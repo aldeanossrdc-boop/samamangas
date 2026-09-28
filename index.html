@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>SalaMangaS</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Cinzel:wght@600;800&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+
+--bg:#07041a;--purple:#7c4dff;--gold:#ffd166;--gold2:#ffb800;
+
+--gold3:#fff3b0;--text:#e8e0ff;--text2:#b8a8e0;--danger:#ff4757;
+
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+
+background:radial-gradient(circle at 20% 10%,#1a0a3a 0%,#07041a 50%,#02010a 100%);
+
+color:var(--text);font-family:'Fredoka',sans-serif;min-height:100vh;overflow-x:hidden;
+
+}
+
+body::before{
+
+content:'';position:fixed;inset:0;
+
+background-image:
+
+radial-gradient(1px 1px at 10% 20%,#fff,transparent),
+
+radial-gradient(1px 1px at 30% 70%,#ffd166,transparent),
+
+radial-gradient(2px 2px at 60% 30%,#fff,transparent),
+
+radial-gradient(1px 1px at 80% 80%,#a67cff,transparent);
+
+background-size:300px 300px,200px 200px,400px 400px,350px 350px;
+
+opacity:.4;pointer-events:none;z-index:0;
+
+}
+
+.wrap{position:relative;z-index:1}
+
+.topbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,209,102,.15);background:rgba(7,4,26,.75);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
+
+.topbar-left{display:flex;align-items:center;gap:8px;justify-self:start}
+
+.topbar-right{display:flex;align-items:center;gap:8px;justify-self:end}
+
+.topbar-center{justify-self:center;cursor:pointer}
+
+.icon-btn{background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.3);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:var(--gold)}
+
+.coin-btn{width:auto;border-radius:20px;padding:0 12px;gap:4px;font-weight:800;font-size:12px;color:var(--gold3);font-family:'Fredoka',sans-serif}
+
+.logo-big{width:56px;height:56px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;display:block;box-shadow:0 0 16px rgba(255,209,102,.4)}
+
+.lang-wrap{position:relative}
+
+.lang-toggle{display:flex;gap:3px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.3);border-radius:14px;padding:3px}
+
+.lang-toggle span{padding:4px 7px;border-radius:10px;font-size:9px;font-weight:600;cursor:pointer;color:var(--text2);transition:.2s}
+
+.lang-toggle span.on{background:var(--gold);color:#1a0a3a;font-weight:800}
+
+.lang-dots{opacity:.7;letter-spacing:1px}
+
+.lang-more-menu{display:none;position:absolute;top:110%;left:0;flex-direction:column;gap:3px;background:rgba(15,8,36,.97);border:1px solid rgba(255,209,102,.3);border-radius:12px;padding:6px;z-index:60;min-width:60px}
+
+.lang-more-menu.on{display:flex}
+
+.lang-more-menu span{padding:5px 10px;border-radius:8px;font-size:11px;cursor:pointer;color:var(--text2)}
+
+.lang-more-menu span.on{background:var(--gold);color:#1a0a3a}
+
+.mainnav{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;background:rgba(15,8,36,.6);border-bottom:1px solid rgba(255,209,102,.1)}
+
+.mainnav b{padding:8px 16px;border-radius:20px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.25);white-space:nowrap;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);transition:.2s}
+
+.mainnav b.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a3a;border-color:var(--gold);font-weight:800}
+
+.screen{display:none;padding:16px;max-width:680px;margin:0 auto}
+
+.screen.on{display:block}
+
+.card{background:linear-gradient(160deg,rgba(124,77,255,.12),rgba(15,8,36,.9));border:1px solid rgba(255,209,102,.2);border-radius:22px;padding:18px;margin-bottom:16px;position:relative;overflow:hidden}
+
+h1.title{font-family:'Cinzel',serif;font-size:28px;font-weight:800;color:var(--gold);text-align:center;margin-bottom:6px;text-shadow:0 0 20px rgba(255,209,102,.4);letter-spacing:1px}
+
+h2.subtitle{font-size:14px;text-align:center;color:var(--text2);margin-bottom:20px;font-weight:400}
+
+h3.section{font-family:'Cinzel',serif;font-size:18px;color:var(--gold3);margin:20px 0 12px}
+
+.btn{padding:12px 20px;border-radius:14px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.35);color:var(--text);font-weight:600;cursor:pointer;font-size:14px;font-family:'Fredoka',sans-serif}
+
+.btn.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a3a;font-weight:800}
+
+.btn-main{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a3a;border:0;border-radius:14px;padding:15px;font-weight:800;cursor:pointer;font-size:15px;font-family:'Fredoka',sans-serif;box-shadow:0 4px 20px rgba(255,209,102,.35)}
+
+.btn-ghost{background:transparent;border:1px solid rgba(255,209,102,.35);color:var(--gold);padding:12px 20px;border-radius:14px;font-weight:600;cursor:pointer;font-size:14px;font-family:'Fredoka',sans-serif}
+
+.input{width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,209,102,.25);border-radius:12px;padding:13px 15px;color:var(--text);font-family:'Fredoka',sans-serif;font-size:14px;margin-top:6px}
+
+label.lbl{display:block;margin-top:16px;font-size:13px;color:var(--gold3);font-weight:600}
+
+textarea.input{resize:vertical;min-height:80px}
+
+.chip{padding:9px 14px;border-radius:20px;background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.25);font-size:13px;cursor:pointer;display:inline-block;margin:4px 4px 0 0;color:var(--text);font-weight:500}
+
+.chip.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a3a;font-weight:700}
+
+.create-opts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px}
+
+.create-opt{padding:16px 8px;border-radius:16px;background:linear-gradient(160deg,rgba(124,77,255,.15),rgba(15,8,36,.7));border:1px solid rgba(255,209,102,.25);text-align:center;cursor:pointer}
+
+.create-opt.on{border-color:var(--gold);box-shadow:0 0 20px rgba(255,209,102,.3)}
+
+.create-opt .ico{font-size:24px;display:block;margin-bottom:6px}
+
+.create-opt .name{font-size:13px;font-weight:700;color:var(--gold3)}
+
+.create-opt .desc{font-size:10px;color:var(--text2);margin-top:2px}
+
+.dots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:10px 0}
+
+.dot-slot{aspect-ratio:1;border-radius:20px;background:radial-gradient(circle at 50% 50%,rgba(255,209,102,.1),rgba(15,8,36,.7));border:2px dashed rgba(255,209,102,.35);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--gold);animation:pulse 2.5s infinite}
+
+.dot-slot.next{border-style:solid;border-color:rgba(255,209,102,.15);color:var(--text2);font-size:11px;text-align:center;padding:8px;animation:none}
+
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,209,102,.3)}50%{box-shadow:0 0 20px 4px rgba(255,209,102,.15)}}
+
+.row-title{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px}
+
+.row-title h3{font-family:'Cinzel',serif;font-size:16px;color:var(--gold)}
+
+.row-title span{font-size:12px;color:var(--text2);cursor:pointer}
+
+.manga-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+
+.donar-mini{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+.donar-mini .txt h3{font-family:'Cinzel',serif;font-size:14px;color:var(--gold3)}
+
+.donar-mini .txt p{font-size:11px;color:var(--text2);margin-top:2px}
+
+.donar-mini button{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a3a;border:0;border-radius:20px;padding:10px 16px;font-weight:800;cursor:pointer;font-size:12px;white-space:nowrap}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center;padding:16px}
+
+.modal-overlay.on{display:flex}
+
+.modal-box{background:linear-gradient(160deg,#1a0f2e,#0d0620);border:1px solid rgba(255,209,102,.3);border-radius:24px;padding:22px;max-width:420px;width:100%;max-height:88vh;overflow-y:auto;position:relative}
+
+.modal-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,209,102,.3);border-radius:50%;width:32px;height:32px;color:var(--gold);font-size:16px;cursor:pointer}
+
+.chatfs{display:none;position:fixed;inset:0;z-index:150;background:radial-gradient(circle at 50% 0%,#1a0a3a,#07041a);flex-direction:column}
+
+.chatfs.on{display:flex}
+
+.chatfs-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(15,8,36,.9);border-bottom:1px solid rgba(255,209,102,.2)}
+
+.chatfs-back{width:34px;height:34px;border-radius:50%;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.3);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:16px;cursor:pointer}
+
+.chatfs-header h2{font-family:'Cinzel',serif;font-size:18px;color:var(--gold);flex:1}
+
+.chatfs-tabs{display:flex;gap:6px;padding:10px 12px;background:rgba(15,8,36,.6);border-bottom:1px solid rgba(255,209,102,.1)}
+
+.chatfs-tab{flex:1;text-align:center;padding:8px 4px;border-radius:18px;font-size:12px;font-weight:600;cursor:pointer;background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.2);color:var(--text2)}
+
+.chatfs-tab.on{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:var(--gold);color:#1a0a3a;font-weight:800}
+
+.chatfs-body{flex:1;overflow-y:auto;padding:14px}
+
+.msg-row{display:flex;gap:8px;margin-bottom:14px;align-items:flex-start}
+
+.msg-row.mine{flex-direction:row-reverse}
+
+.msg-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;overflow:hidden;background:linear-gradient(135deg,var(--purple),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:14px;color:#1a0a3a;font-weight:800;border:1px solid rgba(255,209,102,.4)}
+
+.msg-col{display:flex;flex-direction:column;max-width:72%}
+
+.msg-row.mine .msg-col{align-items:flex-end}
+
+.msg-name{font-size:10px;font-weight:600;color:var(--gold3);margin-bottom:3px}
+
+.msg-bubble{padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.4;word-wrap:break-word}
+
+.msg-bubble.other{background:rgba(124,77,255,.2);border:1px solid rgba(255,209,102,.2);color:var(--text);border-top-left-radius:4px}
+
+.msg-bubble.mine{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a3a;font-weight:600;border-top-right-radius:4px}
+
+.msg-bubble.jisoo{background:linear-gradient(135deg,#ff9edb,#ff6f9c);color:#2b0040;border-top-left-radius:4px;font-weight:600}
+
+.msg-onomat{font-family:'Cinzel',serif;font-weight:800;font-size:18px;margin-top:4px;transform:rotate(-3deg);display:inline-block}
+
+.chatfs-inputbar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(15,8,36,.9);border-top:1px solid rgba(255,209,102,.2)}
+
+.chatfs-inputbar input[type=text]{flex:1;border:1px solid rgba(255,209,102,.25);border-radius:20px;padding:11px 16px;font-family:'Fredoka',sans-serif;background:rgba(0,0,0,.4);color:var(--text);font-size:14px}
+
+.send-btn{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a3a;border:none;font-size:16px;cursor:pointer;flex-shrink:0}
+
+.warn-mini{font-size:11px;background:rgba(255,209,102,.08);border:1px dashed rgba(255,209,102,.4);border-radius:10px;padding:8px 10px;color:var(--gold3);margin-top:10px;line-height:1.4}
+
+.pages-dots{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+
+.page-dot{width:44px;height:44px;border-radius:10px;background:rgba(255,209,102,.06);border:2px dashed rgba(255,209,102,.3);display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:18px;cursor:pointer;overflow:hidden}
+
+.page-dot.filled{border-style:solid;border-color:var(--gold);background-size:cover;background-position:center;color:transparent}
+
+
+
+/* CONFIGURACIÓN */
+.config-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.config-item{padding:12px 14px;border-radius:14px;background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.2);font-size:14px;cursor:pointer;color:var(--text)}
+.config-item:hover{background:rgba(255,209,102,.12)}
+.config-item.danger{color:#ff4757;border-color:rgba(255,71,87,.3)}
+
+/* SAKURAS / SUSCRIPCIONES */
+.pack-card{background:linear-gradient(160deg,rgba(124,77,255,.12),rgba(15,8,36,.9));border:1px solid rgba(255,209,102,.25);border-radius:14px;padding:10px;text-align:center}
+.pack-card .cant{font-weight:800;color:var(--gold3);font-size:15px}
+.pack-card .precio{font-size:11px;color:var(--text2);margin-top:2px}
+.btn-disabled{width:100%;margin-top:8px;opacity:.5;cursor:not-allowed}
+.plan-card{margin-bottom:14px}
+.plan-card ul{font-size:12px;color:var(--text2);padding-left:16px;line-height:1.7;margin-top:8px}
+.plan-card h3{font-family:'Cinzel',serif;font-size:16px}
+
+/* MODO CLARO */
+body.light-mode{background:radial-gradient(circle at 20% 10%,#fff0f5 0%,#ffe8f0 50%,#ffffff 100%);color:#3a1a2a}
+body.light-mode::before{opacity:.12}
+body.light-mode .card,body.light-mode .modal-box,body.light-mode .pack-card{background:linear-gradient(160deg,rgba(255,182,217,.3),rgba(255,255,255,.92));border-color:rgba(255,111,156,.35)}
+body.light-mode .mainnav{background:rgba(255,255,255,.7)}
+body.light-mode .mainnav b{background:rgba(255,111,156,.08);border-color:rgba(255,111,156,.3);color:#3a1a2a}
+body.light-mode .topbar{background:rgba(255,255,255,.85)}
+body.light-mode h1.title,body.light-mode h3.section,body.light-mode .row-title h3{color:#ff6f9c;text-shadow:none}
+body.light-mode .config-item{background:rgba(255,111,156,.08);border-color:rgba(255,111,156,.25);color:#3a1a2a}
+
+/* CHAT TEMA (colores) */
+.chat-tema-menu{display:none;position:absolute;top:52px;right:12px;background:rgba(15,8,36,.97);border:1px solid rgba(255,209,102,.3);border-radius:14px;padding:8px;z-index:60;flex-direction:column;gap:6px}
+.chat-tema-menu.on{display:flex}
+.chat-tema-opt{padding:8px 16px;border-radius:10px;font-size:12px;font-weight:700;color:#5a1030;cursor:pointer;text-align:center}
+.chatfs.tema-rosa{background:linear-gradient(180deg,#ffe3ef,#ffd6e8)!important}
+.chatfs.tema-celeste{background:linear-gradient(180deg,#e3f4ff,#d6ecff)!important}
+.chatfs.tema-amarillo{background:linear-gradient(180deg,#fff9e3,#fff2c2)!important}
+.chatfs.tema-rosa .chatfs-header,.chatfs.tema-celeste .chatfs-header,.chatfs.tema-amarillo .chatfs-header{background:rgba(255,255,255,.55);border-bottom-color:rgba(90,20,48,.15)}
+.chatfs.tema-rosa .chatfs-header h2,.chatfs.tema-celeste .chatfs-header h2,.chatfs.tema-amarillo .chatfs-header h2{color:#ff6f9c;text-shadow:none}
+.chatfs.tema-rosa .chatfs-tabs,.chatfs.tema-celeste .chatfs-tabs,.chatfs.tema-amarillo .chatfs-tabs{background:rgba(255,255,255,.35)}
+.chatfs.tema-rosa .chatfs-tab,.chatfs.tema-celeste .chatfs-tab,.chatfs.tema-amarillo .chatfs-tab{background:rgba(255,255,255,.55);border-color:rgba(90,20,48,.15);color:#7a3050}
+.chatfs.tema-rosa .chatfs-inputbar,.chatfs.tema-celeste .chatfs-inputbar,.chatfs.tema-amarillo .chatfs-inputbar{background:rgba(255,255,255,.55);border-top-color:rgba(90,20,48,.15)}
+.chatfs.tema-rosa .chatfs-inputbar input,.chatfs.tema-celeste .chatfs-inputbar input,.chatfs.tema-amarillo .chatfs-inputbar input{background:#fff;color:#5a1030;border-color:rgba(90,20,48,.15)}
+.msg-bubble.c-pink{background:#ffd6e8;color:#5a1030;border:1px solid #ff9edb}
+.msg-bubble.c-blue{background:#d6f0ff;color:#0a3a52;border:1px solid #9edbff}
+.msg-bubble.c-yellow{background:#fff6c9;color:#5a4a00;border:1px solid #ffe066}
+.msg-onomat{font-size:22px}
+
+/* LOGIN MODAL */
+
+.login-modal{display:flex;position:fixed;inset:0;background:rgba(7,4,26,.92);backdrop-filter:blur(8px);z-index:300;align-items:center;justify-content:center;padding:20px}
+
+.login-modal.hide{display:none}
+
+.login-box{background:linear-gradient(160deg,#1a0f2e,#0d0620);border:1px solid rgba(255,209,102,.35);border-radius:24px;padding:28px 22px;max-width:400px;width:100%;box-shadow:0 0 50px rgba(255,209,102,.2);text-align:center}
+
+.login-logo{width:80px;height:80px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;margin:0 auto 12px;display:block}
+
+.login-box h2{font-family:'Cinzel',serif;font-size:24px;color:var(--gold);margin-bottom:6px;text-shadow:0 0 20px rgba(255,209,102,.4)}
+
+.login-box p{font-size:13px;color:var(--text2);margin-bottom:20px}
+
+.login-google{width:100%;background:#fff;color:#333;border:0;border-radius:14px;padding:13px;font-weight:700;cursor:pointer;font-size:14px;font-family:'Fredoka',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px}
+
+.login-divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--text2);font-size:11px}
+
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:rgba(255,209,102,.2)}
+
+.login-btns{display:flex;gap:8px;margin-top:10px}
+
+.chatfs-btn{font-family:'Fredoka',sans-serif;font-weight:700;border:none;border-radius:20px;padding:11px 16px;cursor:pointer;font-size:13px}
+
+.chatfs-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a3a}
+
+.chatfs-btn.ghost{background:rgba(255,209,102,.1);color:var(--gold);border:1px solid rgba(255,209,102,.3)}
+
+.login-msg{font-size:11px;color:var(--text2);margin-top:10px;min-height:16px}
+
+.login-ceo{display:inline-block;margin-top:16px;font-size:11px;color:#ff4757;cursor:pointer;text-decoration:underline;opacity:.7}
+
+.login-ceo:hover{opacity:1}
+
+.ceo-inputs{display:none;margin-top:12px;text-align:left}
+
+.ceo-inputs.on{display:block}
+
+
+
+@media (max-width:400px){.create-opts{grid-template-columns:1fr 1fr}.manga-grid{grid-template-columns:repeat(2,1fr)}}
+
+#netlify-badge{display:none!important}
+
+.netlify-badge{display:none!important}
+
+
+/* ===== TANDA A ===== */
+.icon-btn{position:relative}
+.badge{position:absolute;top:-4px;right:-4px;background:var(--danger);color:#fff;border-radius:10px;font-size:10px;min-width:16px;height:16px;line-height:16px;text-align:center;font-weight:800;padding:0 3px;font-family:'Fredoka',sans-serif}
+.ov{display:none;position:fixed;inset:0;z-index:160;background:radial-gradient(circle at 50% 0%,#1a0a3a,#07041a);flex-direction:column;overflow-y:auto}
+.ov.on{display:flex}
+.ov-head{display:flex;align-items:center;gap:10px;padding:12px 14px;position:sticky;top:0;background:rgba(7,4,26,.95);border-bottom:1px solid rgba(255,209,102,.2);z-index:2}
+.ov-head h2{font-family:'Cinzel',serif;font-size:17px;color:var(--gold);flex:1}
+.ov-body{padding:14px;max-width:680px;width:100%;margin:0 auto}
+.mcard{position:relative;cursor:pointer}
+.mcard img,.mcard .noimg{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px;border:1px solid rgba(255,209,102,.3);background:rgba(124,77,255,.15);display:block}
+.mcard .t{font-size:12px;font-weight:600;color:var(--gold3);margin-top:4px;line-height:1.2}
+.mcard .a{font-size:10px;color:var(--text2);text-decoration:underline}
+.heart{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;background:rgba(7,4,26,.7);border:1px solid rgba(255,209,102,.4);font-size:13px;display:flex;align-items:center;justify-content:center}
+[data-fav]{filter:grayscale(1)}
+[data-fav].on{filter:none}
+.rdr{display:none;position:fixed;inset:0;z-index:170;background:#000}
+.rdr.on{display:block}
+#rdScroll{position:absolute;inset:0;overflow:auto;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch}
+#rdPags{width:100%}
+#rdPags img{width:100%;display:block;min-height:120px;background:#111}
+#rdCom{background:#0b0620;padding:16px 14px 80px;max-width:680px;margin:0 auto}
+.rd-pill{position:absolute;background:rgba(7,4,26,.75);border:1px solid rgba(255,209,102,.4);color:var(--gold);border-radius:16px;padding:5px 11px;font-size:12px;font-weight:700;cursor:pointer;backdrop-filter:blur(6px)}
+#rdBar{position:absolute;left:0;right:0;bottom:0;text-align:center;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(7,4,26,.88);color:var(--gold3);font-weight:800;font-size:13px;border-top:1px solid rgba(255,209,102,.25)}
+.com{background:rgba(124,77,255,.12);border:1px solid rgba(255,209,102,.2);border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:13px}
+.com b{color:var(--gold3);font-size:12px}.com .cf{font-size:10px;color:var(--text2);margin-left:8px}.com .cdel{float:right;cursor:pointer}.com p{margin-top:4px;word-wrap:break-word}
+.rk{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.2);margin-bottom:6px;cursor:pointer;font-size:13px}
+.rk i{font-style:normal;font-family:'Cinzel',serif;color:var(--gold);font-weight:800;width:22px}
+.rk small{display:block;color:var(--text2);font-size:10px}
+@media (max-width:420px){.topbar{padding:8px;grid-template-columns:auto 1fr auto}.topbar .icon-btn{width:30px;height:30px;font-size:14px}.topbar .coin-btn{width:auto;padding:0 8px}.topbar-left,.topbar-right{gap:4px}.logo-big{width:44px;height:44px}.lang-toggle span{padding:4px 5px}}
+
+/* ===== TANDA B ===== */
+.mini{padding:5px 9px;border-radius:10px;border:1px solid rgba(255,209,102,.4);background:rgba(255,209,102,.1);color:var(--gold);font-size:11px;font-weight:700;cursor:pointer;font-family:'Fredoka',sans-serif}
+.mini.red{color:#ff4757;border-color:#ff4757}
+#rdPags img,.iaImg{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+#ceoTabs .chip{font-size:12px;padding:7px 11px}
+</style>
+
+</head>
+
+<body>
+
+
+
+<!-- LOGIN MODAL -->
+
+<div id="login-modal" class="login-modal">
+
+<div class="login-box">
+
+<img src="logo.jpg" class="login-logo" onerror="this.style.display='none'">
+
+<h2>SalaMangaS</h2>
+
+<p>Ingresá para leer, crear y chatear</p>
+
+
+
+<button class="login-google" onclick="loginGoogle()">
+
+<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+
+Entrar con Google
+
+</button>
+
+
+
+<p id="authMsg" class="login-msg"></p>
+
+
+
+<div id="ceo-inputs" class="ceo-inputs">
+
+<input id="ceoUser" class="input" placeholder="Usuario CEO" style="margin-top:6px">
+
+<input id="ceoPass" class="input" type="password" placeholder="Contraseña CEO" style="margin-top:8px">
+
+<button class="chatfs-btn primary" style="width:100%;margin-top:10px" onclick="loginCEO()">Entrar como CEO</button>
+
+</div>
+
+<a class="login-ceo" onclick="toggleCEOInputs()">🔑 Acceso CEO</a>
+
+</div>
+
+</div>
+
+
+
+<div class="wrap">
+
+<div class="topbar">
+
+<div class="topbar-left">
+
+<button class="icon-btn" onclick="abrirConfig()" title="Configuración">⚙️</button>
+
+<div class="lang-wrap">
+
+<div class="lang-toggle" id="langToggle">
+
+<span id="lang-es" class="on" onclick="setLang('es')">ES</span>
+
+<span id="lang-en" onclick="setLang('en')">EN</span>
+
+<span class="lang-dots" onclick="toggleLangMore()">•••</span>
+
+</div>
+
+<div id="langMore" class="lang-more-menu">
+
+<span id="lang-zh" onclick="setLang('zh')">中文</span>
+
+<span id="lang-ja" onclick="setLang('ja')">日本</span>
+
+<span id="lang-ko" onclick="setLang('ko')">한국</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="topbar-center" onclick="go('inicio')">
+
+<img src="logo.jpg" alt="SalaMangaS" class="logo-big" onerror="this.style.display='none'">
+
+</div>
+
+<div class="topbar-right">
+
+<button class="icon-btn" onclick="abrirBuscar()" title="Buscar">🔍</button>
+<button class="icon-btn" onclick="abrirNotifs()" title="Avisos">🔔<span id="notifBadge" class="badge" style="display:none">0</span></button>
+<button class="icon-btn coin-btn" onclick="abrirSakuras()" title="Sakuras">🪙 <b id="sakurasCount">0</b></button>
+
+<button class="icon-btn" onclick="abrirSuscripciones()" title="Suscripciones">⭐</button>
+
+</div>
+
+</div>
+
+
+
+<div class="mainnav">
+
+<b id="nav-inicio" class="on" onclick="go('inicio')" data-i18n="nav_inicio">🏠 Inicio</b>
+
+<b id="nav-crear" onclick="go('crear')" data-i18n="nav_crear">➕ Crear</b>
+
+<b id="nav-chat" onclick="abrirChat()" data-i18n="nav_chat">💬 Chat</b>
+
+<b id="nav-ceo" onclick="go('ceo')" data-i18n="nav_ceo" style="color:#ff4757;border-color:#ff4757;display:none">🔑 CEO</b>
+
+</div>
+
+
+
+<div id="screen-inicio" class="screen on">
+
+<div class="card">
+
+<div class="donar-mini">
+
+<div class="txt">
+
+<h3 data-i18n="apoyar_t">💖 Apoya a los Creadores</h3>
+
+<p data-i18n="apoyar_s">Mantén el Manga Gratis</p>
+
+</div>
+
+<button onclick="abrirDonar()" data-i18n="donar_btn">Donar $1000 ARS</button>
+
+</div>
+
+</div>
+
+<div class="row-title"><h3 data-i18n="tend_t">⭐ Tendencias</h3><span data-i18n="ver_mas">Ver más ›</span></div>
+
+<div id="tendencias-grid" class="dots-grid"></div>
+
+<div class="row-title"><h3 data-i18n="seguir_t">📖 Continuar Leyendo</h3></div>
+
+<div id="seguir-grid" class="manga-grid"></div>
+
+<div class="row-title"><h3 data-i18n="recom_t">👑 Recomendados</h3><span data-i18n="ver_mas">Ver más ›</span></div>
+
+<div id="recom-grid" class="manga-grid"></div>
+
+<div class="row-title"><h3 data-i18n="desc_t">🌸 Descubrir</h3><span data-i18n="ver_mas">Ver más ›</span></div>
+
+<div id="desc-grid" class="manga-grid"></div>
+
+</div>
+
+
+
+<div id="screen-crear" class="screen">
+
+<h1 class="title" data-i18n="crear_t">Crear Nuevo Manga</h1>
+
+<p class="subtitle" data-i18n="crear_s">Completa los detalles para tu nueva obra</p>
+
+<div class="card">
+
+<h3 class="section" data-i18n="elegir_como">✨ Elegir CÓMO crear</h3>
+
+<div class="create-opts">
+
+<div class="create-opt" onclick="setModoCrear('img')" id="opt-img"><span class="ico">✏️</span><span class="name" data-i18n="op_img">Dibujo a lápiz</span><span class="desc" data-i18n="op_img_d">La IA lo convierte</span></div>
+
+<div class="create-opt" onclick="setModoCrear('pdf')" id="opt-pdf"><span class="ico">📄</span><span class="name" data-i18n="op_pdf">PDF</span><span class="desc" data-i18n="op_pdf_d">Importar PDF</span></div>
+
+<div class="create-opt" onclick="setModoCrear('ia')" id="opt-ia"><span class="ico">🤖</span><span class="name">SalaMangas IA</span><span class="desc" data-i18n="op_ia_d">Generar con IA</span></div>
+
+</div>
+
+<label class="lbl" data-i18n="lbl_titulo">Título del Manga</label>
+
+<input id="titulo" class="input" placeholder="Ej: El cazador de estrellas olvidadas">
+
+<label class="lbl" data-i18n="lbl_genero">Género (selección múltiple)</label>
+
+<div id="generos-wrap"></div>
+
+<label class="lbl" data-i18n="lbl_estilo">Estilo Visual (solo 1)</label>
+
+<div id="estilos-wrap"></div>
+
+<label class="lbl" data-i18n="lbl_sinop">Sinopsis</label>
+
+<textarea id="sinopsis" class="input" placeholder="Escribe la sinopsis de tu manga..."></textarea>
+
+<label class="lbl" data-i18n="lbl_portada">Subir Portada</label>
+
+<input type="file" id="portadaInput" accept="image/*" style="display:none" onchange="subirPortada(event)">
+
+<div class="page-dot" style="width:100%;height:80px;border-radius:12px;font-size:13px" onclick="document.getElementById('portadaInput').click()"><span data-i18n="portada_toque">📷 Toca para subir la portada</span></div>
+
+<div id="portadaPreview" style="margin-top:8px"></div>
+
+<label class="lbl" data-i18n="lbl_paginas">Páginas</label>
+
+<div id="pages-dots" class="pages-dots"></div>
+
+<button class="btn-ghost" style="margin-top:8px" onclick="agregarFilaPuntitos()" data-i18n="sig_btn">Siguiente →</button>
+
+<p style="font-size:11px;color:var(--text2);margin-top:8px;text-align:center"><span data-i18n="pags_info">15 a 20 páginas (gratis) o 15 a 30 (pago) • Mínimo 15 para publicar</span></p>
+
+<div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+
+<button class="btn" onclick="abrirPersonajes()" data-i18n="btn_personajes">👥 Personajes</button>
+
+<button class="btn" onclick="alert('Próximamente')" data-i18n="btn_mis_mangas">📚 Mis mangas</button>
+
+</div>
+
+<div class="warn-mini" data-i18n="aviso_pub">⚠️ Al tocar "Publicar" se enviará a revisión del equipo SalaMangas.</div>
+
+<div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+
+<button class="btn-ghost" style="flex:1" onclick="guardarBorrador()" data-i18n="btn_guardar">💾 Guardar Borrador</button>
+
+<button class="btn-ghost" style="flex:1;color:#ffb86a;border-color:#ffb86a" onclick="alertaMonetizar()" data-i18n="btn_monet">🔒 Monetizar</button>
+
+</div>
+
+<button class="btn-main" style="margin-top:12px" onclick="publicar()" data-i18n="btn_publicar">Publicar</button>
+
+</div>
+
+</div>
+
+
+
+<div id="screen-ceo" class="screen">
+
+<h1 class="title">Panel CEO</h1>
+
+<p class="subtitle">Solo vos tenés acceso</p>
+
+<div class="card">
+
+<h3 class="section">📊 Resumen</h3>
+
+<p style="font-size:13px;color:var(--text2)">Usuarios: <b id="ceoUsers">0</b></p>
+
+<p style="font-size:13px;color:var(--text2)">Mangas: <b id="ceoMangas">0</b></p>
+
+<p style="font-size:13px;color:var(--text2)">Pendientes: <b id="ceoPend">0</b></p>
+<div id="ceoTabs" style="margin-top:14px">
+<span class="chip on" data-t="pend" onclick="ceoTab('pend')">⏳ Pendientes</span><span class="chip" data-t="mangas" onclick="ceoTab('mangas')">📚 Mangas</span><span class="chip" data-t="usuarios" onclick="ceoTab('usuarios')">👥 Usuarios</span><span class="chip" data-t="chats" onclick="ceoTab('chats')">💬 Chats</span><span class="chip" data-t="subs" onclick="ceoTab('subs')">⭐ Suscriptores</span><span class="chip" data-t="donaciones" onclick="ceoTab('donaciones')">💖 Donaciones</span><span class="chip" data-t="stats" onclick="ceoTab('stats')">📊 Stats</span><span class="chip" data-t="sistema" onclick="ceoTab('sistema')">⚙️ Sistema</span>
+</div>
+<div id="ceoBody" style="margin-top:12px"></div>
+
+<button class="btn-ghost" style="margin-top:14px;width:100%" onclick="cerrarSesion()">Cerrar sesión CEO</button>
+
+</div>
+
+</div>
+
+
+
+</div>
+
+
+
+<div id="donar-modal" class="modal-overlay">
+
+<div class="modal-box">
+
+<button class="modal-close" onclick="cerrarDonar()">✕</button>
+
+<h2 style="font-family:'Cinzel',serif;color:var(--gold);margin-bottom:8px" data-i18n="donar_t">Apoyar a SalaMangaS</h2>
+
+<p style="font-size:13px;color:var(--text2)" data-i18n="donar_s">Tu aporte ayuda a mantener la plataforma</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px">
+
+<button class="btn on" onclick="elegirMonto(1000,this)">$1000</button>
+
+<button class="btn" onclick="elegirMonto(2000,this)">$2000</button>
+
+<button class="btn" onclick="elegirMonto(3000,this)">$3000</button>
+
+<button class="btn" onclick="elegirMonto(5000,this)">$5000</button>
+
+</div>
+
+<a id="mpLink" href="https://mpago.la/1sQhRwx" target="_blank" style="display:block;text-align:center;background:#00b1ea;color:#fff;padding:14px;border-radius:14px;font-weight:800;text-decoration:none;margin-top:14px">💳 Mercado Pago</a>
+
+<a id="ppLink" href="https://paypal.me/SalaMangaS/1000" target="_blank" style="display:block;text-align:center;background:#0070ba;color:#fff;padding:14px;border-radius:14px;font-weight:800;text-decoration:none;margin-top:8px">🅿️ PayPal</a>
+
+</div>
+
+</div>
+
+
+
+<div id="config-modal" class="modal-overlay">
+
+<div class="modal-box">
+
+<button class="modal-close" onclick="cerrarConfig()">✕</button>
+
+<h2 style="font-family:'Cinzel',serif;color:var(--gold)">⚙️ Configuración</h2>
+
+<div class="config-list">
+
+<div class="config-item" onclick="abrirCuenta()">👤 Mi cuenta</div>
+<div class="config-item" onclick="abrirBiblioteca()">📚 Mi Biblioteca</div>
+<div class="config-item" onclick="cambiarFotoPerfil()">🖼️ Foto de perfil</div>
+
+<div class="config-item" onclick="cambiarNombre()">✏️ Cambiar nombre</div>
+
+<div class="config-item" onclick="cambiarPassword()">🔒 Cambiar contraseña</div>
+
+<div class="config-item" onclick="abrirIdiomaDesdeConfig()">🌐 Idioma</div>
+
+<div class="config-item" onclick="toggleModoOscuro()">🌗 Modo oscuro / claro</div>
+
+<div class="config-item" onclick="cerrarSesionDesdeConfig()">🚪 Cerrar sesión</div>
+
+<div class="config-item danger" onclick="eliminarCuenta()">🗑️ Eliminar cuenta</div>
+
+<div class="config-item" onclick="abrirInfo('faq')">❓ Ayuda / FAQ</div>
+
+<div class="config-item" onclick="abrirInfo('terminos')">📜 Términos y condiciones</div>
+
+<div class="config-item" onclick="abrirInfo('privacidad')">🔐 Política de privacidad</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div id="info-modal" class="modal-overlay">
+
+<div class="modal-box">
+
+<button class="modal-close" onclick="cerrarInfo()">✕</button>
+
+<h2 id="infoTitulo" style="font-family:'Cinzel',serif;color:var(--gold)"></h2>
+
+<div id="infoTexto" style="font-size:13px;color:var(--text2);line-height:1.6;max-height:50vh;overflow-y:auto;margin-top:10px"></div>
+
+</div>
+
+</div>
+
+
+
+<div id="sakuras-modal" class="modal-overlay">
+
+<div class="modal-box">
+
+<button class="modal-close" onclick="cerrarSakuras()">✕</button>
+
+<h2 style="font-family:'Cinzel',serif;color:var(--gold);text-align:center">🪙 Sakuras</h2>
+
+<p style="font-size:30px;font-weight:800;color:var(--gold3);text-align:center;margin:8px 0"><span id="sakurasSaldo">0</span></p>
+
+<h3 class="section" style="margin-top:6px">✨ Cómo se ganan</h3>
+
+<ul style="font-size:13px;color:var(--text2);padding-left:18px;line-height:1.6">
+
+<li>100 sakuras al registrarte</li>
+
+<li>20 sakuras por entrar cada día (si faltás un día, perdés el bono por 3 días)</li>
+
+<li>100 sakuras cada 10 personas que se registren con tu link</li>
+
+</ul>
+
+<h3 class="section">💸 Cómo se gastan</h3>
+
+<ul style="font-size:13px;color:var(--text2);padding-left:18px;line-height:1.6">
+
+<li>Leer un capítulo: 20 sakuras</li>
+
+<li>Apoyar a un creador: 20 sakuras (el creador recibe la mitad)</li>
+
+</ul>
+
+<h3 class="section">🛒 Comprar Sakuras</h3>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+
+<div class="pack-card"><div class="cant">250 🪙</div><div class="precio">$1000 ARS</div><button class="btn btn-disabled" disabled>Comprar</button></div>
+
+<div class="pack-card"><div class="cant">700 🪙</div><div class="precio">$2000 ARS</div><button class="btn btn-disabled" disabled>Comprar</button></div>
+
+<div class="pack-card"><div class="cant">2200 🪙</div><div class="precio">$5000 ARS</div><button class="btn btn-disabled" disabled>Comprar</button></div>
+
+</div>
+
+<p style="font-size:11px;color:var(--text2);text-align:center;margin-top:10px">Compra próximamente disponible 🌸</p>
+
+<p style="font-size:10px;color:var(--text2);text-align:center;margin-top:16px">Tu link de invitación:</p>
+
+<div style="display:flex;gap:6px;margin-top:4px">
+
+<input id="refLinkInput" class="input" readonly style="font-size:11px">
+
+<button class="btn-ghost" onclick="copiarRefLink()">Copiar</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div id="suscripciones-modal" class="modal-overlay">
+
+<div class="modal-box" style="max-width:480px">
+
+<button class="modal-close" onclick="cerrarSuscripciones()">✕</button>
+
+<h2 style="font-family:'Cinzel',serif;color:var(--gold);text-align:center">⭐ Suscripciones</h2>
+
+<p style="font-size:12px;color:var(--text2);text-align:center;margin-bottom:14px">Elegí tu plan de creador</p>
+
+<div class="card plan-card" style="border-color:rgba(255,209,102,.4)">
+
+<h3 style="color:var(--gold3)">BÁSICO — $3000 ARS/mes</h3>
+
+<ul><li>20 a 40 páginas al mes para crear</li><li>200 sakuras</li><li>0% de comisión</li><li>Sorteos</li><li>Chat: Mangakar</li></ul>
+
+<button class="btn-ghost btn-disabled" disabled>Comprar</button>
+
+</div>
+
+<div class="card plan-card" style="border-color:var(--gold)">
+
+<h3 style="color:var(--gold)">PRO — $5000 ARS/mes</h3>
+
+<ul><li>30 a 60 páginas al mes para crear</li><li>500 sakuras</li><li>20% de comisión</li><li>Sorteos</li><li>Chat: Mangakar + Mangakar Pro</li></ul>
+
+<button class="btn-ghost btn-disabled" disabled>Comprar</button>
+
+</div>
+
+<div class="card plan-card" style="border-color:#ff9edb;margin-bottom:0">
+
+<h3 style="color:#ff9edb">SUPER PRO — $12000 ARS/mes</h3>
+
+<ul><li>Creación ilimitada</li><li>Sakuras ilimitadas</li><li>50% de comisión</li><li>Sorteos</li><li>Chat: las 3 salas</li></ul>
+
+<button class="btn-ghost btn-disabled" disabled>Comprar</button>
+
+</div>
+
+<p style="font-size:11px;color:var(--text2);text-align:center;margin-top:10px">Compra próximamente disponible 🌸</p>
+
+</div>
+
+</div>
+
+
+
+<div id="bienvenida-creador-modal" class="modal-overlay">
+
+<div class="modal-box" style="text-align:center">
+
+<button class="modal-close" onclick="cerrarBienvenidaCreador()">✕</button>
+
+<h2 style="font-family:'Cinzel',serif;color:var(--gold)">🌸 ¡Bienvenido/a, creador!</h2>
+
+<p style="font-size:13px;color:var(--text2);margin-top:14px;line-height:1.7;text-align:left">
+
+Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto desde el inicio.<br><br>
+
+<b style="color:var(--gold3)">2 reglas de oro:</b><br>
+
+1. Sé constante. Un capítulo por semana vale más que uno cada tanto.<br>
+
+2. Cuidá tu historia y escuchá a tus lectores. Los comentarios son oro.<br><br>
+
+¡A crear! 🚀
+
+</p>
+
+<button class="btn-main" style="margin-top:16px" onclick="cerrarBienvenidaCreador()">¡Entendido!</button>
+
+</div>
+
+</div>
+
+
+
+
+<div id="reader" class="rdr">
+<div id="rdScroll">
+<div id="rdPags"></div>
+<div id="rdCom">
+<h3 class="section" style="margin-top:0">💬 Comentarios</h3>
+<div style="display:flex;gap:8px"><input id="comIn" class="input" style="margin-top:0" placeholder="Escribí un comentario..." maxlength="500" onkeydown="if(event.key==='Enter')publicarComentario()"><button class="send-btn" onclick="publicarComentario()">➤</button></div>
+<div id="comList" style="margin-top:14px"></div>
+</div>
+</div>
+<div class="rd-pill" style="top:calc(10px + env(safe-area-inset-top,0px));left:10px" onclick="cerrarLector()">← Inicio</div>
+<div style="position:absolute;top:calc(10px + env(safe-area-inset-top,0px));right:10px;display:flex;gap:6px"><div class="rd-pill" id="rdHeart" style="position:static" onclick="toggleFav(rd.m.id)">❤️</div><div class="rd-pill" style="position:static" onclick="compartir(rd.m.titulo)">🔗</div></div>
+<div id="rdBar">1 / 1</div>
+</div>
+
+<div id="bus" class="ov">
+<div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('bus')">←</div><input id="busIn" class="input" style="margin:0;flex:1" placeholder="Título, género o autor..." oninput="buscar()"></div>
+<div class="ov-body">
+<div id="busGen"></div>
+<div style="margin:10px 0"><span class="chip on" id="ord-pop" onclick="setOrden('pop')">🔥 Popularidad</span><span class="chip" id="ord-new" onclick="setOrden('new')">🆕 Más nuevos</span></div>
+<div id="busHome"><h3 class="section">🏆 Top 10 de la semana</h3><div id="busRank"></div><h3 class="section">🆕 Nuevos capítulos</h3><div id="busNuevos"></div></div>
+<div id="busRes" class="manga-grid" style="display:none"></div>
+</div>
+</div>
+
+<div id="bib" class="ov"><div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('bib')">←</div><h2>📚 Mi Biblioteca</h2></div><div class="ov-body"><div id="bib-grid" class="manga-grid"></div></div></div>
+
+<div id="cre" class="ov"><div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('cre')">←</div><h2>Creador</h2></div><div class="ov-body" id="creBody"></div></div>
+
+<div id="notif-modal" class="modal-overlay"><div class="modal-box"><button class="modal-close" onclick="cerrarOv('notif-modal')">✕</button><h2 style="font-family:'Cinzel',serif;color:var(--gold)">🔔 Avisos</h2><div id="notifList" style="margin-top:12px"></div></div></div>
+
+<div id="cuenta-modal" class="modal-overlay"><div class="modal-box"><button class="modal-close" onclick="cerrarOv('cuenta-modal')">✕</button>
+<h2 style="font-family:'Cinzel',serif;color:var(--gold)">👤 Mi cuenta</h2>
+<p style="margin-top:12px;font-size:13px;color:var(--text2)">Usuario: <b id="ctaNombre" style="color:var(--gold3)"></b></p>
+<div class="card" style="margin-top:14px;text-align:center"><div id="ctaRefs" style="font-size:34px;font-weight:800;color:var(--gold)">0</div><div style="font-size:12px;color:var(--text2)">personas registradas con tu link</div><div id="ctaFalta" style="font-size:12px;color:var(--gold3);margin-top:6px"></div></div>
+<button class="btn-main" onclick="compartir()">🔗 Compartir mi link</button>
+<button class="btn-ghost" style="width:100%;margin-top:8px" onclick="editarBio()">✏️ Editar mi bio</button>
+</div></div>
+
+
+<input type="file" id="lapizInput" accept="image/*" style="display:none" onchange="if(this.files[0])abrirIA('lapiz',this.files[0]);this.value=''">
+<input type="file" id="pdfInput" accept="application/pdf" style="display:none" onchange="if(this.files[0])importarPDF(this.files[0]);this.value=''">
+
+<div id="mant" style="display:none;position:fixed;inset:0;z-index:250;background:radial-gradient(circle at 50% 0%,#1a0a3a,#07041a);align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px">
+<div style="font-size:54px">🛠️</div><h2 style="font-family:'Cinzel',serif;color:var(--gold);margin-top:10px">Estamos en mantenimiento</h2><p style="color:var(--text2);margin-top:8px">Volvemos muy pronto 🌸</p>
+</div>
+
+<div id="iaov" class="ov">
+<div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('iaov')">←</div><h2 id="iaTitulo">SalaMangas IA</h2></div>
+<div class="ov-body">
+<div id="iaDibujoBox" style="display:none"><img id="iaDibujo" class="iaImg" style="width:100%;max-height:220px;object-fit:contain;border-radius:12px;background:rgba(0,0,0,.3)"></div>
+<label class="lbl">🎨 Colores</label><input id="iaColores" class="input" placeholder="Ej: tonos pastel, cielo violeta, detalles dorados">
+<label class="lbl">📝 Detalles / qué querés que pase</label><textarea id="iaTxt" class="input" placeholder="Describí la escena, el ambiente, la ropa, la expresión..."></textarea>
+<label class="lbl">✨ Estilo visual</label><div id="iaEstilos"></div>
+<label class="lbl">👥 Personajes (opcional)</label><div id="iaPjs"></div>
+<button class="btn-main" id="iaBtn" style="margin-top:16px" onclick="iaGenerar()">✨ Generar</button>
+<div id="iaRes" style="margin-top:14px"></div>
+</div>
+</div>
+
+<div id="pj" class="ov">
+<div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('pj')">←</div><h2>👥 Personajes</h2></div>
+<div class="ov-body">
+<button class="btn-main" onclick="nuevoPersonaje()">＋ Nuevo personaje</button>
+<div class="warn-mini">💡 Cuanto más detalle pongas, mejor va a mantener la IA al personaje en cada página.</div>
+<div id="pjLista" style="margin-top:14px"></div>
+</div>
+</div>
+
+<div id="pj-modal" class="modal-overlay"><div class="modal-box">
+<button class="modal-close" onclick="cerrarOv('pj-modal')">✕</button>
+<h2 style="font-family:'Cinzel',serif;color:var(--gold)">Nuevo personaje</h2>
+<label class="lbl">Nombre</label><input id="pjNom" class="input" maxlength="60">
+<label class="lbl">Descripción detallada</label><textarea id="pjDesc" class="input" placeholder="Pelo, ojos, ropa, edad, altura, marcas especiales..."></textarea>
+<div class="warn-mini">Cuanto más detalle pongas, mejor va a mantener la IA al personaje en cada página.</div>
+<label class="lbl">Foto de referencia (opcional)</label><input id="pjFoto" type="file" accept="image/*" class="input">
+<button id="pjGuardar" class="btn-main" style="margin-top:16px" onclick="guardarPersonaje()">Guardar personaje</button>
+</div></div>
+
+<div id="chatfs" class="chatfs">
+
+<div class="chatfs-header">
+
+<div class="chatfs-back" onclick="cerrarChat()">←</div>
+
+<h2>SalaMangaS Chat</h2>
+
+<div class="chatfs-back" onclick="abrirChatTema()" title="Colores del chat">🎨</div>
+
+<div class="chatfs-back" onclick="cerrarSesion()" title="Cerrar sesión">🚪</div>
+
+</div>
+
+<div id="chatTemaMenu" class="chat-tema-menu">
+
+<div class="chat-tema-opt" style="background:linear-gradient(135deg,#ffd6e8,#ffb3d9)" onclick="setChatTema('rosa')">Rosa</div>
+
+<div class="chat-tema-opt" style="background:linear-gradient(135deg,#d6f0ff,#b3e0ff)" onclick="setChatTema('celeste')">Celeste</div>
+
+<div class="chat-tema-opt" style="background:linear-gradient(135deg,#fff6c9,#ffe999)" onclick="setChatTema('amarillo')">Amarillo</div>
+
+</div>
+
+<div class="chatfs-tabs">
+
+<div id="tab-mangakar" class="chatfs-tab on" onclick="cambiarSala('mangakar')">Mangakar</div>
+
+<div id="tab-mangakarpro" class="chatfs-tab" onclick="cambiarSala('mangakarpro')">Mangakar Pro</div>
+
+<div id="tab-salamangaspro" class="chatfs-tab" onclick="cambiarSala('salamangaspro')">SalaMangas Pro</div>
+
+</div>
+
+<div class="chatfs-body">
+
+<div id="chatbox"></div>
+
+</div>
+
+<div id="chatbar" class="chatfs-inputbar" style="display:none">
+
+<input id="chatIn" type="text" placeholder="Escribí..." onkeydown="if(event.key==='Enter')enviarMensaje()">
+
+<button class="send-btn" onclick="enviarMensaje()">➤</button>
+
+</div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL = 'https://zalfaldrmccncjsahdmi.supabase.co';
+
+const SUPABASE_KEY = 'sb_publishable_ghOA30jYrCYcWrwvA1pd2g_8VsjZoVV';
+
+const CLOUD_NAME = 'dtms6ovt';
+
+const CLOUD_PRESET = 'SalaMangas';
+
+const CEO_EMAILS = ['aldeanossrdc@gmail.com','srdcceo1992@gmail.com'];
+
+const CEO_USER = 'SrdcCeoSM';
+
+const CEO_PASS = 'DereckRoman';
+
+
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+
+auth: {
+
+persistSession: true,
+
+autoRefreshToken: true,
+
+detectSessionInUrl: true,
+
+flowType: 'implicit'
+
+}
+
+});
+
+let miPerfil = null;
+
+let salaActual = 'mangakar';
+
+let canalRealtime = null;
+
+let generosSel = [];
+
+let estiloSel = null;
+
+let portadaArchivo = null;
+
+let paginas = [];
+
+let monto = 1000;
+
+let lang = 'es';
+
+let filaActual = 0;
+
+
+
+const T = {
+
+es:{nav_inicio:"🏠 Inicio",nav_crear:"➕ Crear",nav_chat:"💬 Chat",apoyar_t:"💖 Apoya a los Creadores",apoyar_s:"Mantén el Manga Gratis",donar_btn:"Donar $1000 ARS",tend_t:"⭐ Tendencias",ver_mas:"Ver más ›",seguir_t:"📖 Continuar Leyendo",recom_t:"👑 Recomendados",desc_t:"🌸 Descubrir",crear_t:"Crear Nuevo Manga",crear_s:"Completa los detalles para tu nueva obra",elegir_como:"✨ Elegir CÓMO crear",op_img:"Dibujo a lápiz",op_img_d:"La IA lo convierte",op_pdf:"PDF",op_pdf_d:"Importar PDF",op_ia_d:"Generar con IA",lbl_titulo:"Título del Manga",lbl_genero:"Género (selección múltiple)",lbl_estilo:"Estilo Visual (solo 1)",lbl_sinop:"Sinopsis",lbl_portada:"Subir Portada",portada_toque:"📷 Toca para subir la portada",lbl_paginas:"Páginas",sig_btn:"Siguiente →",pags_info:"15 a 20 páginas (gratis) o 15 a 30 (pago) • Mínimo 15 para publicar",btn_personajes:"👥 Personajes",btn_mis_mangas:"📚 Mis mangas",aviso_pub:"⚠️ Al tocar Publicar se enviará a revisión.",btn_guardar:"💾 Guardar Borrador",btn_monet:"🔒 Monetizar",btn_publicar:"Publicar",monet_msg:"Para monetizar tu manga, necesitás el plan de suscripción.\n\nPlan básico: 20%.\nPlan Pro: 50%."},
+
+en:{nav_inicio:"🏠 Home",nav_crear:"➕ Create",nav_chat:"💬 Chat",apoyar_t:"💖 Support Creators",apoyar_s:"Keep Manga Free",donar_btn:"Donate $1000 ARS",tend_t:"⭐ Trending",ver_mas:"See more ›",seguir_t:"📖 Continue Reading",recom_t:"👑 Recommended",desc_t:"🌸 Discover",crear_t:"Create New Manga",crear_s:"Complete details",elegir_como:"✨ Choose HOW to create",op_img:"Pencil drawing",op_img_d:"AI converts it",op_pdf:"PDF",op_pdf_d:"Import PDF",op_ia_d:"Generate with AI",lbl_titulo:"Manga Title",lbl_genero:"Genre",lbl_estilo:"Visual Style",lbl_sinop:"Synopsis",lbl_portada:"Upload Cover",portada_toque:"📷 Tap to upload cover",lbl_paginas:"Pages",sig_btn:"Next →",pags_info:"15 to 20 pages (free) or 15 to 30 (paid)",btn_personajes:"👥 Characters",btn_mis_mangas:"📚 My mangas",aviso_pub:"⚠️ Publish sends to review.",btn_guardar:"💾 Save Draft",btn_monet:"🔒 Monetize",btn_publicar:"Publish",monet_msg:"To monetize, you need the subscription plan."},
+
+zh:{nav_inicio:"🏠 首页",nav_crear:"➕ 创建",nav_chat:"💬 聊天",apoyar_t:"💖 支持创作者",apoyar_s:"保持漫画免费",donar_btn:"捐赠 $1000 ARS",tend_t:"⭐ 热门",ver_mas:"更多 ›",seguir_t:"📖 继续阅读",recom_t:"👑 推荐",desc_t:"🌸 发现",crear_t:"创建新漫画",crear_s:"完成新作品的详细信息",elegir_como:"✨ 选择创建方式",op_img:"图片",op_img_d:"上传图片",op_pdf:"PDF",op_pdf_d:"导入PDF",op_ia_d:"AI生成",lbl_titulo:"漫画标题",lbl_genero:"类型",lbl_estilo:"视觉风格",lbl_sinop:"简介",lbl_portada:"上传封面",portada_toque:"📷 点击上传封面",lbl_paginas:"页面",sig_btn:"下一页 →",pags_info:"15到20页（免费）或15到30页（付费）",btn_personajes:"👥 角色",btn_mis_mangas:"📚 我的漫画",aviso_pub:"⚠️ 点击发布后将送审",btn_guardar:"💾 保存草稿",btn_monet:"🔒 变现",btn_publicar:"发布",monet_msg:"要变现您的漫画，需要订阅计划。"},
+
+ja:{nav_inicio:"🏠 ホーム",nav_crear:"➕ 作成",nav_chat:"💬 チャット",apoyar_t:"💖 クリエイターを支援",apoyar_s:"漫画を無料に保つ",donar_btn:"寄付 $1000 ARS",tend_t:"⭐ トレンド",ver_mas:"もっと見る ›",seguir_t:"📖 続きを読む",recom_t:"👑 おすすめ",desc_t:"🌸 発見",crear_t:"新しい漫画を作成",crear_s:"新作の詳細を入力",elegir_como:"✨ 作成方法を選択",op_img:"画像",op_img_d:"画像をアップロード",op_pdf:"PDF",op_pdf_d:"PDFをインポート",op_ia_d:"AIで生成",lbl_titulo:"漫画タイトル",lbl_genero:"ジャンル",lbl_estilo:"ビジュアルスタイル",lbl_sinop:"あらすじ",lbl_portada:"表紙をアップロード",portada_toque:"📷 タップして表紙をアップロード",lbl_paginas:"ページ",sig_btn:"次へ →",pags_info:"15〜20ページ（無料）または15〜30ページ（有料）",btn_personajes:"👥 キャラクター",btn_mis_mangas:"📚 マイ漫画",aviso_pub:"⚠️ 公開すると審査に送られます",btn_guardar:"💾 下書き保存",btn_monet:"🔒 収益化",btn_publicar:"公開",monet_msg:"漫画を収益化するには購読プランが必要です。"},
+
+ko:{nav_inicio:"🏠 홈",nav_crear:"➕ 만들기",nav_chat:"💬 채팅",apoyar_t:"💖 크리에이터 지원",apoyar_s:"만화를 무료로 유지",donar_btn:"후원 $1000 ARS",tend_t:"⭐ 트렌드",ver_mas:"더 보기 ›",seguir_t:"📖 계속 읽기",recom_t:"👑 추천",desc_t:"🌸 발견",crear_t:"새 만화 만들기",crear_s:"새 작품의 세부 정보를 입력하세요",elegir_como:"✨ 만드는 방법 선택",op_img:"이미지",op_img_d:"이미지 업로드",op_pdf:"PDF",op_pdf_d:"PDF 가져오기",op_ia_d:"AI로 생성",lbl_titulo:"만화 제목",lbl_genero:"장르",lbl_estilo:"비주얼 스타일",lbl_sinop:"줄거리",lbl_portada:"표지 업로드",portada_toque:"📷 표지를 업로드하려면 탭하세요",lbl_paginas:"페이지",sig_btn:"다음 →",pags_info:"15~20페이지(무료) 또는 15~30페이지(유료)",btn_personajes:"👥 캐릭터",btn_mis_mangas:"📚 내 만화",aviso_pub:"⚠️ 게시하면 검토 후 공개됩니다",btn_guardar:"💾 임시 저장",btn_monet:"🔒 수익화",btn_publicar:"게시",monet_msg:"만화를 수익화하려면 구독 플랜이 필요합니다."}
+
+};
+
+
+
+function setLang(l){
+
+lang = l;
+
+document.querySelectorAll('.lang-toggle span, .lang-more-menu span').forEach(s=>s.classList.remove('on'));
+
+const elL = document.getElementById('lang-'+l);
+
+if(elL) elL.classList.add('on');
+
+document.querySelectorAll('[data-i18n]').forEach(el=>{
+
+const k = el.getAttribute('data-i18n');
+
+if(T[l][k]) el.innerText = T[l][k];
+
+});
+
+}
+
+function toggleLangMore(){
+
+document.getElementById('langMore').classList.toggle('on');
+
+}
+
+function abrirIdiomaDesdeConfig(){
+
+cerrarConfig();
+
+document.getElementById('langMore').classList.add('on');
+
+}
+
+
+
+function go(id){
+
+document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+
+document.getElementById('screen-'+id).classList.add('on');
+
+document.querySelectorAll('.mainnav b').forEach(b=>b.classList.remove('on'));
+
+const n = document.getElementById('nav-'+id);
+
+if(n) n.classList.add('on');
+
+document.getElementById('chatfs').classList.remove('on');
+
+window.scrollTo(0,0);
+
+if(id==='ceo'){cargarStatsCEO();ceoTab(window._ceoT||'pend');}
+
+}
+
+function abrirChat(){
+
+document.querySelectorAll('.mainnav b').forEach(b=>b.classList.remove('on'));
+
+document.getElementById('nav-chat').classList.add('on');
+
+document.getElementById('chatfs').classList.add('on');
+
+if(miPerfil) cambiarSala(salaActual);
+
+}
+
+function cerrarChat(){go('inicio')}
+
+/* ===== CONFIGURACIÓN ===== */
+function abrirConfig(){document.getElementById('config-modal').classList.add('on')}
+function cerrarConfig(){document.getElementById('config-modal').classList.remove('on')}
+
+async function cambiarFotoPerfil(){
+if(!miPerfil){alert('Iniciá sesión primero');return;}
+const inp = document.createElement('input');
+inp.type = 'file';inp.accept = 'image/*';
+inp.onchange = async e=>{
+const f = e.target.files[0];if(!f) return;
+try{
+const url = await subirACloudinary(f);
+const {error} = await sb.from('profiles').update({avatar_url:url}).eq('id',miPerfil.id);
+if(error){alert('Error: '+error.message);return;}
+miPerfil.avatar_url = url;
+alert('Foto de perfil actualizada ✅');
+}catch(err){alert('Error subiendo la imagen');}
+};
+inp.click();
+}
+
+async function cambiarNombre(){
+if(!miPerfil){alert('Iniciá sesión primero');return;}
+const nuevo = prompt('Nuevo nombre de usuario:', miPerfil.username||'');
+if(!nuevo || !nuevo.trim()) return;
+const {error} = await sb.from('profiles').update({username:nuevo.trim()}).eq('id',miPerfil.id);
+if(error){alert('Error: '+error.message);return;}
+miPerfil.username = nuevo.trim();
+alert('Nombre actualizado ✅');
+}
+
+async function cambiarPassword(){
+if(!miPerfil){alert('Iniciá sesión primero');return;}
+const nueva = prompt('Nueva contraseña (mínimo 6 caracteres):');
+if(!nueva) return;
+if(nueva.length<6){alert('Mínimo 6 caracteres');return;}
+const {error} = await sb.auth.updateUser({password:nueva});
+if(error){alert('Error: '+error.message);return;}
+alert('Contraseña actualizada ✅');
+}
+
+function toggleModoOscuro(){
+document.body.classList.toggle('light-mode');
+localStorage.setItem('modoClaro', document.body.classList.contains('light-mode')?'1':'0');
+}
+
+function cerrarSesionDesdeConfig(){
+cerrarConfig();
+cerrarSesion();
+}
+
+async function eliminarCuenta(){
+if(!miPerfil){alert('Iniciá sesión primero');return;}
+if(!confirm('¿Seguro que querés eliminar tu cuenta? Esta acción no se puede deshacer.')) return;
+alert('Para eliminar tu cuenta por seguridad lo procesamos manualmente. Escribinos por WhatsApp y lo resolvemos en menos de 24hs 🌸');
+}
+
+const INFO_TEXTOS = {
+faq:{t:'❓ Ayuda / FAQ', c:'<b>¿Cómo publico un manga?</b><br>Andá a Crear, completá los datos y subí al menos 15 páginas.<br><br><b>¿Cómo gano Sakuras?</b><br>Registrándote, entrando todos los días e invitando amigos con tu link.<br><br><b>¿Cómo contacto soporte?</b><br>Escribinos por WhatsApp desde el botón de contacto.'},
+terminos:{t:'📜 Términos y condiciones', c:'Al usar SalaMangaS aceptás publicar contenido original o con los derechos correspondientes. El equipo se reserva el derecho de moderar y remover contenido que infrinja estas normas. (Texto sujeto a actualización).'},
+privacidad:{t:'🔐 Política de privacidad', c:'Tus datos (email, nombre de usuario, avatar) se usan únicamente para el funcionamiento de la app. No compartimos tu información con terceros salvo obligación legal. (Texto sujeto a actualización).'}
+};
+function abrirInfo(tipo){
+document.getElementById('infoTitulo').innerText = INFO_TEXTOS[tipo].t;
+document.getElementById('infoTexto').innerHTML = INFO_TEXTOS[tipo].c;
+document.getElementById('info-modal').classList.add('on');
+}
+function cerrarInfo(){document.getElementById('info-modal').classList.remove('on')}
+
+/* ===== SAKURAS ===== */
+function abrirSakuras(){
+document.getElementById('sakurasSaldo').innerText = (miPerfil && miPerfil.sakuras) || 0;
+const ref = miPerfil ? (window.location.origin+window.location.pathname+'?ref='+miPerfil.id) : 'Iniciá sesión para tener tu link';
+document.getElementById('refLinkInput').value = ref;
+document.getElementById('sakuras-modal').classList.add('on');
+}
+function cerrarSakuras(){document.getElementById('sakuras-modal').classList.remove('on')}
+function copiarRefLink(){
+const inp = document.getElementById('refLinkInput');
+inp.select();
+navigator.clipboard && navigator.clipboard.writeText(inp.value);
+alert('Link copiado ✅');
+}
+function actualizarSakurasUI(){
+const el = document.getElementById('sakurasCount');
+if(el) el.innerText = (miPerfil && miPerfil.sakuras) || 0;
+}
+async function procesarSakurasDiarias(perfil){
+try{
+if(perfil.sakuras===undefined) return;
+const hoy = new Date().toISOString().slice(0,10);
+if(perfil.last_login === hoy) return;
+const actualizar = {last_login:hoy};
+const pausaHasta = perfil.streak_pause_until;
+const enPausa = pausaHasta && pausaHasta >= hoy;
+if(!enPausa){
+const ayer = new Date(Date.now()-86400000).toISOString().slice(0,10);
+if(!perfil.last_login || perfil.last_login === ayer){
+actualizar.sakuras = (perfil.sakuras||0) + 20;
+} else {
+actualizar.streak_pause_until = new Date(Date.now()+3*86400000).toISOString().slice(0,10);
+}
+}
+const {error} = await sb.from('profiles').update(actualizar).eq('id',perfil.id);
+if(!error) Object.assign(perfil, actualizar);
+}catch(e){ /* columnas de sakuras aún no existen en Supabase, se ignora */ }
+}
+
+/* ===== SUSCRIPCIONES ===== */
+function abrirSuscripciones(){document.getElementById('suscripciones-modal').classList.add('on')}
+function cerrarSuscripciones(){document.getElementById('suscripciones-modal').classList.remove('on')}
+
+/* ===== TEMA DE CHAT ===== */
+function abrirChatTema(){document.getElementById('chatTemaMenu').classList.toggle('on')}
+function setChatTema(t){
+const chatfs = document.getElementById('chatfs');
+chatfs.classList.remove('tema-rosa','tema-celeste','tema-amarillo');
+chatfs.classList.add('tema-'+t);
+localStorage.setItem('chatTema', t);
+document.getElementById('chatTemaMenu').classList.remove('on');
+}
+function colorBurbuja(uid){
+const colores = ['c-pink','c-blue','c-yellow'];
+let hash = 0;
+for(let i=0;i<(uid||'').length;i++) hash += uid.charCodeAt(i);
+return colores[hash % colores.length];
+}
+
+/* ===== BIENVENIDA CREADOR ===== */
+function cerrarBienvenidaCreador(){document.getElementById('bienvenida-creador-modal').classList.remove('on')}
+
+
+
+const MP_LINKS = {1000:"https://mpago.la/1sQhRwx",2000:"https://mpago.li/2p8db62",3000:"https://mpago.li/2UDTp4x",5000:"https://mpago.li/1NJXS5H"};
+
+function abrirDonar(){document.getElementById('donar-modal').classList.add('on')}
+
+function cerrarDonar(){document.getElementById('donar-modal').classList.remove('on')}
+
+function elegirMonto(m,el){
+
+monto = m;
+
+document.querySelectorAll('#donar-modal .btn').forEach(b=>b.classList.remove('on'));
+
+el.classList.add('on');
+
+document.getElementById('mpLink').href = MP_LINKS[m] || MP_LINKS[1000];
+
+document.getElementById('ppLink').href = 'https://paypal.me/SalaMangaS/'+m;
+
+}
+
+
+
+const GENEROS = ["Acción","Romance","Terror","Drama","Comedia","Isekai","Fantasía","Ciencia Ficción","Slice of Life","Misterio","Aventura","Sobrenatural","Suspense","Religioso"];
+
+const ESTILOS = ["Manga clásico B/N","Cómic occidental","Screentone","Pastel","Noir","Dark Fantasy","Chibi","Realista","Acuarela","Vintage"];
+
+
+
+function renderGeneros(){
+
+const w = document.getElementById('generos-wrap');
+
+w.innerHTML = '';
+
+GENEROS.forEach(g=>{
+
+const c = document.createElement('span');
+
+c.className = 'chip';c.innerText = g;
+
+c.onclick = ()=>{c.classList.toggle('on');if(c.classList.contains('on')) generosSel.push(g);else generosSel = generosSel.filter(x=>x!==g);};
+
+w.appendChild(c);
+
+});
+
+}
+
+function renderEstilos(){
+
+const w = document.getElementById('estilos-wrap');
+
+w.innerHTML = '';
+
+ESTILOS.forEach(e=>{
+
+const c = document.createElement('span');
+
+c.className = 'chip';c.innerText = e;
+
+c.onclick = ()=>{document.querySelectorAll('#estilos-wrap .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');estiloSel = e;};
+
+w.appendChild(c);
+
+});
+
+}
+
+function setModoCrear(m){
+
+document.querySelectorAll('.create-opt').forEach(o=>o.classList.remove('on'));
+
+document.getElementById('opt-'+m).classList.add('on');
+
+if(m==='img'){document.getElementById('lapizInput').click();}else if(m==='pdf'){document.getElementById('pdfInput').click();}else if(m==='ia'){abrirIA('ia');}
+
+}
+
+function subirPortada(e){
+
+const file = e.target.files[0];if(!file) return;
+
+portadaArchivo = file;
+
+const reader = new FileReader();
+
+reader.onload = ev=>{document.getElementById('portadaPreview').innerHTML = '<img src="'+ev.target.result+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:12px">';};
+
+reader.readAsDataURL(file);
+
+}
+
+function agregarFilaPuntitos(){
+
+const cont = document.getElementById('pages-dots');
+
+if(filaActual >= 3){alert('Máximo 30 espacios.');return;}
+
+for(let i=0;i<10;i++){
+
+const d = document.createElement('div');
+
+d.className = 'page-dot';d.innerText = '+';
+
+d.onclick = ()=>subirPagina(d);
+
+cont.appendChild(d);
+
+}
+
+filaActual++;
+
+}
+
+function subirPagina(dot){
+const inp = document.createElement('input');
+inp.type = 'file';inp.accept = 'image/*';
+inp.onchange = e=>{
+const f = e.target.files[0];if(!f) return;
+dot.classList.add('filled');dot.style.backgroundImage = 'url('+URL.createObjectURL(f)+')';dot.innerText='';
+if(dot._pi===undefined){dot._pi = paginas.length;paginas.push({file:f});} else paginas[dot._pi] = {file:f};
+};
+inp.click();
+}
+
+async function subirACloudinary(file){
+
+const form = new FormData();
+
+form.append('file', file);
+
+form.append('upload_preset', CLOUD_PRESET);
+
+const r = await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/image/upload',{method:'POST',body:form});
+
+const data = await r.json();
+
+if(!data.secure_url) throw new Error((data.error&&data.error.message)||'No se pudo subir la imagen');
+
+return data.secure_url;
+
+}
+
+async function guardarBorrador(){
+
+const titulo = document.getElementById('titulo').value.trim();
+
+if(!titulo){alert('Poné un título');return;}
+
+const lista = JSON.parse(localStorage.getItem('borradores')||'[]');
+
+lista.unshift({titulo,generos:generosSel,estilo:estiloSel,fecha:new Date().toISOString()});
+
+localStorage.setItem('borradores',JSON.stringify(lista));
+
+alert('Borrador guardado ✅');
+
+}
+
+async function publicar(){
+
+if(!miPerfil){alert('Creá una cuenta para publicar');return;}
+
+const titulo = document.getElementById('titulo').value.trim();
+
+if(!titulo){alert('Poné un título');return;}
+
+if(paginas.length < 15){alert('Necesitás al menos 15 páginas. Tenés '+paginas.length);return;}
+
+if(!estiloSel){alert('Elegí un estilo visual');return;}
+
+alert('Subiendo páginas...');
+
+const urlsPaginas = [];
+
+for(const p of paginas){
+
+try{const url = await subirACloudinary(p.file);urlsPaginas.push(url);}catch(err){alert('Error: '+err.message);return;}
+
+}
+
+let portadaUrl = null;
+
+if(portadaArchivo){try{ portadaUrl = await subirACloudinary(portadaArchivo); }catch(e){}}
+
+const {error} = await sb.from('mangas').insert({user_id:miPerfil.id,titulo,generos:generosSel,estilo:estiloSel,sinopsis:document.getElementById('sinopsis').value,portada_url:portadaUrl,paginas_urls:urlsPaginas,estado:'pendiente',vistas:0,likes:0});
+
+if(error){alert('Error: '+error.message);return;}
+
+alert('¡Manga enviado a revisión! 🎉');
+
+try{
+
+const {count} = await sb.from('mangas').select('*',{count:'exact',head:true}).eq('user_id',miPerfil.id);
+
+if(count===1) document.getElementById('bienvenida-creador-modal').classList.add('on');
+
+}catch(e){}
+
+setTimeout(()=>{if(!document.getElementById('pages-dots').children.length) agregarFilaPuntitos();},0);document.getElementById('titulo').value='';document.getElementById('sinopsis').value='';
+
+generosSel=[];estiloSel=null;paginas=[];portadaArchivo=null;
+
+document.querySelectorAll('#generos-wrap .chip, #estilos-wrap .chip').forEach(c=>c.classList.remove('on'));
+
+document.getElementById('pages-dots').innerHTML='';document.getElementById('portadaPreview').innerHTML='';
+
+filaActual=0;
+
+}
+
+function alertaMonetizar(){alert(T[lang].monet_msg)}
+
+
+
+async function loginGoogle(){
+
+const {error} = await sb.auth.signInWithOAuth({
+
+provider: 'google',
+
+options: { redirectTo: window.location.origin + window.location.pathname }
+
+});
+
+if(error) alert('Error: '+error.message);
+
+}
+
+
+
+function limpiarURLAuth(){
+
+if(window.location.hash.includes('access_token') || window.location.search.includes('code=') || window.location.hash.includes('error')){
+
+window.history.replaceState({}, document.title, window.location.pathname);
+
+}
+
+}
+
+
+
+function toggleCEOInputs(){
+
+document.getElementById('ceo-inputs').classList.toggle('on');
+
+}
+
+
+
+function loginCEO(){
+
+const u = document.getElementById('ceoUser').value.trim();
+
+const p = document.getElementById('ceoPass').value;
+
+if(u === CEO_USER && p === CEO_PASS){
+
+document.getElementById('nav-ceo').style.display = 'inline-block';
+
+localStorage.setItem('esCEO','1');
+
+alert('Bienvenido, CEO 👑');
+
+document.getElementById('login-modal').classList.add('hide');
+cargarStatsCEO();
+
+} else {
+
+alert('Usuario o contraseña incorrectos');
+
+}
+
+}
+
+
+
+async function cargarStatsCEO(){
+
+if(localStorage.getItem('esCEO')!=='1') return;
+
+try{
+
+const {count:usersCount} = await sb.from('profiles').select('*',{count:'exact',head:true});
+
+document.getElementById('ceoUsers').innerText = usersCount ?? 0;
+
+}catch(e){document.getElementById('ceoUsers').innerText = '—';}
+
+try{
+
+const {count:mangasCount} = await sb.from('mangas').select('*',{count:'exact',head:true});
+
+document.getElementById('ceoMangas').innerText = mangasCount ?? 0;
+
+}catch(e){document.getElementById('ceoMangas').innerText = '—';}
+
+try{
+
+const {count:pendCount} = await sb.from('mangas').select('*',{count:'exact',head:true}).eq('estado','pendiente');
+
+document.getElementById('ceoPend').innerText = pendCount ?? 0;
+
+}catch(e){document.getElementById('ceoPend').innerText = '—';}
+
+}
+
+
+
+async function registrarse(){
+
+const email = document.getElementById('authEmail').value.trim();
+
+const pass = document.getElementById('authPass').value;
+
+const msg = document.getElementById('authMsg');
+
+if(!email||!pass){msg.style.color='#ff4757';msg.innerText='Completá email y contraseña';return;}
+
+if(pass.length<6){msg.style.color='#ff4757';msg.innerText='Mínimo 6 caracteres';return;}
+
+msg.style.color='var(--text2)';msg.innerText='Creando cuenta...';
+
+const {data,error} = await sb.auth.signUp({email,password:pass});
+
+if(error){msg.style.color='#ff4757';msg.innerText='Error: '+error.message;return;}
+
+if(data.session){msg.innerText='';cargarSesion();}
+
+else{msg.style.color='var(--gold)';msg.innerText='¡Cuenta creada! Revisá tu email.';}
+
+}
+
+
+
+async function iniciarSesion(){
+
+const email = document.getElementById('authEmail').value.trim();
+
+const pass = document.getElementById('authPass').value;
+
+const msg = document.getElementById('authMsg');
+
+if(!email||!pass){msg.style.color='#ff4757';msg.innerText='Completá email y contraseña';return;}
+
+msg.style.color='var(--text2)';msg.innerText='Ingresando...';
+
+const {error} = await sb.auth.signInWithPassword({email,password:pass});
+
+if(error){msg.style.color='#ff4757';msg.innerText='Error: '+error.message;return;}
+
+msg.innerText='';cargarSesion();
+
+}
+
+
+
+async function cargarSesion(){
+
+const {data:{user}} = await sb.auth.getUser();
+
+limpiarURLAuth();
+
+if(!user){
+
+if(document.getElementById('login-modal').classList.contains('hide')===false){
+
+const msg = document.getElementById('authMsg');
+
+if(msg){msg.style.color='#ff4757';msg.innerText='No se pudo confirmar el ingreso con Google. Probá de nuevo.';}
+
+}
+
+return;
+
+}
+
+if(user.email && CEO_EMAILS.includes(user.email.toLowerCase())){
+
+localStorage.setItem('esCEO','1');
+
+document.getElementById('nav-ceo').style.display='inline-block';
+
+}
+
+let {data:perfil} = await sb.from('profiles').select('*').eq('id',user.id).single();
+
+let esNuevo = false;
+
+if(!perfil){
+
+await sb.from('profiles').insert({id:user.id,username:user.email.split('@')[0],tier:'basico'});
+
+const r = await sb.from('profiles').select('*').eq('id',user.id).single();
+
+perfil = r.data;
+
+esNuevo = true;window._esNuevo = true;
+
+}
+
+if(esNuevo){
+
+try{ await sb.from('profiles').update({sakuras:100}).eq('id',user.id); perfil.sakuras = 100; }catch(e){ /* columna sakuras aún no existe */ }
+
+}
+
+if(perfil.baneado){await sb.auth.signOut();miPerfil=null;alert('Tu cuenta fue suspendida. Si creés que es un error, contactá al equipo de SalaMangaS.');return;}
+
+await procesarSakurasDiarias(perfil);
+
+miPerfil = perfil;
+
+actualizarSakurasUI();
+
+document.getElementById('login-modal').classList.add('hide');
+
+document.getElementById('chatbar').style.display='flex';postLogin();
+
+cambiarSala('mangakar');
+
+}
+
+
+
+async function cerrarSesion(){
+
+await sb.auth.signOut();
+
+miPerfil = null;
+
+localStorage.removeItem('esCEO');
+
+document.getElementById('nav-ceo').style.display='none';
+
+document.getElementById('login-modal').classList.remove('hide');
+
+document.getElementById('chatbar').style.display='none';
+
+document.getElementById('chatbox').innerHTML='';
+if(canalRealtime){sb.removeChannel(canalRealtime);canalRealtime=null;}
+
+go('inicio');
+
+}
+
+
+
+function tieneAcceso(sala){
+
+if(!miPerfil) return false;
+
+if(sala==='mangakar') return true;
+
+if(sala==='mangakarpro') return miPerfil.tier==='basico'||miPerfil.tier==='pro'||localStorage.getItem('esCEO')==='1';
+
+if(sala==='salamangaspro') return miPerfil.tier==='pro'||localStorage.getItem('esCEO')==='1';
+
+return false;
+
+}
+
+
+
+async function cambiarSala(sala){
+
+if(!miPerfil) return;
+
+if(!tieneAcceso(sala)){alert('Esta sala es solo para suscriptores.');return;}
+
+salaActual = sala;
+
+document.querySelectorAll('.chatfs-tab').forEach(t=>t.classList.remove('on'));
+
+document.getElementById('tab-'+sala).classList.add('on');
+
+await cargarMensajes();
+
+suscribirRealtime();
+
+}
+
+
+
+async function cargarMensajes(){
+
+const box = document.getElementById('chatbox');
+
+box.innerHTML = '<p style="text-align:center;color:var(--text2);font-size:12px">Cargando...</p>';
+
+const {data,error} = await sb.from('messages').select('*').eq('room',salaActual).order('created_at',{ascending:true}).limit(100);
+
+box.innerHTML = '';
+
+if(error){box.innerHTML = '<p style="color:#ff4757;font-size:12px">Error: '+error.message+'</p>';return;}
+
+if(!data||data.length===0){
+
+box.innerHTML = '<p style="text-align:center;color:var(--text2);font-size:12px;padding:20px">Sé el primero en escribir 💬</p>';
+
+} else { data.forEach(m=>renderMsg(m)); }
+
+box.scrollTop = box.scrollHeight;
+
+}
+
+
+
+const ONOMAT = ['gasp!!','doki doki','zukyun!!','kira~','fuwa~'];
+
+function renderMsg(m){
+
+const box = document.getElementById('chatbox');
+
+const row = document.createElement('div');
+
+const esMio = miPerfil && m.user_id===miPerfil.id;
+
+const esJisoo = m.user_id==='jisoo';
+
+row.className = 'msg-row'+(esMio?' mine':'');
+
+const av = document.createElement('div');
+
+av.className = 'msg-avatar';
+
+if(esJisoo) av.innerText = '🌸';
+
+else av.innerText = (m.username||'?')[0].toUpperCase();
+
+const col = document.createElement('div');
+
+col.className = 'msg-col';
+
+if(!esMio){
+
+const nm = document.createElement('div');
+
+nm.className = 'msg-name';
+
+nm.innerText = esJisoo ? 'Jisoo' : (m.username||'Usuario');
+
+col.appendChild(nm);
+
+}
+
+const bub = document.createElement('div');
+
+bub.className = 'msg-bubble '+(esMio?'mine':esJisoo?'jisoo':'other '+colorBurbuja(m.user_id));
+
+bub.innerText = m.content;
+
+col.appendChild(bub);
+
+if(m.content && m.content.includes('!')){
+
+const o = document.createElement('div');
+
+o.className = 'msg-onomat';
+
+o.style.color = esMio?'#1a0a3a':'#ff6f9c';
+
+o.innerText = ONOMAT[Math.floor(Math.random()*ONOMAT.length)];
+
+col.appendChild(o);
+
+}
+
+row.appendChild(av);row.appendChild(col);box.appendChild(row);
+
+}
+
+
+
+function suscribirRealtime(){
+
+if(canalRealtime) sb.removeChannel(canalRealtime);
+
+canalRealtime = sb.channel('room-'+salaActual)
+
+.on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'room=eq.'+salaActual},payload=>{
+
+renderMsg(payload.new);
+
+document.getElementById('chatbox').scrollTop = document.getElementById('chatbox').scrollHeight;
+
+}).subscribe();
+
+}
+
+
+
+async function enviarMensaje(){
+
+const inp = document.getElementById('chatIn');
+
+const txt = inp.value.trim();
+
+if(!txt || !miPerfil) return;
+
+inp.value = '';
+
+const {error} = await sb.from('messages').insert({room:salaActual,user_id:miPerfil.id,username:miPerfil.username,content:txt});
+
+if(error){alert('Error: '+error.message);return;}
+
+}
+
+
+
+
+/* ===== TANDA A ===== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let MANGAS=[],AUTORES={},FAVS=new Set(),SEGUIDOS=new Set(),rd=null,chCom=null,chNotif=null,busGen=null,busOrd='pop';
+const nomAutor = id => (AUTORES[id]&&AUTORES[id].username)||'Autor';
+function cerrarOv(id){$(id).classList.remove('on')}
+
+async function cargarMangas(){
+try{
+let q=sb.from('mangas').select('*').order('created_at',{ascending:false}).limit(200);
+if(localStorage.getItem('esCEO')!=='1') q=q.in('estado',['aprobado','publicado']);
+const {data}=await q;MANGAS=data||[];
+const ids=[...new Set(MANGAS.map(m=>m.user_id))];
+if(ids.length){const {data:ps}=await sb.from('profiles').select('*').in('id',ids);(ps||[]).forEach(p=>AUTORES[p.id]=p);}
+}catch(e){}
+}
+function cardManga(m){
+const d=document.createElement('div');d.className='mcard';
+const k=String(m.id);
+d.innerHTML=(m.portada_url?'<img loading="lazy" src="'+esc(m.portada_url)+'">':'<div class="noimg"></div>')+'<div class="heart'+(FAVS.has(k)?' on':'')+'" data-fav="'+esc(k)+'">❤️</div><div class="t">'+esc(m.titulo)+'</div><div class="a">'+esc(nomAutor(m.user_id))+'</div>';
+d.onclick=()=>abrirLector(m.id);
+d.querySelector('.heart').onclick=e=>{e.stopPropagation();toggleFav(m.id)};
+d.querySelector('.a').onclick=e=>{e.stopPropagation();abrirCreador(m.user_id)};
+return d;
+}
+function pintar(id,l){
+const g=$(id);g.innerHTML='';l.forEach(m=>g.appendChild(cardManga(m)));
+if(!l.length) g.innerHTML='<p style="grid-column:1/-1;text-align:center;color:var(--text2);font-size:12px;padding:10px">Nada por acá todavía 🌸</p>';
+}
+async function cargarInicio(){
+await cargarMangas();await cargarFavs();
+pintar('recom-grid',[...MANGAS].sort((a,b)=>(b.likes||0)-(a.likes||0)).slice(0,6));
+pintar('desc-grid',MANGAS.slice(0,9));
+pintarContinuar();
+}
+
+/* --- Lector --- */
+function setBar(){$('rdBar').innerText=rd.pag+' / '+rd.total}
+function irAPagina(p){const im=$('rdPags').children[p-1];if(im)$('rdScroll').scrollTop=im.offsetTop}
+function actualizarPag(){
+if(!rd)return;
+const sc=$('rdScroll'),im=$('rdPags').children,y=sc.scrollTop+sc.clientHeight/2;
+let p=1;for(let i=0;i<im.length;i++){if(im[i].offsetTop<=y)p=i+1;else break}
+if(p!==rd.pag){rd.pag=p;setBar();clearTimeout(rd.t);rd.t=setTimeout(guardarHist,1200)}
+}
+async function guardarHist(){
+if(!rd||!miPerfil)return;
+try{await sb.from('historial').upsert({user_id:miPerfil.id,manga_id:String(rd.m.id),ultima_pagina:rd.pag,actualizado:new Date().toISOString()},{onConflict:'user_id,manga_id'})}catch(e){}
+}
+async function abrirLector(id){
+let m=MANGAS.find(x=>String(x.id)===String(id));
+if(!m){try{const {data}=await sb.from('mangas').select('*').eq('id',id).maybeSingle();m=data}catch(e){}}
+const pags=(m&&m.paginas_urls)||[];
+if(!pags.length){alert('Este manga todavía no tiene páginas disponibles');return}
+if(chCom){sb.removeChannel(chCom);chCom=null}
+rd={m,total:pags.length,pag:1,zoom:1,t:null};
+const c=$('rdPags');c.innerHTML='';c.style.width='100%';
+pags.forEach(u=>{const i=document.createElement('img');i.src=u;i.draggable=false;i.oncontextmenu=e=>e.preventDefault();c.appendChild(i)});
+try{sb.rpc('sumar_vista',{mid:String(m.id)}).then(()=>{})}catch(e){}
+const hb=$('rdHeart');hb.dataset.fav=String(m.id);hb.classList.toggle('on',FAVS.has(String(m.id)));
+$('reader').classList.add('on');$('rdScroll').scrollTop=0;setBar();
+let ult=1;
+if(miPerfil){try{const {data}=await sb.from('historial').select('ultima_pagina').eq('user_id',miPerfil.id).eq('manga_id',String(m.id)).maybeSingle();if(data&&data.ultima_pagina>1)ult=Math.min(data.ultima_pagina,pags.length)}catch(e){}}
+if(rd&&rd.m===m){
+rd.pag=ult;setBar();guardarHist();cargarComentarios();
+if(ult>1)Promise.all([...c.children].slice(0,ult).map(i=>i.decode?i.decode().catch(()=>{}):0)).then(()=>irAPagina(ult));
+}
+}
+function cerrarLector(){
+if(rd)clearTimeout(rd.t);
+const p=guardarHist();
+if(chCom){sb.removeChannel(chCom);chCom=null}
+rd=null;
+document.querySelectorAll('.ov.on').forEach(o=>o.classList.remove('on'));
+$('reader').classList.remove('on');
+go('inicio');
+p.then(pintarContinuar);
+}
+(function(){
+const sc=$('rdScroll');let d0=0,z0=1;
+const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+sc.addEventListener('touchstart',e=>{if(e.touches.length===2){d0=dist(e.touches);z0=rd?rd.zoom:1}},{passive:true});
+sc.addEventListener('touchmove',e=>{if(e.touches.length===2&&rd&&d0){e.preventDefault();rd.zoom=Math.min(4,Math.max(1,z0*dist(e.touches)/d0));$('rdPags').style.width=(rd.zoom*100)+'%'}},{passive:false});
+sc.addEventListener('touchend',e=>{if(e.touches.length<2)d0=0});
+sc.addEventListener('scroll',actualizarPag,{passive:true});
+})();
+
+/* --- Historial --- */
+async function pintarContinuar(){
+if(!miPerfil)return;
+try{
+const {data}=await sb.from('historial').select('*').eq('user_id',miPerfil.id).order('actualizado',{ascending:false}).limit(5);
+pintar('seguir-grid',(data||[]).map(h=>MANGAS.find(m=>String(m.id)===String(h.manga_id))).filter(Boolean));
+}catch(e){}
+}
+
+/* --- Favoritos / Biblioteca --- */
+async function cargarFavs(){
+FAVS=new Set();if(!miPerfil)return;
+try{const {data}=await sb.from('favoritos').select('manga_id').eq('user_id',miPerfil.id);(data||[]).forEach(f=>FAVS.add(String(f.manga_id)))}catch(e){}
+}
+function pintarFav(k){document.querySelectorAll('[data-fav="'+k+'"]').forEach(x=>x.classList.toggle('on',FAVS.has(k)))}
+async function toggleFav(id){
+if(!miPerfil){alert('Iniciá sesión primero');return}
+const k=String(id),on=!FAVS.has(k);
+on?FAVS.add(k):FAVS.delete(k);pintarFav(k);
+const {error}=on?await sb.from('favoritos').insert({user_id:miPerfil.id,manga_id:k}):await sb.from('favoritos').delete().eq('user_id',miPerfil.id).eq('manga_id',k);
+if(error){on?FAVS.delete(k):FAVS.add(k);pintarFav(k);alert('Error: '+error.message);return}
+if(on){const m=MANGAS.find(x=>String(x.id)===k);if(m)notificar(m.user_id,'like','❤️ A '+miPerfil.username+' le gustó "'+m.titulo+'"',k)}
+}
+async function abrirBiblioteca(){
+cerrarConfig();$('bib').classList.add('on');
+await cargarFavs();if(!MANGAS.length)await cargarMangas();
+pintar('bib-grid',MANGAS.filter(m=>FAVS.has(String(m.id))));
+}
+
+/* --- Buscador / filtros / ranking --- */
+function renderGenChips(){
+const w=$('busGen');w.innerHTML='';
+['Todos',...GENEROS].forEach(g=>{const c=document.createElement('span');c.className='chip'+((g==='Todos'?!busGen:busGen===g)?' on':'');c.innerText=g;c.onclick=()=>{busGen=g==='Todos'?null:g;renderGenChips();buscar()};w.appendChild(c)});
+}
+function setOrden(o){busOrd=o;$('ord-pop').classList.toggle('on',o==='pop');$('ord-new').classList.toggle('on',o==='new');buscar()}
+function buscar(){
+const q=$('busIn').value.trim().toLowerCase(),hay=q||busGen;
+$('busHome').style.display=hay?'none':'block';$('busRes').style.display=hay?'grid':'none';
+if(!hay)return;
+const l=MANGAS.filter(m=>(!busGen||(m.generos||[]).includes(busGen))&&(!q||[m.titulo,(m.generos||[]).join(' '),nomAutor(m.user_id)].join(' ').toLowerCase().includes(q)));
+l.sort(busOrd==='new'?(a,b)=>new Date(b.created_at)-new Date(a.created_at):(a,b)=>((b.vistas||0)+(b.likes||0))-((a.vistas||0)+(a.likes||0)));
+pintar('busRes',l);
+}
+function fila(m,i,ex){
+const d=document.createElement('div');d.className='rk';
+d.innerHTML='<i>'+i+'</i><div style="flex:1"><b style="color:var(--gold3)">'+esc(m.titulo)+'</b><small>'+esc(nomAutor(m.user_id))+(ex?' · '+esc(ex):'')+'</small></div>';
+d.onclick=()=>abrirLector(m.id);return d;
+}
+async function abrirBuscar(){
+$('bus').classList.add('on');
+if(!MANGAS.length)await cargarMangas();
+renderGenChips();buscar();
+const cont={};
+try{const {data}=await sb.from('historial').select('manga_id').gte('actualizado',new Date(Date.now()-7*864e5).toISOString()).limit(2000);(data||[]).forEach(h=>{const k=String(h.manga_id);cont[k]=(cont[k]||0)+1})}catch(e){}
+const top=[...MANGAS].sort((a,b)=>(cont[String(b.id)]||0)-(cont[String(a.id)]||0)||(b.vistas||0)-(a.vistas||0)).slice(0,10);
+const r=$('busRank');r.innerHTML='';top.forEach((m,i)=>r.appendChild(fila(m,i+1,cont[String(m.id)]?cont[String(m.id)]+' lecturas':'')));
+const n=$('busNuevos');n.innerHTML='';MANGAS.slice(0,10).forEach((m,i)=>n.appendChild(fila(m,'•',m.created_at?new Date(m.created_at).toLocaleDateString('es'):'')));
+if(!MANGAS.length){r.innerHTML=n.innerHTML='<p style="color:var(--text2);font-size:12px">Nada por acá todavía 🌸</p>'}
+}
+
+/* --- Creador / seguidores --- */
+async function abrirCreador(uid){
+$('cre').classList.add('on');
+const b=$('creBody');b.innerHTML='<p style="text-align:center;color:var(--text2)">Cargando...</p>';
+if(!AUTORES[uid]){try{const {data}=await sb.from('profiles').select('*').eq('id',uid).maybeSingle();if(data)AUTORES[uid]=data}catch(e){}}
+const p=AUTORES[uid]||{};let n=0;
+try{const r=await sb.from('seguidores').select('*',{count:'exact',head:true}).eq('creador_id',uid);n=r.count||0}catch(e){}
+const sig=SEGUIDOS.has(uid);
+b.innerHTML='<div style="text-align:center"><div class="msg-avatar" style="width:84px;height:84px;font-size:32px;margin:0 auto">'+(p.avatar_url?'<img src="'+esc(p.avatar_url)+'" style="width:100%;height:100%;object-fit:cover">':esc((p.username||'?')[0].toUpperCase()))+'</div><h1 class="title" style="font-size:22px;margin-top:10px">'+esc(p.username||'Autor')+'</h1><p style="font-size:12px;color:var(--text2)">'+n+' seguidores</p><p style="font-size:13px;margin:10px 0">'+esc(p.bio||'Este creador todavía no escribió su bio ✨')+'</p><div style="display:flex;gap:8px"><button class="btn'+(sig?' on':'')+'" style="flex:1" onclick="toggleSeguir(\''+esc(uid)+'\',this)">'+(sig?'✓ Siguiendo':'＋ Seguir')+'</button><button class="btn-ghost" style="flex:1" onclick="compartir()">🔗 Compartir</button></div></div><h3 class="section">📚 Sus mangas</h3><div id="creGrid" class="manga-grid"></div>';
+pintar('creGrid',MANGAS.filter(m=>m.user_id===uid));
+}
+async function toggleSeguir(uid,btn){
+if(!miPerfil){alert('Iniciá sesión primero');return}
+if(uid===miPerfil.id){alert('Ese sos vos 🌸');return}
+const on=!SEGUIDOS.has(uid);
+const {error}=on?await sb.from('seguidores').insert({seguidor_id:miPerfil.id,creador_id:uid}):await sb.from('seguidores').delete().eq('seguidor_id',miPerfil.id).eq('creador_id',uid);
+if(error){alert('Error: '+error.message);return}
+on?SEGUIDOS.add(uid):SEGUIDOS.delete(uid);
+btn.innerText=on?'✓ Siguiendo':'＋ Seguir';btn.classList.toggle('on',on);
+if(on)notificar(uid,'seguidor','🌸 '+miPerfil.username+' empezó a seguirte');
+}
+async function notificarSeguidores(titulo){
+try{
+const {data:s}=await sb.from('seguidores').select('seguidor_id').eq('creador_id',miPerfil.id);
+const {data:m}=await sb.from('mangas').select('id').eq('user_id',miPerfil.id).order('created_at',{ascending:false}).limit(1);
+if(s&&s.length)await sb.from('notificaciones').insert(s.map(x=>({user_id:x.seguidor_id,tipo:'capitulo',texto:'📖 '+miPerfil.username+' subió "'+titulo+'"',manga_id:m&&m[0]?String(m[0].id):null})));
+}catch(e){}
+}
+
+/* --- Comentarios --- */
+function pintarComentario(c){
+const v=$('comVacio');if(v)v.remove();
+if($('c'+c.id))return;
+const d=document.createElement('div');d.id='c'+c.id;d.className='com';
+const mio=miPerfil&&c.user_id===miPerfil.id;
+d.innerHTML='<b>'+esc(c.username||'Usuario')+'</b><span class="cf">'+new Date(c.created_at).toLocaleDateString('es')+'</span>'+(mio?'<span class="cdel" onclick="borrarComentario(\''+c.id+'\')">🗑️</span>':'')+'<p>'+esc(c.contenido)+'</p>';
+$('comList').appendChild(d);
+}
+async function cargarComentarios(){
+const l=$('comList');l.innerHTML='';
+const mid=String(rd.m.id);
+const {data}=await sb.from('comentarios').select('*').eq('manga_id',mid).order('created_at',{ascending:true}).limit(200);
+(data||[]).forEach(pintarComentario);
+if(!(data||[]).length)l.innerHTML='<p id="comVacio" style="text-align:center;color:var(--text2);font-size:12px">Sé el primero en comentar 💬</p>';
+chCom=sb.channel('com-'+mid)
+.on('postgres_changes',{event:'INSERT',schema:'public',table:'comentarios',filter:'manga_id=eq.'+mid},p=>pintarComentario(p.new))
+.on('postgres_changes',{event:'DELETE',schema:'public',table:'comentarios'},p=>{const e=$('c'+p.old.id);if(e)e.remove()})
+.subscribe();
+}
+async function publicarComentario(){
+const i=$('comIn'),t=i.value.trim();
+if(!t)return;
+if(!miPerfil){alert('Iniciá sesión primero');return}
+i.value='';
+const {error}=await sb.from('comentarios').insert({manga_id:String(rd.m.id),user_id:miPerfil.id,username:miPerfil.username,contenido:t});
+if(error){alert('Error: '+error.message);return}
+notificar(rd.m.user_id,'comentario','💬 '+miPerfil.username+' comentó en "'+rd.m.titulo+'"',rd.m.id);
+}
+async function borrarComentario(id){
+if(!miPerfil||!confirm('¿Borrar tu comentario?'))return;
+await sb.from('comentarios').delete().eq('id',id).eq('user_id',miPerfil.id);
+const e=$('c'+id);if(e)e.remove();
+}
+
+/* --- Notificaciones --- */
+async function notificar(uid,tipo,texto,mid){
+if(!miPerfil||uid===miPerfil.id)return;
+try{await sb.from('notificaciones').insert({user_id:uid,tipo,texto,manga_id:mid?String(mid):null})}catch(e){}
+}
+async function cargarNotifs(){
+if(!miPerfil)return;
+try{
+const {count}=await sb.from('notificaciones').select('*',{count:'exact',head:true}).eq('user_id',miPerfil.id).eq('leida',false);
+const b=$('notifBadge');b.innerText=count>99?'99+':count;b.style.display=count?'block':'none';
+}catch(e){}
+}
+async function abrirNotifs(){
+if(!miPerfil){alert('Iniciá sesión primero');return}
+$('notif-modal').classList.add('on');
+const l=$('notifList');l.innerHTML='<p style="color:var(--text2);font-size:12px">Cargando...</p>';
+const {data}=await sb.from('notificaciones').select('*').eq('user_id',miPerfil.id).order('created_at',{ascending:false}).limit(30);
+l.innerHTML='';
+if(!data||!data.length){l.innerHTML='<p style="text-align:center;color:var(--text2);font-size:12px">Sin avisos por ahora 🔔</p>';return}
+data.forEach(n=>{const d=document.createElement('div');d.className='config-item';d.style.marginTop='8px';if(!n.leida)d.style.borderColor='var(--gold)';d.innerHTML=(n.leida?'':'● ')+esc(n.texto);d.onclick=()=>leerNotif(n,d);l.appendChild(d)});
+}
+async function leerNotif(n,el){
+if(!n.leida){n.leida=true;el.style.borderColor='';el.innerHTML=el.innerHTML.replace(/^● /,'');await sb.from('notificaciones').update({leida:true}).eq('id',n.id);cargarNotifs()}
+if(n.manga_id){cerrarOv('notif-modal');abrirLector(n.manga_id)}
+}
+
+/* --- Compartir / referidos --- */
+function capturarRef(){const r=new URLSearchParams(location.search).get('ref');if(r)localStorage.setItem('refPendiente',r)}
+async function compartir(titulo){
+if(!miPerfil){alert('Iniciá sesión primero');return}
+const url=location.origin+location.pathname+'?ref='+miPerfil.id,txt=titulo?'Leé "'+titulo+'" en SalaMangaS 🌸':'Sumate a SalaMangaS 🌸';
+try{if(navigator.share){await navigator.share({title:'SalaMangaS',text:txt,url});return}}catch(e){return}
+try{await navigator.clipboard.writeText(url)}catch(e){prompt('Copiá tu link:',url);return}
+alert('Link copiado ✅');
+}
+async function abrirCuenta(){
+if(!miPerfil){alert('Iniciá sesión primero');return}
+cerrarConfig();$('cuenta-modal').classList.add('on');
+$('ctaNombre').innerText=miPerfil.username||'';
+let n=0;try{const r=await sb.from('referidos').select('*',{count:'exact',head:true}).eq('referidor_id',miPerfil.id);n=r.count||0}catch(e){}
+$('ctaRefs').innerText=n;$('ctaFalta').innerText='Te faltan '+(10-n%10)+' para ganar 100 🪙';
+}
+async function editarBio(){
+const b=prompt('Tu bio (máx. 200 caracteres):',miPerfil.bio||'');
+if(b===null)return;
+const {error}=await sb.from('profiles').update({bio:b.trim().slice(0,200)}).eq('id',miPerfil.id);
+if(error){alert('Error: '+error.message);return}
+miPerfil.bio=b.trim().slice(0,200);AUTORES[miPerfil.id]=miPerfil;alert('Bio actualizada ✅');
+}
+
+async function postLogin(){
+try{
+if(window._esNuevo){window._esNuevo=false;const r=localStorage.getItem('refPendiente');
+if(r&&r!==miPerfil.id)await sb.from('referidos').insert({referidor_id:r,referido_id:miPerfil.id});
+localStorage.removeItem('refPendiente')}
+}catch(e){}
+try{const {data}=await sb.from('seguidores').select('creador_id').eq('seguidor_id',miPerfil.id);SEGUIDOS=new Set((data||[]).map(x=>x.creador_id))}catch(e){}
+cargarInicio();cargarNotifs();
+if(chNotif)sb.removeChannel(chNotif);
+chNotif=sb.channel('notif-'+miPerfil.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'notificaciones',filter:'user_id=eq.'+miPerfil.id},cargarNotifs).subscribe();
+}
+
+
+/* ===== TANDA B ===== */
+let CONFIG={},CEO_USERS=[],PERSONAJES=[],iaModo=null,iaImg=null,iaEstilo=null,iaPjSel=[],iaBlob=null;
+function vacio(t){return '<p style="text-align:center;color:var(--text2);font-size:12px;padding:10px">'+t+'</p>'}
+function elegirArchivo(acc){return new Promise(r=>{const i=document.createElement('input');i.type='file';i.accept=acc;i.onchange=()=>r(i.files[0]||null);i.click()})}
+
+/* --- Configuración global (fondo / mantenimiento) --- */
+async function cargarConfig(){
+try{const {data}=await sb.from('config').select('*');const c={};(data||[]).forEach(x=>c[x.clave]=x.valor);CONFIG=c;aplicarConfig()}catch(e){}
+}
+function aplicarConfig(){
+const f=CONFIG.fondo||'';
+if(f.startsWith('url:')) document.body.style.background='url("'+encodeURI(f.slice(4)).replace(/"/g,'%22')+'") center/cover fixed';
+else if(/^color:#[0-9a-f]{3,8}$/i.test(f)) document.body.style.background=f.slice(6);
+else document.body.style.background='';
+aplicarMant();
+}
+function aplicarMant(){const m=$('mant');if(m)m.style.display=(CONFIG.mantenimiento==='1'&&localStorage.getItem('esCEO')!=='1')?'flex':'none'}
+async function setConfig(k,v){const {error}=await sb.from('config').upsert({clave:k,valor:v},{onConflict:'clave'});if(error)alert('Error: '+error.message);return !error}
+
+/* --- Panel CEO --- */
+async function ceoSesion(){try{const {data:{user}}=await sb.auth.getUser();return user&&user.email&&CEO_EMAILS.includes(user.email.toLowerCase())?user:null}catch(e){return null}}
+async function ceoAccion(fn){
+if(!await ceoSesion()){alert('Para hacer cambios entrá con Google usando tu email CEO. El acceso por usuario/contraseña no alcanza para modificar datos.');return}
+await fn();
+}
+async function cargarAutores(l){
+const ids=[...new Set(l.map(m=>m.user_id))].filter(i=>!AUTORES[i]);if(!ids.length)return;
+const {data}=await sb.from('profiles').select('*').in('id',ids);(data||[]).forEach(p=>AUTORES[p.id]=p);
+}
+function rowCeo(b,html,btns){const d=document.createElement('div');d.className='rk';d.style.flexWrap='wrap';d.style.cursor='default';d.innerHTML='<div style="flex:1;min-width:120px">'+html+'</div>'+btns;b.appendChild(d)}
+function bt(t,fn,red){return '<button class="mini'+(red?' red':'')+'" onclick="'+fn+'">'+t+'</button>'}
+const tt=t=>'<b style="color:var(--gold3)">'+esc(t)+'</b>';
+async function ceoTab(t){
+window._ceoT=t;
+document.querySelectorAll('#ceoTabs .chip').forEach(c=>c.classList.toggle('on',c.dataset.t===t));
+const b=$('ceoBody');if(!b)return;b.innerHTML=vacio('Cargando...');
+try{await CEO_R[t](b)}catch(e){b.innerHTML='<p style="color:#ff4757;font-size:12px">Error: '+esc(e.message||e)+'</p>'}
+}
+const CEO_R={
+pend:async b=>{
+const {data,error}=await sb.from('mangas').select('*').eq('estado','pendiente').order('created_at',{ascending:false});if(error)throw error;
+await cargarAutores(data);b.innerHTML=data.length?'':vacio('No hay mangas pendientes ✨');
+data.forEach(m=>rowCeo(b,tt(m.titulo)+'<small>'+esc(nomAutor(m.user_id))+' · '+(m.paginas_urls||[]).length+' págs</small>',bt('👁️ Ver',"abrirLector('"+m.id+"')")+bt('✅ Aprobar',"ceoEstado('"+m.id+"','aprobado')")+bt('❌ Rechazar',"ceoEstado('"+m.id+"','rechazado')",1)));
+},
+mangas:async b=>{
+const {data,error}=await sb.from('mangas').select('*').order('created_at',{ascending:false}).limit(300);if(error)throw error;
+await cargarAutores(data);b.innerHTML=data.length?'':vacio('Todavía no hay mangas');
+data.forEach(m=>rowCeo(b,tt(m.titulo)+'<small>'+esc(nomAutor(m.user_id))+' · '+esc(m.estado)+' · 👁 '+(m.vistas||0)+' · ❤️ '+(m.likes||0)+'</small>',bt('👁️',"abrirLector('"+m.id+"')")+bt('⬇️',"ceoDescargar('"+m.id+"')")+bt('🗑️',"ceoBorrar('"+m.id+"')",1)));
+},
+usuarios:async b=>{
+const {data,error}=await sb.from('profiles').select('*').limit(1000);if(error)throw error;CEO_USERS=data;
+b.innerHTML='<input id="ceoBuscar" class="input" style="margin:0 0 10px" placeholder="🔍 Buscar usuario por nombre..." oninput="ceoPintarUsers()"><div id="ceoUL"></div>';ceoPintarUsers();
+},
+chats:async b=>{
+b.innerHTML='<div id="chSel">'+['mangakar','mangakarpro','salamangaspro'].map(r=>'<span class="chip" onclick="ceoChat(\''+r+'\')">'+r+'</span>').join('')+'</div><div id="chLista" style="margin-top:10px;max-height:50vh;overflow-y:auto"></div>';ceoChat('mangakar');
+},
+subs:async b=>{
+const {data,error}=await sb.from('profiles').select('id,username,tier').limit(2000);if(error)throw error;
+const c={};data.forEach(u=>{const t=u.tier||'sin plan';c[t]=(c[t]||0)+1});
+b.innerHTML='<div class="card" style="padding:12px">'+Object.keys(c).map(t=>'<div style="font-size:13px">'+esc(t)+': <b style="color:var(--gold)">'+c[t]+'</b></div>').join('')+'</div><p class="warn-mini">Ojo: "basico" es el valor que la app le pone por defecto a todo usuario nuevo, así que no distingue pagos de gratuitos.</p>';
+data.filter(u=>['pro','superpro','super_pro'].includes(u.tier)).forEach(u=>rowCeo(b,tt(u.username||'—')+'<small>'+esc(u.tier)+'</small>',''));
+},
+donaciones:async b=>{
+const {data,error}=await sb.from('donaciones').select('*').order('created_at',{ascending:false}).limit(300);if(error)throw error;
+const tot=data.reduce((s,d)=>s+Number(d.monto||0),0);
+b.innerHTML='<button class="btn-ghost" style="width:100%;margin-bottom:8px" onclick="ceoDonacion()">➕ Registrar donación</button><p style="font-size:13px;margin-bottom:8px">Total: <b style="color:var(--gold)">$'+tot+'</b></p>';
+data.forEach(d=>rowCeo(b,tt(d.donante||'Anónimo')+' → '+esc(d.creador||'SalaMangaS')+'<small>$'+d.monto+' '+esc(d.moneda||'')+' · '+new Date(d.created_at).toLocaleDateString('es')+'</small>',''));
+},
+stats:async b=>{
+const {data,error}=await sb.from('mangas').select('id,titulo,vistas,likes,user_id').limit(1000);if(error)throw error;await cargarAutores(data);
+const blk=(t,k)=>'<h3 class="section" style="font-size:15px;margin:10px 0 6px">'+t+'</h3>'+[...data].sort((a,c)=>(c[k]||0)-(a[k]||0)).slice(0,10).map((m,i)=>'<div class="rk" style="cursor:default"><i>'+(i+1)+'</i><div style="flex:1">'+tt(m.titulo)+'<small>'+esc(nomAutor(m.user_id))+'</small></div><b>'+(m[k]||0)+'</b></div>').join('');
+b.innerHTML=blk('👁️ Más vistos','vistas')+blk('❤️ Más likes','likes');
+},
+sistema:async b=>{
+await cargarConfig();const mt=CONFIG.mantenimiento==='1';
+b.innerHTML='<div class="card" style="padding:14px"><b>🛠️ Modo mantenimiento</b><p style="font-size:12px;color:var(--text2);margin:6px 0">Estado: <b>'+(mt?'ACTIVADO':'apagado')+'</b>. Los usuarios ven un cartel; el CEO sigue entrando.</p><button class="btn-main" onclick="ceoMant('+!mt+')">'+(mt?'Desactivar':'Activar')+'</button></div>'+
+'<div class="card" style="padding:14px"><b>🎨 Fondo de la app</b><div style="display:flex;gap:8px;margin-top:8px"><input type="color" id="fondoColor" value="#07041a" style="width:50px;height:40px;border:0;background:none"><button class="btn-ghost" style="flex:1" onclick="ceoFondo(\'color\')">Usar color</button></div><button class="btn-ghost" style="width:100%;margin-top:8px" onclick="ceoFondo(\'img\')">🖼️ Subir imagen de fondo</button><button class="btn-ghost" style="width:100%;margin-top:8px" onclick="ceoFondo(\'reset\')">↺ Restaurar fondo original</button></div>'+
+'<button class="btn-main" onclick="ceoExcel()">📊 Exportar datos a Excel</button>';
+}};
+function ceoPintarUsers(){
+const q=($('ceoBuscar').value||'').toLowerCase(),l=$('ceoUL');l.innerHTML='';
+const f=CEO_USERS.filter(u=>(u.username||'').toLowerCase().includes(q)||String(u.id).includes(q));
+if(!f.length){l.innerHTML=vacio('Sin resultados');return}
+f.forEach(u=>rowCeo(l,tt(u.username||'(sin nombre)')+(u.baneado?' 🚫':'')+'<small>plan: '+esc(u.tier||'—')+' · 🪙 '+(u.sakuras||0)+'</small>',bt(u.baneado?'✅ Desbanear':'🚫 Banear',"ceoBan('"+u.id+"',"+!u.baneado+")",!u.baneado)));
+}
+async function ceoChat(r){
+const l=$('chLista');l.innerHTML=vacio('Cargando...');
+document.querySelectorAll('#chSel .chip').forEach(c=>c.classList.toggle('on',c.innerText===r));
+const {data,error}=await sb.from('messages').select('*').eq('room',r).order('created_at',{ascending:false}).limit(100);
+if(error){l.innerHTML=vacio('Error: '+esc(error.message));return}
+l.innerHTML=data.length?'':vacio('Sin mensajes');
+data.slice().reverse().forEach(m=>rowCeo(l,tt(m.user_id==='jisoo'?'Jisoo':(m.username||'?'))+'<small>'+new Date(m.created_at).toLocaleString('es')+'</small>'+esc(m.content),''));
+l.scrollTop=l.scrollHeight;
+}
+async function ceoEstado(id,estado){await ceoAccion(async()=>{
+const {data:m,error}=await sb.from('mangas').update({estado}).eq('id',id).select().single();
+if(error){alert('Error: '+error.message);return}
+notificar(m.user_id,'estado',(estado==='aprobado'?'✅ Tu manga "':'❌ Tu manga "')+m.titulo+(estado==='aprobado'?'" fue aprobado':'" fue rechazado'),m.id);
+if(estado==='aprobado')avisarSeguidores(m);
+ceoTab('pend');cargarStatsCEO();
+})}
+async function avisarSeguidores(m){
+try{
+const {data:s}=await sb.from('seguidores').select('seguidor_id').eq('creador_id',m.user_id);
+if(s&&s.length)await sb.from('notificaciones').insert(s.map(x=>({user_id:x.seguidor_id,tipo:'capitulo',texto:'📖 '+nomAutor(m.user_id)+' subió "'+m.titulo+'"',manga_id:String(m.id)})));
+}catch(e){}
+}
+async function ceoBorrar(id){await ceoAccion(async()=>{
+if(!confirm('¿Borrar este manga para siempre? No se puede deshacer.'))return;
+const {error}=await sb.from('mangas').delete().eq('id',id);
+if(error){alert('Error: '+error.message);return}
+const k=String(id);
+await Promise.all(['comentarios','favoritos','historial'].map(t=>sb.from(t).delete().eq('manga_id',k)));
+MANGAS=MANGAS.filter(m=>String(m.id)!==k);
+ceoTab('mangas');cargarStatsCEO();cargarInicio();
+})}
+async function ceoDescargar(id){
+if(localStorage.getItem('esCEO')!=='1')return;
+const {data:m}=await sb.from('mangas').select('titulo,portada_url,paginas_urls').eq('id',id).single();
+if(!m)return;
+const urls=[...(m.portada_url?[m.portada_url]:[]),...(m.paginas_urls||[])];
+alert('Se van a descargar '+urls.length+' imágenes. Si el navegador pregunta, permití las descargas múltiples.');
+for(let i=0;i<urls.length;i++){
+try{const b=await (await fetch(urls[i])).blob();const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(m.titulo||'manga').replace(/[^\w-]+/g,'_')+'_'+String(i).padStart(2,'0')+'.jpg';document.body.appendChild(a);a.click();a.remove();await new Promise(r=>setTimeout(r,400))}
+catch(e){window.open(urls[i],'_blank')}
+}
+}
+async function ceoBan(id,ban){await ceoAccion(async()=>{
+if(ban&&!confirm('¿Banear a este usuario? No va a poder volver a entrar.'))return;
+const {error}=await sb.from('profiles').update({baneado:ban}).eq('id',id);
+if(error){alert('Error: '+error.message);return}
+const u=CEO_USERS.find(x=>x.id===id);if(u)u.baneado=ban;ceoPintarUsers();
+})}
+async function ceoDonacion(){await ceoAccion(async()=>{
+const d=prompt('¿Quién donó?');if(!d)return;
+const c=prompt('¿A qué creador? (vacío = a SalaMangaS)')||'';
+const m=Number(prompt('Monto (solo número):'));if(!m)return;
+const {error}=await sb.from('donaciones').insert({donante:d,creador:c,monto:m,moneda:'ARS'});
+if(error){alert('Error: '+error.message);return}
+ceoTab('donaciones');
+})}
+async function ceoMant(on){await ceoAccion(async()=>{if(await setConfig('mantenimiento',on?'1':'0')){CONFIG.mantenimiento=on?'1':'0';ceoTab('sistema')}})}
+async function ceoFondo(t){await ceoAccion(async()=>{
+let v='';
+if(t==='color')v='color:'+$('fondoColor').value;
+else if(t==='img'){const f=await elegirArchivo('image/*');if(!f)return;try{v='url:'+await subirACloudinary(f)}catch(e){alert('Error: '+e.message);return}}
+if(await setConfig('fondo',v)){CONFIG.fondo=v;aplicarConfig()}
+})}
+async function ceoExcel(){
+if(!window.XLSX){alert('No se pudo cargar la librería de Excel');return}
+try{
+const wb=XLSX.utils.book_new();
+for(const [n,t] of [['Usuarios','profiles'],['Mangas','mangas'],['Donaciones','donaciones'],['Comentarios','comentarios']]){
+const {data}=await sb.from(t).select('*').limit(5000);
+const rows=(data||[]).map(r=>{const o={};for(const k in r)o[k]=Array.isArray(r[k])?r[k].join(', '):r[k];return o});
+XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),n);
+}
+XLSX.writeFile(wb,'salamangas_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}catch(e){alert('Error: '+e.message)}
+}
+
+/* --- Páginas: agregar automáticamente (PDF / IA) --- */
+function addPagi
