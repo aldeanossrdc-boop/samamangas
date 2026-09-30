@@ -51,11 +51,23 @@ exports.handler = async (event) => {
       } else if (ref.tipo === 'donacion') {
         const { data: donante } = await sb.from('profiles').select('username').eq('id', ref.user_id).maybeSingle();
         const { data: creador } = await sb.from('profiles').select('username,tier').eq('id', ref.creador).maybeSingle();
-        const pctComision = creador && (creador.tier === 'pro' || creador.tier === 'superpro') ? 0.5 : 0.2;
-        const montoCreador = Math.round(Number(ref.monto_ars || 0) * pctComision);
+
+        // Comisión según plan del creador:
+        // Pro = 20% para el creador / 80% CEO
+        // Súper = 50% para el creador / 50% CEO
+        // Gratis / Básico = 0% (no monetizan)
+        let pctCreador = 0;
+        if (creador && creador.tier === 'pro') pctCreador = 0.20;
+        else if (creador && creador.tier === 'superpro') pctCreador = 0.50;
+
+        const montoCreador = Math.round(Number(ref.monto_ars || 0) * pctCreador);
         await sb.from('donaciones').insert({
-          donante: (donante && donante.username) || 'Usuario', creador: (creador && creador.username) || ref.creador,
-          monto: ref.monto_ars || montoUSD, moneda: ref.monto_ars ? 'ARS' : 'USD', comision_pct: pctComision, monto_creador: montoCreador
+          donante: (donante && donante.username) || 'Usuario',
+          creador: (creador && creador.username) || ref.creador,
+          monto: ref.monto_ars || montoUSD,
+          moneda: ref.monto_ars ? 'ARS' : 'USD',
+          comision_pct: pctCreador,
+          monto_creador: montoCreador
         });
         await sb.from('notificaciones').insert({ user_id: ref.creador, tipo: 'donacion', texto: '💖 Recibiste una donación por PayPal' });
 
@@ -103,4 +115,3 @@ exports.handler = async (event) => {
     return out(200);
   }
 };
-          
