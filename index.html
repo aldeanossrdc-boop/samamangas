@@ -390,10 +390,10 @@ Entrar con Google
 <div class="card">
 <h3 class="section">✨ Crear</h3>
 <div class="create-opts create-opts-4">
-<div class="create-opt" onclick="abrirCrearPantalla('pagina')"><span class="ico">🖼️</span><span class="name">Imagen por imagen</span><span class="desc">Página por página</span></div>
-<div class="create-opt" onclick="abrirCrearPantalla('ia')"><span class="ico">🤖</span><span class="name">SalaMangaS IA</span><span class="desc">Crear desde cero o referencias</span></div>
-<div class="create-opt" onclick="abrirCrearPantalla('lapiz')"><span class="ico">✏️</span><span class="name">Subir dibujos a lápiz</span><span class="desc">Renacer con IA</span></div>
-<div class="create-opt" onclick="abrirCrearPantalla('pdf')"><span class="ico">📄</span><span class="name">PDF</span><span class="desc">10 a 25 páginas</span></div>
+<div class="create-opt" onclick="nuevoCrear('pagina')"><span class="ico">🖼️</span><span class="name">Imagen por imagen</span><span class="desc">Página por página</span></div>
+<div class="create-opt" onclick="nuevoCrear('ia')"><span class="ico">🤖</span><span class="name">SalaMangaS IA</span><span class="desc">Crear desde cero o referencias</span></div>
+<div class="create-opt" onclick="nuevoCrear('lapiz')"><span class="ico">✏️</span><span class="name">Subir dibujos a lápiz</span><span class="desc">Renacer con IA</span></div>
+<div class="create-opt" onclick="nuevoCrear('pdf')"><span class="ico">📄</span><span class="name">PDF</span><span class="desc">10 a 25 páginas</span></div>
 </div>
 </div>
 <div class="card">
@@ -402,6 +402,7 @@ Entrar con Google
 <button class="btn" onclick="abrirPersonajes()">👥 Mis personajes</button>
 <button class="btn" onclick="alert('La sección Mis mangas se abre desde Inicio / tu perfil.')">📚 Mis mangas</button>
 <button class="btn" onclick="abrirBorradores()">💾 Mis borradores</button>
+<button class="btn" onclick="alertaMonetizar()">💰 Monetizar</button>
 </div>
 </div>
 </div>
@@ -427,7 +428,7 @@ Entrar con Google
 <h3 class="section">📄 Páginas <span style="font-size:11px;color:var(--text2)">(máximo 20)</span></h3>
 <div id="lapizSlots" class="pages-dots"></div>
 <div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
-<div class="step-nav"><button class="btn" onclick="abrirCrearPantalla('lapiz1')">← Atrás</button><button class="btn" onclick="abrirVistaPreviaCreacion()">Vista previa</button><button class="btn-main" onclick="agregarFilaLapiz()">Siguiente →</button></div>
+<div class="step-nav"><button class="btn" onclick="abrirCrearPantalla('lapiz')">← Atrás</button><button class="btn" onclick="abrirVistaPreviaCreacion()">Vista previa</button><button class="btn-main" onclick="agregarFilaLapiz()">Siguiente →</button></div>
 </div>
 </div>
 <div id="screen-crear-pagina" class="screen">
@@ -438,6 +439,7 @@ Entrar con Google
 <label class="lbl">Portada</label><input id="paginaPortada" class="input" type="file" accept="image/*">
 <label class="lbl">Sinopsis</label><textarea id="paginaSinopsis" class="input" placeholder="Sinopsis"></textarea>
 <label class="lbl">Géneros</label><div id="paginaGeneros"></div>
+<label class="lbl">Estilo visual</label><div id="paginaEstilos"></div>
 <h3 class="section">📄 Páginas (máximo 20)</h3><div id="paginaSlots" class="pages-dots"></div>
 <button class="btn" style="width:100%;margin-top:8px" onclick="agregarPaginaSlot()">＋ Agregar página</button>
 <div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
@@ -449,9 +451,11 @@ Entrar con Google
 <div class="card">
 <label class="lbl">Título</label><input id="pdfTitulo" class="input" placeholder="Título del manga">
 <label class="lbl">Subtítulos</label><input id="pdfSubtitulo" class="input" placeholder="Subtítulo">
+<label class="lbl">Portada (opcional: si no, se usa la 1ª página)</label><input id="pdfPortada" class="input" type="file" accept="image/*">
 <label class="lbl">Géneros</label><div id="pdfGeneros"></div>
 <label class="lbl">Sinopsis</label><textarea id="pdfSinopsis" class="input" placeholder="Sinopsis"></textarea>
 <div id="pdfPlanSlots" style="margin-top:14px"></div>
+<div id="pdfPreview" class="pdf-preview"></div>
 <p class="plan-note">PDF permitido: 10 a 25 páginas. Después de publicar podés seguir creando según tu plan.</p>
 <div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button><button class="btn-main" onclick="publicarPDF()">Publicar</button></div>
 </div>
@@ -459,11 +463,20 @@ Entrar con Google
 <div id="screen-crear-ia" class="screen">
 <div class="create-head"><button class="chatfs-back" onclick="volverCrear()">←</button><h1 class="title" style="flex:1;margin:0">🤖 SalaMangaS IA</h1></div>
 <div class="card">
-<p class="subtitle">Podés empezar de cero o subir imágenes de referencia.</p>
-<button class="btn-main" onclick="abrirIA('ia')">✨ Abrir SalaMangaS IA</button>
+<p class="subtitle" style="margin-bottom:16px">Podés empezar de cero o subir imágenes de referencia.</p>
+<button class="btn-main" style="margin-top:0" onclick="abrirIA('ia')">✨ Abrir SalaMangaS IA</button>
+<label class="lbl">Título</label><input id="iaCrearTitulo" class="input" placeholder="Título del manga">
+<label class="lbl">Subtítulo</label><input id="iaCrearSubtitulo" class="input" placeholder="Subtítulo">
+<label class="lbl">Portada (opcional: se puede usar una imagen de la IA)</label><input id="iaCrearPortada" class="input" type="file" accept="image/*">
+<label class="lbl">Sinopsis</label><textarea id="iaCrearSinopsis" class="input" placeholder="Sinopsis"></textarea>
+<label class="lbl">Géneros</label><div id="iaCrearGeneros"></div>
+<label class="lbl">Estilo visual</label><div id="iaCrearEstilos"></div>
+<h3 class="section">📄 Páginas (máximo 20)</h3><div id="iaCrearSlots" class="pages-dots"></div>
+<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
 <div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button></div>
 </div>
 </div>
+<div id="crear-legacy" style="display:none" aria-hidden="true"><input id="titulo"><textarea id="sinopsis"></textarea><div id="generos-wrap"></div><div id="estilos-wrap"></div><div id="pages-dots"></div><div id="portadaPreview"></div></div>
 <div id="preview-creacion" class="preview-full" onclick="cerrarVistaPreviaCreacion()">
 <button class="preview-x" onclick="event.stopPropagation();cerrarVistaPreviaCreacion()">✕</button>
 <div id="previewCreacionBody"></div>
@@ -531,6 +544,7 @@ Entrar con Google
 <button class="modal-close" onclick="cerrarSakuras()">✕</button>
 <h2 style="font-family:'Cinzel',serif;color:var(--gold);text-align:center">🪙 Sakuras</h2>
 <p style="font-size:30px;font-weight:800;color:var(--gold3);text-align:center;margin:8px 0"><span id="sakurasSaldo">0</span></p>
+<label class="lbl">🔗 Tu link de invitación</label><div style="display:flex;gap:8px;margin-bottom:12px"><input id="refLinkInput" class="input" readonly style="margin:0"><button class="btn" onclick="copiarRefLink()">Copiar</button></div>
 <div class="warn-mini">100 Sakuras diarias para todos los planes. No se acumulan. Si no las usás ese día, se pierden.</div>
 <h3 class="section">💸 Costos</h3>
 <ul style="font-size:13px;color:var(--text2);padding-left:18px;line-height:1.6">
@@ -550,7 +564,7 @@ Entrar con Google
 <h2 style="font-family:'Cinzel',serif;color:var(--gold);text-align:center">⭐ Planes de SalaMangaS</h2>
 <p style="font-size:12px;color:var(--text2);text-align:center;margin-bottom:14px">Todos reciben 100 Sakuras diarias. No son acumulables y se pierden al terminar el día.</p>
 <div id="planesDefinitivos"></div>
-<div class="card" style="padding:14px"><b style="color:var(--gold3)">📖 Manga extra</b><p style="font-size:12px;color:var(--text2);margin:6px 0">$10.000 ARS / $10 USD. Pago único, no vence.</p><div style="display:flex;gap:8px"><button class="btn-main" style="flex:1;padding:10px" onclick="comprarMangaExtraMP()">💳 Mercado Pago</button><button class="btn" style="flex:1" onclick="comprarMangaExtraPayPal()">🅿️ PayPal</button></div></div>
+<div class="card" style="padding:14px"><b style="color:var(--gold3)">📖 Manga extra</b><p style="font-size:12px;color:var(--text2);margin:6px 0">$10.000 ARS / $10 USD. Pago único, no vence.</p><div style="display:flex;gap:8px"><button class="btn-main" style="flex:1;padding:10px" onclick="comprarMangaExtraMP()">💳 Mercado Pago</button><button class="btn" style="flex:1" onclick="comprarMangaExtraPayPal()">🅿️ PayPal</button></div><p id="mangaExtraMsg" style="font-size:11px;color:var(--text2);margin-top:8px"></p></div>
 </div></div>
 <div id="bienvenida-creador-modal" class="modal-overlay">
 <div class="modal-box" style="text-align:center">
@@ -612,6 +626,7 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div id="iaDibujoBox" style="display:none"><img id="iaDibujo" class="iaImg" style="width:100%;max-height:220px;object-fit:contain;border-radius:12px;background:rgba(0,0,0,.3)"></div>
 <label class="lbl">📝 Instrucción para la IA</label>
 <textarea id="iaTxt" class="input" placeholder="Describí la escena, ambiente, ropa, expresión, encuadre y lo que querés modificar..."></textarea>
+<label class="lbl">🎨 Colores (opcional)</label><input id="iaColores" class="input" placeholder="Ej.: blanco y negro con detalles dorados">
 <label class="lbl">✨ Estilo visual</label><div id="iaEstilos"></div>
 <label class="lbl">🖼️ Imágenes de referencia (opcional)</label>
 <input id="iaRefInput" class="input" type="file" accept="image/*" multiple>
@@ -998,7 +1013,7 @@ async function publicar(){
 if(!miPerfil){alert('Creá una cuenta para publicar');return;}
 const titulo = document.getElementById('titulo').value.trim();
 if(!titulo){alert('Poné un título');return;}
-if(paginas.length < 15){alert('Necesitás al menos 15 páginas. Tenés '+paginas.length);return;}
+if(paginas.length<(window._modoCrear==='pdf'?10:15)){alert('Necesitás al menos 15 páginas. Tenés '+paginas.length);return;}
 if(paginas.length > 20){alert('Un capítulo no puede superar las 20 páginas.');return;}
 if(!estiloSel){alert('Elegí un estilo visual');return;}
 if(localStorage.getItem('esCEO')!=='1'){
@@ -1871,6 +1886,7 @@ function _comprimirImg(src,max){
 return new Promise(ok=>{const im=new Image();im.onload=()=>{const s=Math.min(1,(max||900)/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.7))};im.onerror=()=>ok(null);im.src=src});
 }
 async function guardarBorrador(){
+  sincronizarCrear();
   const titulo=document.getElementById('titulo').value.trim();
   if(!titulo){alert('Poné un título');return}
   const btn=event&&event.target;if(btn){btn.disabled=true;btn.innerText='Guardando...'}
@@ -1901,21 +1917,6 @@ function abrirBorradores(){
 function borrarBorrador(id){
   const lista=JSON.parse(localStorage.getItem('borradores')||'[]').filter(d=>d.id!==id);
   localStorage.setItem('borradores',JSON.stringify(lista));abrirBorradores();
-}
-function cargarBorrador(id){
-  const d=JSON.parse(localStorage.getItem('borradores')||'[]').find(x=>x.id===id);
-  if(!d)return;
-  document.getElementById('titulo').value=d.titulo||'';
-  document.getElementById('sinopsis').value=d.sinopsis||'';
-  generosSel=[...(d.generos||[])];estiloSel=d.estilo||null;
-  document.querySelectorAll('#generos-wrap .chip').forEach(c=>c.classList.toggle('on',generosSel.includes(c.innerText)));
-  document.querySelectorAll('#estilos-wrap .chip').forEach(c=>c.classList.toggle('on',c.innerText===estiloSel));
-  if(d.portada){portadaArchivo=dataURLtoFile(d.portada,'portada.jpg');document.getElementById('portadaPreview').innerHTML='<img src="'+d.portada+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:12px">'}
-  document.getElementById('pages-dots').innerHTML='';document.getElementById('pages-dots').style.display='flex';document.getElementById('pdfPreview').classList.remove('on');document.getElementById('pdfPreview').innerHTML='';filaActual=0;paginas=[];
-  agregarFilaPuntitos();
-  (d.paginas||[]).forEach(du=>{const f=dataURLtoFile(du,'p.jpg');const dot=(()=>{const libre=[...document.getElementById('pages-dots').children].find(x=>!x.classList.contains('filled'));if(libre)return libre;agregarFilaPuntitos();return [...document.getElementById('pages-dots').children].find(x=>!x.classList.contains('filled'))})();if(dot){dot.classList.add('filled');dot.style.backgroundImage='url('+du+')';dot.innerText='';dot._pi=paginas.length;paginas.push({file:f})}});
-  cerrarOv('borradores-modal');
-  alert('Borrador cargado ✅. Revisá los datos y tocá Publicar cuando quieras.');
 }
 /* ===== PERSONAJES =====
    FIX: antes se guardaban en localStorage (solo en ese navegador, el CEO
@@ -2013,8 +2014,8 @@ async function b64Redim(src,max){
   }finally{URL.revokeObjectURL(u)}
 }
 function dataURLtoFile(dataurl,filename){const a=dataurl.split(',');const mime=a[0].match(/:(.*?);/)[1];const b=atob(a[1]);let n=b.length;const u8=new Uint8Array(n);while(n--)u8[n]=b.charCodeAt(n);return new File([u8],filename,{type:mime})}
-function usarIAPortada(){if(!iaImg)return;portadaArchivo=dataURLtoFile(iaImg,'salamangas-portada.png');$('portadaPreview').innerHTML='<img src="'+esc(iaImg)+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:12px">';cerrarOv('iaov');go('crear')}
-function usarIAPagina(){if(!iaImg)return;const f=dataURLtoFile(iaImg,'salamangas-pagina.png');paginas.push({file:f});const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+iaImg+')';d.innerText='';d._pi=paginas.length-1;$('pages-dots').appendChild(d);cerrarOv('iaov');go('crear')}
+function usarIAPortada(){if(!iaImg)return;portadaArchivo=dataURLtoFile(iaImg,'salamangas-portada.png');$('portadaPreview').innerHTML='<img src="'+esc(iaImg)+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:12px">';cerrarOv('iaov');reabrirCrear()}
+function usarIAPagina(){if(!iaImg)return;const f=dataURLtoFile(iaImg,'salamangas-pagina.png');paginas.push({file:f});const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+iaImg+')';d.innerText='';d._pi=paginas.length-1;$('pages-dots').appendChild(d);cerrarOv('iaov');reabrirCrear()}
 /* ===== PDF IMPORT ===== */
 async function importarPDF(file){
   if(!file||file.type!=='application/pdf'){alert('Elegí un archivo PDF válido');return}
@@ -2042,7 +2043,7 @@ async function importarPDF(file){
     const nota=preview.querySelector('.pdf-info');
     if(nota)nota.innerText='📄 '+file.name+' · '+paginas.length+' página(s) listas para publicar';
     alert('PDF importado: '+paginas.length+' páginas listas ✅');
-    go('crear');
+    go('crear');abrirCrearPantalla('pdf');
   }catch(e){
     $('pdfPreview').classList.remove('on');
     $('pdfPreview').innerHTML='';
@@ -2213,22 +2214,7 @@ function abrirSuscripciones(){renderPlanesDefinitivos();$('suscripciones-modal')
 function ocultarCrearPantallas(){
  ['crear','crear-lapiz-1','crear-lapiz-2','crear-pagina','crear-pdf','crear-ia'].forEach(id=>{const e=$('screen-'+id);if(e)e.classList.remove('on')});
 }
-function abrirCrearPantalla(tipo){
- ocultarCrearPantallas();
- if(tipo==='lapiz')tipo='lapiz-1';
- const e=$('screen-crear-'+tipo);if(e)e.classList.add('on');
- if(tipo==='lapiz-1')renderCrearAux();
- if(tipo==='pagina')renderCrearAux();
- if(tipo==='pdf')renderPDFSlots();
- if(tipo==='ia'){}
- window.scrollTo(0,0);
-}
 function volverCrear(){ocultarCrearPantallas();$('screen-crear').classList.add('on');window.scrollTo(0,0)}
-function renderCrearAux(){
- const maps=[['lapizGeneros',GENEROS_DEFINITIVOS],['paginaGeneros',GENEROS_DEFINITIVOS],['pdfGeneros',GENEROS_DEFINITIVOS]];
- maps.forEach(([id,arr])=>{const w=$(id);if(!w)return;w.innerHTML='';arr.forEach(g=>{const c=document.createElement('span');c.className='chip';c.textContent=g;c.onclick=()=>c.classList.toggle('on');w.appendChild(c)})});
- ['lapizEstilos'].forEach(id=>{const w=$(id);if(!w)return;w.innerHTML='';ESTILOS.forEach(e=>{const c=document.createElement('span');c.className='chip';c.textContent=e;c.onclick=()=>{w.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')};w.appendChild(c)})});
-}
 function crearLapizPaso2(){
  const f=$('lapizPortada')?.files?.[0];if(f){portadaArchivo=f;$('lapizVistaBox').innerHTML='<img src="'+URL.createObjectURL(f)+'">'}
  document.getElementById('screen-crear-lapiz-1').classList.remove('on');document.getElementById('screen-crear-lapiz-2').classList.add('on');
@@ -2273,16 +2259,81 @@ function renderPDFSlots(){
    w.appendChild(d)
  }
 }
+/* ===== CREAR: pantallas nuevas conectadas a publicar/borradores ===== */
+const CREAR_PFX={lapiz:'lapiz',pagina:'pagina',pdf:'pdf',ia:'iaCrear'};
+function abrirCrearPantalla(tipo){
+ ocultarCrearPantallas();
+ if(tipo==='lapiz'||tipo==='lapiz1')tipo='lapiz-1';
+ if(tipo==='lapiz2')tipo='lapiz-2';
+ const e=$('screen-crear-'+tipo);if(e)e.classList.add('on');
+ window._modoCrear=tipo.indexOf('lapiz')===0?'lapiz':tipo;
+ renderCrearAux();
+ if(tipo==='pdf')renderPDFSlots();
+ if(tipo==='lapiz-2')renderLapizSlots();
+ if(tipo==='pagina')renderPaginaSlots();
+ if(tipo==='ia')renderIASlots();
+ window.scrollTo(0,0);
+}
+function nuevoCrear(tipo){limpiarCrearUI(true);abrirCrearPantalla(tipo)}
+function reabrirCrear(){
+ go('crear');const m=window._modoCrear||'pagina';
+ abrirCrearPantalla(m==='lapiz'?'lapiz-2':m);
+}
+function renderCrearAux(){
+ ['lapizGeneros','paginaGeneros','pdfGeneros','iaCrearGeneros'].forEach(id=>{const w=$(id);if(!w||w.children.length)return;GENEROS_DEFINITIVOS.forEach(g=>{const c=document.createElement('span');c.className='chip';c.textContent=g;c.onclick=()=>c.classList.toggle('on');w.appendChild(c)})});
+ ['lapizEstilos','paginaEstilos','iaCrearEstilos'].forEach(id=>{const w=$(id);if(!w||w.children.length)return;ESTILOS.forEach(e=>{const c=document.createElement('span');c.className='chip';c.textContent=e;c.onclick=()=>{w.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')};w.appendChild(c)})});
+}
+function renderIASlots(){
+ const w=$('iaCrearSlots');if(!w)return;w.innerHTML='';
+ paginas.forEach((p,i)=>{const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+URL.createObjectURL(p.file)+')';d.onclick=()=>{if(confirm('¿Quitar página '+(i+1)+'?')){paginas.splice(i,1);renderIASlots()}};w.appendChild(d)});
+ if(paginas.length<20){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=()=>abrirIA('ia');w.appendChild(d)}
+}
+/* Copia los datos de la pantalla de crear activa a lo que usa publicar() y guardarBorrador() */
+function sincronizarCrear(){
+ const m=window._modoCrear||'pagina',pf=CREAR_PFX[m]||'pagina';
+ const val=id=>{const e=$(id);return e?e.value:''};
+ $('titulo').value=val(pf+'Titulo');$('sinopsis').value=val(pf+'Sinopsis');
+ generosSel=[...document.querySelectorAll('#'+pf+'Generos .chip.on')].map(x=>x.textContent);
+ const es=document.querySelector('#'+pf+'Estilos .chip.on');
+ estiloSel=es?es.textContent:(m==='pdf'?ESTILOS[0]:null);
+ const inp=$(pf+'Portada'),f=inp&&inp.files&&inp.files[0];
+ if(f)portadaArchivo=f;
+ else if(!portadaArchivo&&paginas[0])portadaArchivo=paginas[0].file;
+}
+function limpiarCrearUI(sinVolver){
+ paginas=[];portadaArchivo=null;generosSel=[];estiloSel=null;filaActual=0;
+ ['lapiz','pagina','pdf','iaCrear'].forEach(pf=>{
+  ['Titulo','Subtitulo','Sinopsis','Portada','Prompt'].forEach(s=>{const e=$(pf+s);if(e)e.value=''});
+  document.querySelectorAll('#'+pf+'Generos .chip, #'+pf+'Estilos .chip').forEach(x=>x.classList.remove('on'));
+ });
+ const pv=$('pdfPreview');if(pv){pv.classList.remove('on');pv.innerHTML=''}
+ const vb=$('lapizVistaBox');if(vb)vb.innerHTML='<div>Subí un dibujo para verlo acá</div>';
+ renderLapizSlots();renderPaginaSlots();renderIASlots();
+ if(!sinVolver)volverCrear();
+}
 async function publicarPDF(){
- const f=$('pdfInput')?.files?.[0];if(!f){alert('Subí un PDF primero.');return}
- const buf=await f.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:buf}).promise;
- if(pdf.numPages<10||pdf.numPages>25){alert('El PDF debe tener entre 10 y 25 páginas.');return}
- paginas=[];for(let n=1;n<=Math.min(20,pdf.numPages);n++){const page=await pdf.getPage(n),vp=page.getViewport({scale:1.3}),c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.86));if(blob)paginas.push({file:new File([blob],'pagina-'+n+'.jpg',{type:'image/jpeg'})})}
- document.getElementById('titulo').value=$('pdfTitulo').value;document.getElementById('sinopsis').value=$('pdfSinopsis').value;generosSel=[...document.querySelectorAll('#pdfGeneros .chip.on')].map(x=>x.textContent);estiloSel=ESTILOS[0];await publicar()
+ if(!paginas.length){alert('Subí un PDF primero.');return}
+ if(paginas.length<10||paginas.length>25){alert('El PDF debe tener entre 10 y 25 páginas.');return}
+ paginas=paginas.slice(0,20);
+ window._modoCrear='pdf';
+ await publicar();
+}
+function cargarBorrador(id){
+ const d=JSON.parse(localStorage.getItem('borradores')||'[]').find(x=>x.id===id);
+ if(!d)return;
+ nuevoCrear('pagina');
+ $('paginaTitulo').value=d.titulo||'';$('paginaSinopsis').value=d.sinopsis||'';
+ document.querySelectorAll('#paginaGeneros .chip').forEach(c=>c.classList.toggle('on',(d.generos||[]).includes(c.textContent)));
+ document.querySelectorAll('#paginaEstilos .chip').forEach(c=>c.classList.toggle('on',c.textContent===d.estilo));
+ if(d.portada)portadaArchivo=dataURLtoFile(d.portada,'portada.jpg');
+ paginas=(d.paginas||[]).map((du,i)=>({file:dataURLtoFile(du,'pagina-'+(i+1)+'.jpg')}));
+ renderPaginaSlots();cerrarOv('borradores-modal');go('crear');abrirCrearPantalla('pagina');
+ alert('Borrador cargado ✅. Revisá los datos y tocá Publicar cuando quieras.');
 }
 /* Limitar publicar existente a 20 y costos exactos */
 const publicarOriginal=publicar;
 publicar=async function(){
+ sincronizarCrear();
  if(paginas.length>20){alert('Un capítulo no puede pasar de 20 páginas. Si querés más, creá otro capítulo.');return}
  if(paginas.length===0){alert('Agregá páginas antes de publicar.');return}
  const costo=paginas.length===20?COSTOS_SAKURAS.capitulo:paginas.length*COSTOS_SAKURAS.pagina;
@@ -2291,7 +2342,9 @@ publicar=async function(){
    if(k==='gratis'&&paginas.length>20)return;
    /* El capítulo completo cuesta 500; una carga parcial cuesta 50 por página. */
  }
- return publicarOriginal();
+ const n=paginas.length;
+ await publicarOriginal();
+ if(n&&paginas.length===0)limpiarCrearUI();
 }
 /* Donación creador: montos definitivos 1000–10000 y mensaje según plan */
 function abrirDonarCreador(){
