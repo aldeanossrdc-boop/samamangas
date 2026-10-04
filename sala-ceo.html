@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SalaMangaS</title>
+<title>SalaMangaS — Panel CEO</title>
+<meta name="robots" content="noindex,nofollow">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -455,6 +456,10 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .sp-foto img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
 .sp-foto-bar{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:12px 6px 4px;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75))}
 #fotoModal{z-index:300}
+
+/* ===== SALA CEO: solo se ve el panel (y el login si no hay sesión) ===== */
+.wrap>*:not(#screen-ceo){display:none!important}
+.login-modal{z-index:400}
 </style>
 </head>
 <body>
@@ -516,7 +521,7 @@ Entrar con Google
 <b id="nav-chat" onclick="abrirChat()" data-i18n="nav_chat">💬 Chat</b>
 <b onclick="abrirConfig()" data-i18n="nav_config">⚙️ Config</b>
 <b id="nav-perfil" onclick="abrirMiPerfilSocial()" data-i18n="nav_perfil">👤 Mi perfil</b>
-<b id="nav-ceo" onclick="window.location.href='/sala-ceo.html'" data-i18n="nav_ceo" style="color:#ff4757;border-color:#ff4757;display:none">🔑 CEO</b>
+<b id="nav-ceo" onclick="go('ceo')" data-i18n="nav_ceo" style="color:#ff4757;border-color:#ff4757;display:none">🔑 CEO</b>
 </div>
 <div id="screen-inicio" class="screen on">
 <div class="card social-home-card" onclick="abrirMiPerfilSocial()">
@@ -667,6 +672,22 @@ Entrar con Google
 <div id="preview-creacion" class="preview-full" onclick="cerrarVistaPreviaCreacion()">
 <button class="preview-x" onclick="event.stopPropagation();cerrarVistaPreviaCreacion()">✕</button>
 <div id="previewCreacionBody"></div>
+</div>
+<div id="screen-ceo" class="screen">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><button class="chatfs-back" onclick="location.href='/'">←</button><h1 class="title" style="flex:1;margin-bottom:0">Panel CEO</h1></div>
+<p class="subtitle">Solo vos tenés acceso</p>
+<div class="card">
+<h3 class="section">📊 Resumen</h3>
+<p style="font-size:13px;color:var(--text2)">Usuarios: <b id="ceoUsers">0</b></p>
+<p style="font-size:13px;color:var(--text2)">Mangas: <b id="ceoMangas">0</b></p>
+<p style="font-size:13px;color:var(--text2)">Pendientes: <b id="ceoPend">0</b></p>
+<div id="ceoTabs" style="margin-top:14px">
+<span class="chip on" data-t="pend" onclick="ceoTab('pend')">⏳ Pendientes</span><span class="chip" data-t="mangas" onclick="ceoTab('mangas')">📚 Mangas</span><span class="chip" data-t="usuarios" onclick="ceoTab('usuarios')">👥 Usuarios</span><span class="chip" data-t="chats" onclick="ceoTab('chats')">💬 Chats</span><span class="chip" data-t="subs" onclick="ceoTab('subs')">⭐ Suscriptores</span><span class="chip" data-t="donaciones" onclick="ceoTab('donaciones')">💖 Donaciones</span><span class="chip" data-t="stats" onclick="ceoTab('stats')">📊 Stats</span><span class="chip" data-t="sistema" onclick="ceoTab('sistema')">⚙️ Sistema</span><span class="chip" data-t="regalar" onclick="ceoTab('regalar')">🎁 Regalar</span>
+</div>
+<div id="ceoBody" style="margin-top:12px"></div>
+<button class="btn-main" style="margin-top:14px" onclick="location.href='/'">⬅ Volver a la app</button>
+<button class="btn-ghost" style="margin-top:14px;width:100%" onclick="cerrarSesion()">Cerrar sesión CEO</button>
+</div>
 </div>
 </div>
 <div id="donar-modal" class="modal-overlay">
@@ -1013,8 +1034,7 @@ cerrarConfig();
 document.getElementById('langMore').classList.add('on');
 }
 function go(id){
-if(id==='ceo'){window.location.href='/sala-ceo.html';return}
-if(false){esCeoReal(true).then(ok=>{if(ok){go._ok=1;go('ceo');go._ok=0}else{alert('Ingresá primero con Google usando tu cuenta CEO');go('inicio')}});return}
+if(id==='ceo'&&!go._ok){esCeoReal(true).then(ok=>{if(ok){go._ok=1;go('ceo');go._ok=0}else{alert('Ingresá primero con Google usando tu cuenta CEO');go('inicio')}});return}
 document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
 document.getElementById('screen-'+id).classList.add('on');
 document.querySelectorAll('.mainnav b').forEach(b=>b.classList.remove('on'));
@@ -3321,8 +3341,7 @@ iniciarApp=function(){
   /* ---- CEO: ningún dato se carga antes de verificar la identidad real ---- */
   const _goBase=go;
   go= function(id){
-    if(id==='ceo'){window.location.href='/sala-ceo.html';return}
-    return _goBase(id);
+    if(id!=='ceo')return _goBase(id);
     if(window._ceoOpening)return;
     window._ceoOpening=true;
     document.querySelectorAll('.screen').forEach(x=>x.classList.remove('on'));
@@ -3341,7 +3360,8 @@ iniciarApp=function(){
       const m=$('authMsg');if(m){m.style.color='#ff4757';m.innerText='La cuenta no pertenece a CEO_EMAILS.'}
       alert('Acceso denegado. Ingresá con una cuenta CEO verificada.');return;
     }
-    window.location.href='/sala-ceo.html';
+    $('login-modal').classList.add('hide');
+    go('ceo');
   };
   ceoTab=async function(t){
     if(!(await esCeoReal(true))){
@@ -3414,6 +3434,32 @@ iniciarApp=function(){
 
 })();
 
+</script>
+<script>
+/* ===== SALA CEO: arranque independiente ===== */
+(function(){
+  let ok=false;
+  function mostrar(){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+    const p=document.getElementById('screen-ceo');if(p)p.classList.add('on');
+    window.scrollTo(0,0);
+    cargarStatsCEO();ceoTab(window._ceoT||'pend');
+  }
+  window.go=function(){if(ok)mostrar()};
+  const _cs=cerrarSesion;
+  cerrarSesion=async function(){try{await _cs()}catch(e){}location.href='/'};
+  async function verificar(){
+    const r=await sb.auth.getSession();
+    if(!r||!r.data||!r.data.session)return;
+    if(await esCeoReal(true)){
+      if(ok)return;
+      ok=true;document.getElementById('login-modal').classList.add('hide');mostrar();
+    }else location.replace('/');
+  }
+  sb.auth.onAuthStateChange((ev,s)=>{if(s&&s.user&&(ev==='SIGNED_IN'||ev==='INITIAL_SESSION'))setTimeout(verificar,400)});
+  verificar();
+  setInterval(async()=>{if(ok&&!(await esCeoReal(true)))location.replace('/')},30000);
+})();
 </script>
 </body>
 </html>
