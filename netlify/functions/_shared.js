@@ -5,7 +5,7 @@
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://zalfaldrmccncjsahdmi.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_KEY || 'sb_publishable_ghOA30jYrCYcWrwvA1pd2g_8VsjZoVV';
-const SITE_URL = (process.env.SITE_URL || 'https://salamangas.netlify.app').replace(/\/$/, '');
+const SITE_URL = (process.env.SITE_URL || 'https://salamangakers.netlify.app').replace(/\/$/, '');
 
 function out(c, o) {
   return { statusCode: c, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(o || {}) };
@@ -43,14 +43,29 @@ async function precioUSD(clave, def) {
   return def;
 }
 
-// ---------------- Precios (Tanda D) ----------------
-const NOMBRE_PLAN = { basico: 'Mangakar', pro: 'Mangakar Pro', superpro: 'Súper Mangakar' };
-const PRECIOS_PLANES_ARS = { basico: 3000, pro: 5000, superpro: 12000 };
-const PRECIOS_PLANES_USD = { basico: '3.00', pro: '5.00', superpro: '12.00' };
+// ---------------- Precios (definitivos 04/10/2026) ----------------
+const NOMBRE_PLAN = {
+  pro: 'Mangakars Pro',
+  superpro: 'Súper Mangakars Pro',
+  semidios: 'Semi Dios Mangakars',
+  dios: 'Mangakars Dios'
+};
+const PRECIOS_PLANES_ARS = {
+  pro: 3000,
+  superpro: 5000,
+  semidios: 12000,
+  dios: 30000
+};
+const PRECIOS_PLANES_USD = {
+  pro: '3.00',
+  superpro: '5.00',
+  semidios: '12.00',
+  dios: '30.00'
+};
 
 const CANT_SAKURAS = { '250': 250, '700': 700, '1500': 1500, '3000': 3000 };
 const PRECIOS_SAKURAS_ARS = { '250': 1000, '700': 2000, '1500': 3000, '3000': 5000 };
-const PRECIOS_SAKURAS_USD = { '250': '1.00', '700': '2.00', '1500': '2.50', '3000': '5.00' };
+const PRECIOS_SAKURAS_USD = { '250': '1.00', '700': '2.00', '1500': '3.00', '3000': '5.00' };
 
 const MANGA_EXTRA_ARS = 10000;
 const MANGA_EXTRA_USD = '10.00';
