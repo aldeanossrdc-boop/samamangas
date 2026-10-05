@@ -1,0 +1,26 @@
+{
+  "name": "SalaMangaS",
+  "short_name": "SalaMangaS",
+  "description": "App de mangas con IA, chat y pagos.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07041a",
+  "theme_color": "#ffd166",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
