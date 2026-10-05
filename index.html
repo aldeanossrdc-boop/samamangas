@@ -4,14 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SalaMangaS</title>
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#7c4dff">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="SalaMangaS">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/png" href="/logo.png">
-<link rel="apple-touch-icon" href="/logo.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -521,17 +513,6 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .chatfs[data-estilo="shonen"] .chatfs-header h2,.chatfs[data-estilo="comic"] .chatfs-header h2{text-shadow:2px 2px 0 #171021;-webkit-text-stroke:0}
 .chatfs[data-estilo="comic"] .chatfs-header h2{text-shadow:2px 2px 0 #fff}
 .chatfs[data-estilo] .chat-tema-opt{color:#3a1030}
-
-/* ===== 05/10/2026 ===== */
-.mainnav-top{align-items:stretch}
-.mainnav-top b{display:flex;align-items:center;height:36px;padding-top:0;padding-bottom:0}
-.nav-perfil-top{flex:1;justify-content:center;gap:7px;min-width:0}
-.nav-perfil-top .np-av{width:22px;height:22px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid var(--gold)}
-.nav-perfil-top .np-ph{display:inline-flex;align-items:center;justify-content:center;font-size:12px;background:linear-gradient(135deg,var(--purple),var(--gold));color:#1a0a3a;font-weight:800}
-.nav-perfil-top .ins-img{margin-left:0}
-.ia-counter{display:inline-block;margin-top:4px;padding:5px 10px;border-radius:14px;border:1px solid currentColor;font-size:12px;font-weight:800;white-space:nowrap;cursor:pointer;background:rgba(0,0,0,.25);font-family:'Fredoka',sans-serif}
-.ia-status{font-size:12px;color:var(--gold3);text-align:center;margin:0 0 14px;padding:8px 10px;border-radius:12px;background:rgba(255,209,102,.08);border:1px dashed rgba(255,209,102,.35)}
-button[data-ia-btn]:disabled{cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -587,7 +568,6 @@ Entrar con Google
 </div>
 <div class="mainnav mainnav-top">
 <b id="nav-crear" onclick="go('crear')" data-i18n="nav_crear">➕ Crear</b>
-<b id="navPerfilTop" class="nav-perfil-top" onclick="abrirMiPerfilSocial()"><span class="np-av np-ph">👤</span><span>Mi perfil</span></b>
 </div>
 <div class="mainnav mainnav-bottom">
 <b id="nav-inicio" class="on" onclick="go('inicio')" data-i18n="nav_inicio">🏠 Inicio</b>
@@ -597,6 +577,16 @@ Entrar con Google
 <b id="nav-ceo" onclick="window.location.href='/sala-ceo.html'" data-i18n="nav_ceo" style="color:#ff4757;border-color:#ff4757;display:none">🔑 CEO</b>
 </div>
 <div id="screen-inicio" class="screen on">
+<div class="card social-home-card" onclick="abrirMiPerfilSocial()">
+<div class="social-home-inner">
+<div class="social-home-avatar" id="homeProfileAvatar">👤</div>
+<div class="social-home-copy">
+<h3>👤 Mi perfil</h3>
+<p>Tu perfil social manga: fotos, gustos, estilos, mangas y diseños.</p>
+</div>
+<div class="social-home-arrow">›</div>
+</div>
+</div>
 <div class="row-title"><h3 data-i18n="tend_t">⭐ Tendencias</h3><span data-i18n="ver_mas">Ver más ›</span></div>
 <div id="tendencias-grid" class="dots-grid"></div>
 <div class="row-title"><h3 data-i18n="seguir_t">📖 Continuar Leyendo</h3></div>
@@ -607,7 +597,7 @@ Entrar con Google
 <div id="desc-grid" class="manga-grid"></div>
 </div>
 <div id="screen-crear" class="screen">
-<div style="display:flex;align-items:flex-start;gap:8px"><h1 class="title" style="flex:1;margin-bottom:6px">Crear Nuevo Manga</h1><span id="iaContador" class="ia-counter" onclick="abrirRecargaIA()" title="Generaciones de IA. Tocá para recargar">🎨 0 / 0 gen</span></div>
+<h1 class="title">Crear Nuevo Manga</h1>
 <p class="subtitle">Elegí cómo querés crear tu obra</p>
 <div class="card">
 <h3 class="section">✨ Crear</h3>
@@ -631,8 +621,16 @@ Entrar con Google
 <div id="screen-crear-lapiz-1" class="screen">
 <div class="create-head"><button class="chatfs-back" onclick="volverCrear()">←</button><h1 class="title" style="flex:1;margin:0">✏️ Subir dibujos a lápiz</h1></div>
 <div class="card">
-<div class="ia-status" data-ia-status>⏳ Conectando IA...</div>
-<div id="lapiz-legacy-ui-1">
+<div class="ai-coming-soon">
+<div class="ai-coming-icon">✏️✨</div>
+<h2>✨ SalaMangaS IA — PRÓXIMAMENTE</h2>
+<p>Esta función estará disponible solo para suscriptores pagos.<br>Con la ayuda de los suscriptores y donaciones, la implementaremos lo antes posible. ¡Gracias por bancar el proyecto! 🌸</p>
+<div class="ai-coming-actions">
+<button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button>
+<button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button>
+</div>
+</div>
+<div id="lapiz-legacy-ui-1" style="display:none" aria-hidden="true">
 <label class="lbl">Título</label><input id="lapizTitulo" class="input" placeholder="Título del manga">
 <label class="lbl">Subtítulo</label><input id="lapizSubtitulo" class="input" placeholder="Subtítulo">
 <label class="lbl">Sinopsis</label><textarea id="lapizSinopsis" class="input" placeholder="Sinopsis"></textarea>
@@ -641,25 +639,30 @@ Entrar con Google
 <label class="lbl">Estilo visual</label><div id="lapizEstilos"></div>
 <div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button><button class="btn-main" onclick="crearLapizPaso2()">Siguiente →</button></div>
 </div>
-<div class="ai-coming-actions" style="margin-top:16px"><button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button><button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button></div>
 </div>
 </div>
 <div id="screen-crear-lapiz-2" class="screen">
 <div class="create-head"><button class="chatfs-back" onclick="volverCrear()">←</button><h1 class="title" style="flex:1;margin:0">✏️ Renacer</h1></div>
 <div class="card">
-<div class="ia-status" data-ia-status>⏳ Conectando IA...</div>
-<div id="lapiz-legacy-ui-2">
+<div class="ai-coming-soon">
+<div class="ai-coming-icon">✏️✨</div>
+<h2>✨ SalaMangaS IA — PRÓXIMAMENTE</h2>
+<p>Esta función estará disponible solo para suscriptores pagos.<br>Con la ayuda de los suscriptores y donaciones, la implementaremos lo antes posible. ¡Gracias por bancar el proyecto! 🌸</p>
+<div class="ai-coming-actions">
+<button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button>
+<button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button>
+</div>
+</div>
+<div id="lapiz-legacy-ui-2" style="display:none" aria-hidden="true">
 <div id="lapizVistaBox" class="reference-box"><div>Subí un dibujo para verlo acá</div></div>
 <label class="lbl">📝 ¿Qué querés que haga la IA?</label><textarea id="lapizPrompt" class="input" placeholder="Ej.: limpiar líneas, mantener personajes, agregar fondo..."></textarea>
-<button class="btn-main" id="btnRenacer" data-ia-btn="lapiz" data-label="✨ Renacer" onclick="renacerLapiz()">✨ Renacer</button>
-<button class="btn" data-ia-recarga="btnRenacer" style="display:none;width:100%;margin-top:8px" onclick="abrirRecargaIA()">🎨 Recarga IA</button>
+<button class="btn-main" onclick="renacerLapiz()">✨ Renacer</button>
 <button class="btn" style="width:100%;margin-top:8px" onclick="agregarFilaLapiz()">＋ Agregar a la fila</button>
 <h3 class="section">📄 Páginas <span style="font-size:11px;color:var(--text2)">(máximo 20)</span></h3>
 <div id="lapizSlots" class="pages-dots"></div>
 <div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
 </div>
 <div class="step-nav"><button class="btn" onclick="abrirCrearPantalla('lapiz')">← Atrás</button><button class="btn" onclick="abrirVistaPreviaCreacion()">Vista previa</button><button class="btn-main" onclick="agregarFilaLapiz()">Siguiente →</button></div>
-<div class="ai-coming-actions" style="margin-top:16px"><button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button><button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button></div>
 </div>
 </div>
 <div id="screen-crear-pagina" class="screen">
@@ -694,11 +697,18 @@ Entrar con Google
 <div id="screen-crear-ia" class="screen">
 <div class="create-head"><button class="chatfs-back" onclick="volverCrear()">←</button><h1 class="title" style="flex:1;margin:0">🤖 SalaMangaS IA</h1></div>
 <div class="card">
-<div class="ia-status" data-ia-status>⏳ Conectando IA...</div>
-<div id="ia-legacy-ui">
+<div class="ai-coming-soon">
+<div class="ai-coming-icon">🤖✨</div>
+<h2>✨ SalaMangaS IA — PRÓXIMAMENTE</h2>
+<p>Esta función estará disponible solo para suscriptores pagos.<br>Con la ayuda de los suscriptores y donaciones, la implementaremos lo antes posible. ¡Gracias por bancar el proyecto! 🌸</p>
+<div class="ai-coming-actions">
+<button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button>
+<button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button>
+</div>
+</div>
+<div id="ia-legacy-ui" style="display:none" aria-hidden="true">
 <p class="subtitle" style="margin-bottom:16px">Podés empezar de cero o subir imágenes de referencia.</p>
-<button class="btn-main" id="btnIAAbrir" data-ia-btn="ia" data-label="✨ Abrir SalaMangaS IA" style="margin-top:0" onclick="abrirIA('ia')">✨ Abrir SalaMangaS IA</button>
-<button class="btn" data-ia-recarga="btnIAAbrir" style="display:none;width:100%;margin-top:8px" onclick="abrirRecargaIA()">🎨 Recarga IA</button>
+<button class="btn-main" style="margin-top:0" onclick="abrirIA('ia')">✨ Abrir SalaMangaS IA</button>
 <label class="lbl">Título</label><input id="iaCrearTitulo" class="input" placeholder="Título del manga">
 <label class="lbl">Subtítulo</label><input id="iaCrearSubtitulo" class="input" placeholder="Subtítulo">
 <label class="lbl">Portada (opcional: se puede usar una imagen de la IA)</label><input id="iaCrearPortada" class="input" type="file" accept="image/*">
@@ -709,7 +719,6 @@ Entrar con Google
 <div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
 </div>
 <div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button></div>
-<div class="ai-coming-actions" style="margin-top:16px"><button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button><button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button></div>
 </div>
 </div>
 <div id="crear-legacy" style="display:none" aria-hidden="true"><input id="titulo"><textarea id="sinopsis"></textarea><div id="generos-wrap"></div><div id="estilos-wrap"></div><div id="pages-dots"></div><div id="portadaPreview"></div></div>
@@ -787,16 +796,6 @@ Entrar con Google
 <div class="pack-card"><div class="cant">1500 🪙</div><div class="precio">$3000 ARS / $3 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(1500)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(1500)">🅿️ PayPal</button></div>
 <div class="pack-card"><div class="cant">3000 🪙</div><div class="precio">$5000 ARS / $5 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(3000)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(3000)">🅿️ PayPal</button></div>
 </div>
-<button class="btn-main" style="margin-top:14px" onclick="abrirRecargaIA()">🎨 Recarga IA</button>
-</div></div>
-<div id="recarga-ia-modal" class="modal-overlay"><div class="modal-box">
-<button class="modal-close" onclick="cerrarOv('recarga-ia-modal')">✕</button>
-<h2 style="font-family:'Cinzel',serif;color:var(--gold);text-align:center">🎨 Recarga IA</h2>
-<p id="recargaIASaldo" style="font-size:13px;color:var(--text2);text-align:center;margin:8px 0"></p>
-<div class="card" style="padding:14px;text-align:center"><div style="font-size:26px;font-weight:800;color:var(--gold)">50 generaciones</div><div style="font-size:14px;color:var(--gold3);margin-top:4px">$3 USD / $3.000 ARS</div></div>
-<ul style="font-size:13px;color:var(--text2);padding-left:18px;line-height:1.7;margin-top:10px"><li>Las generaciones compradas <b>no vencen</b>.</li><li>Son <b>acumulables</b>: se suman a las de tu plan.</li><li>Primero se gastan las del plan y después las compradas.</li></ul>
-<div class="pay-row"><button class="btn-main" style="margin-top:0" onclick="comprarRecargaIAMP()">💳 Mercado Pago</button><button class="btn" onclick="comprarRecargaIAPP()">🅿️ PayPal</button></div>
-<p id="recargaIAMsg" style="font-size:11px;color:var(--text2);text-align:center;margin-top:10px"></p>
 </div></div>
 <div id="suscripciones-modal" class="modal-overlay">
 <div class="modal-box" style="max-width:520px">
@@ -872,8 +871,7 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <label class="lbl">🖼️ Imágenes de referencia (opcional)</label>
 <input id="iaRefInput" class="input" type="file" accept="image/*" multiple>
 <label class="lbl">👥 Personajes (opcional)</label><div id="iaPjs"></div>
-<button class="btn-main" id="iaBtn" data-ia-btn="auto" data-label="✨ Generar" style="margin-top:16px" onclick="iaGenerar()">✨ Generar</button>
-<button class="btn" data-ia-recarga="iaBtn" style="display:none;width:100%;margin-top:8px" onclick="abrirRecargaIA()">🎨 Recarga IA</button>
+<button class="btn-main" id="iaBtn" style="margin-top:16px" onclick="iaGenerar()">✨ Generar</button>
 <div id="iaRes" style="margin-top:14px"></div>
 </div>
 </div>
@@ -2311,7 +2309,7 @@ const PAYMENT_PLANS={basico:'Plan Básico',pro:'Plan Pro',superpro:'Plan Súper 
 const SAKURA_PACKS=['250','700','2200'];
 async function netlifyPost(fn,body){
   const {data:{session}}=await sb.auth.getSession();
-  const r=await fetch('/.netlify/functions/'+fn,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(session?session.access_token:'')},body:JSON.stringify(body)});
+  const r=await fetch('/api/'+fn,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(session?session.access_token:'')},body:JSON.stringify(body)});
   const j=await r.json().catch(()=>({}));
   if(!r.ok) throw new Error(j.error||'Error del servidor');
   return j;
@@ -2475,8 +2473,8 @@ async function guardarPersonaje(){
   if(btn){btn.disabled=false;btn.innerText='Guardar personaje'}
 }
 function pintarPersonajes(){
-  const b=$('pjLista');if(!b)return;b.innerHTML=PERSONAJES.length?'':vacio('Todavía no hay personajes');
-  PERSONAJES.forEach(p=>{
+  const b=$('pjLista');if(!b)return;b.innerHTML=PERSONAJOS.length?'':vacio('Todavía no hay personajes');
+  PERSONAJOS.forEach(p=>{
     const d=document.createElement('div');d.className='rk';
     const foto=p.foto_url?'<img src="'+esc(p.foto_url)+'" style="width:48px;height:48px;object-fit:cover;border-radius:10px">':'<div class="msg-avatar">👤</div>';
     d.innerHTML=foto+'<div style="flex:1"><b style="color:var(--gold3)">'+esc(p.nombre)+'</b><small>'+esc(p.descripcion)+'</small></div><button class="mini" onclick="verPersonaje(\''+p.id+'\')">👁️ Ver</button><button class="mini red" onclick="borrarPersonaje(\''+p.id+'\')">🗑️</button>';
@@ -2484,7 +2482,7 @@ function pintarPersonajes(){
   });
 }
 function verPersonaje(id){
-  const p=PERSONAJES.find(x=>String(x.id)===String(id));if(!p)return;
+  const p=PERSONAJOS.find(x=>String(x.id)===String(id));if(!p)return;
   $('pjPreviewTitulo').innerText='👤 '+p.nombre;
   $('pjPreviewFoto').innerHTML=p.foto_url?'<img class="pj-preview-modal-img" src="'+esc(p.foto_url)+'" alt="'+esc(p.nombre)+'">':'<div class="msg-avatar" style="margin:auto;width:72px;height:72px;font-size:28px">👤</div>';
   $('pjPreviewDesc').innerText=p.descripcion||'Sin descripción.';
@@ -2749,11 +2747,11 @@ function renderPlanesDefinitivos(){
   const p=PLANES_SALAMANGAS[k],d=document.createElement('div');d.className='card plan-def';
   const precio=p.precioARS?`$${p.precioARS.toLocaleString('es-AR')} ARS / $${p.precioUSD} USD`:'Gratis';
   let bullets='';
-  if(k==='gratis')bullets='<li>1 capítulo de 15 a 20 páginas por mes</li><li>1 PDF por mes</li><li>0 generaciones IA — sin IA</li><li>1 manga para crear</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMankers</li><li>No monetiza</li>';
-  if(k==='pro')bullets='<li>2 capítulos por mes</li><li>2 PDF por mes</li><li>20 generaciones IA por mes</li><li>IA: solo función Lápiz</li><li>1 manga para crear</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMankers + SalaMankers Pro</li><li>No monetiza</li>';
-  if(k==='superpro')bullets='<li>4 capítulos por mes</li><li>4 PDF por mes</li><li>50 generaciones IA por mes</li><li>IA: Lápiz + SalaMangaS IA</li><li>2 mangas para crear</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMankers + SalaMankers Pro</li><li>No monetiza</li>';
-  if(k==='semidios')bullets='<li>Capítulos y PDF ilimitados (máximo 20 páginas por capítulo)</li><li>150 generaciones IA por mes</li><li>IA: todas las funciones</li><li>3 mangas para crear, publicar y gratis TODOS los meses</li><li>4000 Sakuras para leer</li><li>No monetiza</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Botón con contador exacto del apoyo, se abona cada 30 días</li>';
-  if(k==='dios')bullets='<li>Capítulos y PDF ilimitados (máximo 20 páginas por capítulo)</li><li>400 generaciones IA por mes</li><li>IA: todas las funciones</li><li>Lectura ilimitada todo el mes</li><li>4 creaciones gratis TODOS los meses</li><li>4000 Sakuras para leer</li><li>💰 Monetiza: 100% de las donaciones para el creador</li><li>Alias del creador para Mercado Pago Argentina / PayPal internacional</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li>';
+  if(k==='gratis')bullets='<li>1 manga para crear</li><li>1 capítulo de 15 a 20 páginas o 1 PDF por mes</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMankers</li><li>No monetiza</li>';
+  if(k==='pro')bullets='<li>1 manga para crear</li><li>2 capítulos de 15 a 20 páginas o 2 PDF por mes</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMankers + SalaMankers Pro</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Insignia Pro plata</li><li>No monetiza</li>';
+  if(k==='superpro')bullets='<li>2 mangas para crear</li><li>4 capítulos de 15 a 20 páginas o 4 PDF por mes</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMankers + SalaMankers Pro</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Insignia Pro oro</li><li>No monetiza</li>';
+  if(k==='semidios')bullets='<li>3 mangas para crear, publicar y gratis TODOS los meses</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>No monetiza</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li><li>Botón con contador exacto del apoyo, se abona cada 30 días</li>';
+  if(k==='dios')bullets='<li>4 creaciones gratis TODOS los meses</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>Lectura ilimitada todo el mes</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>💰 Monetiza: 100% de las donaciones para el creador</li><li>Alias del creador para Mercado Pago Argentina / PayPal internacional</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li>';
   d.innerHTML=`<h3>${p.nombre}</h3><div class="plan-ins">${insigniaGrande(k,'xl')}<p>${INSIGNIAS[k].corto}</p></div><div class="plan-price">${precio}</div><ul>${bullets}</ul>`;
   if(k!=='gratis'){
     const row=document.createElement('div');row.style.cssText='display:flex;gap:8px;margin-top:10px';
@@ -2764,7 +2762,7 @@ function renderPlanesDefinitivos(){
   w.appendChild(d);
  });
   const cc=document.createElement('div');cc.className='card plan-def ins-card-ceo';cc.innerHTML='<h3>CEO</h3><div class="plan-ins">'+insigniaGrande('ceo','xl')+'<p>'+INSIGNIAS.ceo.corto+'</p></div>';w.appendChild(cc);
- const note=document.createElement('div');note.className='warn-mini';note.innerText='Las generaciones IA del plan NO se acumulan de un mes al otro. Las de Recarga IA no vencen y se suman. Semi Dios y Mangakar Dios: las creaciones gratis se renuevan cada mes. Máximo 20 páginas por capítulo.';w.appendChild(note);
+ const note=document.createElement('div');note.className='warn-mini';note.innerText='Semi Dios y Mangakar Dios: las creaciones gratis se renuevan cada mes. Máximo 20 páginas por capítulo.';w.appendChild(note);
 }
 function abrirSuscripciones(){renderPlanesDefinitivos();$('suscripciones-modal').classList.add('on')}
 /* Crear: navegación */
@@ -3069,12 +3067,12 @@ subirACloudinary=async function(file){
    PARA AGREGAR UNA NUEVA: 1) subí la imagen a la raíz, 2) sumá una entrada acá
    (y su clave en ORDEN_INSIGNIAS), 3) si depende de una regla nueva, tocá claveInsignia(). */
 const INSIGNIAS={
-  ceo:{img:'/ceo.png',emoji:'🐉',nombre:'CEO',corto:'🐉 El creador supremo de SalaMangaS.',largo:'El creador supremo de SalaMangaS. Solo existe uno en toda la plataforma: el dueño, el que construyó todo desde cero.',gana:'No se compra ni se regala. Es única.'},
+  ceo:{img:'/ceo.png',emoji:'🐉',nombre:'CEO',corto:'🐉 El creador supremo de SalaMangaS. Solo uno en toda la plataforma. Es el dueño, el que construyó todo desde cero.',largo:'El creador supremo de SalaMangaS. Solo existe uno en toda la plataforma: el dueño, el que construyó todo desde cero.',gana:'No se compra ni se regala. Es única.'},
   dios:{img:'/dios.png',emoji:'👑',nombre:'Mangakars Dios',corto:'👑 El máximo poder. Corona imperial.',largo:'El máximo poder dentro de SalaMangaS. La corona imperial es para quienes lo apoyan todo.',gana:'4 creaciones gratis por mes, lectura ilimitada, monetiza el 100% de las donaciones, chat directo con el CEO y chat Dios del Manga.'},
   semidios:{img:'/semidios.png',emoji:'🌟',nombre:'Semi Dios',corto:'🦊 A un paso de lo divino. Máscara del zorro.',largo:'A un paso de lo divino. La máscara del zorro marca a quienes ya están cerca de la cima.',gana:'3 mangas gratis por mes, capítulos sin límite, 4000 Sakuras para leer, chat directo con el CEO y chat Dios del Manga. No monetiza.'},
   superpro:{img:'/superpro.png',emoji:'🥇',nombre:'Súper Mangakars Pro',corto:'⚔️ El que domina el arte. Espada del guerrero.',largo:'El que domina el arte. Las espadas cruzadas son del guerrero que ya conoce su oficio.',gana:'2 mangas, 4 capítulos por mes, 2000 Sakuras y chat SalaMankers Pro. No monetiza.'},
   pro:{img:'/pro.png',emoji:'🥈',nombre:'Mangakars Pro',corto:'🖋️ El que escribe y crea. Pluma de autor.',largo:'El que escribe y crea. La pluma con el libro es la marca del autor.',gana:'1 manga, 2 capítulos por mes, 500 Sakuras y chat SalaMankers Pro. No monetiza.'},
-  gratis:{img:'/gratis.png',emoji:'🌱',nombre:'Mangakars Gratis',corto:'🌱 El que recién arranca.',largo:'El que recién arranca su camino en SalaMangaS. La estrella dorada es el primer paso.',gana:'1 manga, 1 capítulo por mes y 200 Sakuras diarias (no acumulables). No monetiza.'}
+  gratis:{img:'/gratis.png',emoji:'🌱',nombre:'Mangakars Gratis',corto:'🌱 El que recién arranca. Sin insignia especial.',largo:'El que recién arranca su camino en SalaMangaS. La estrella dorada es el primer paso.',gana:'1 manga, 1 capítulo por mes y 200 Sakuras diarias (no acumulables). No monetiza.'}
 };
 const ORDEN_INSIGNIAS=['ceo','dios','semidios','superpro','pro','gratis'];
 function esCuentaCEO(p){
@@ -3562,164 +3560,6 @@ iniciarApp=function(){
 
 })();
 
-/* ===== 05/10/2026: IA (contador, estados, recarga) + botón "Mi perfil" arriba ===== */
-(function(){
-  'use strict';
-  const GEN_IA_PLAN={gratis:0,pro:20,superpro:50,semidios:150,dios:400};
-  const RECARGA_IA={cantidad:50,usd:3,ars:3000};
-  const iaClave=p=>(p&&planVigentePerfil(p))?planClave(p):'gratis';
-  const iaCupo=p=>GEN_IA_PLAN[iaClave(p)]||0;
-  const iaExtra=()=>Math.max(0,Number(miPerfil&&miPerfil.generaciones_extra)||0);
-  function iaPlanRest(){
-    if(!miPerfil)return 0;
-    const f=miPerfil.ultima_recarga_ia?new Date(miPerfil.ultima_recarga_ia):null,n=new Date();
-    const mismoMes=f&&f.getUTCFullYear()===n.getUTCFullYear()&&f.getUTCMonth()===n.getUTCMonth();
-    return mismoMes?Math.max(0,Number(miPerfil.generaciones_ia)||0):iaCupo(miPerfil);
-  }
-  const iaRest=()=>esCeoSync()?Infinity:iaPlanRest()+iaExtra();
-  const iaConectada=()=>esCeoSync()||(typeof CONFIG==='object'&&CONFIG&&CONFIG.ia_activa==='1');
-  function iaColor(n){return n<=0?'#8a8a98':(n<5?'#ff4757':(n<=10?'#ffd166':'#2ecc71'))}
-  /* Qué pasa con cada botón "Generar" según plan, conexión y saldo */
-  function iaEstadoBoton(modo){
-    if(esCeoSync())return {ok:true};
-    if(!iaConectada())return {ok:false,texto:'Conectando IA...'};
-    if(!miPerfil)return {ok:false,texto:'Iniciá sesión para usar la IA'};
-    const k=iaClave(miPerfil);
-    if(k==='gratis')return {ok:false,texto:'Tu plan Gratis no incluye IA',planes:true};
-    if(k==='pro'&&modo!=='lapiz')return {ok:false,texto:'Tu plan Pro incluye solo la función Lápiz',planes:true};
-    if(iaRest()<=0)return {ok:false,texto:'Sin generaciones. Comprá más',recarga:true};
-    return {ok:true};
-  }
-  function actualizarBotonesIA(){
-    document.querySelectorAll('[data-ia-btn]').forEach(b=>{
-      const modo=b.dataset.iaBtn==='auto'?(typeof iaModo!=='undefined'&&iaModo?iaModo:'ia'):b.dataset.iaBtn;
-      const e=iaEstadoBoton(modo);
-      b.disabled=!e.ok;b.style.opacity=e.ok?'':'.65';
-      b.textContent=e.ok?b.dataset.label:e.texto;
-      const rb=document.querySelector('[data-ia-recarga="'+b.id+'"]');
-      if(rb)rb.style.display=(!e.ok&&e.recarga)?'block':'none';
-    });
-  }
-  function actualizarIAUI(){
-    try{
-      const rest=iaRest(),inf=rest===Infinity;
-      const c=$('iaContador');
-      if(c){
-        const max=Math.max(inf?0:rest,iaCupo(miPerfil)+iaExtra());
-        const col=inf?'#2ecc71':iaColor(rest);
-        c.style.color=col;c.style.borderColor=col;
-        c.textContent=inf?'🎨 ∞ gen':'🎨 '+rest+' / '+max+' gen';
-      }
-      let txt;
-      if(inf)txt='🎨 Generaciones ilimitadas (CEO)';
-      else if(!iaConectada())txt='⏳ Conectando IA...';
-      else txt='🎨 Te quedan <b>'+rest+'</b> generaciones ('+iaPlanRest()+' del plan + '+iaExtra()+' compradas)';
-      document.querySelectorAll('[data-ia-status]').forEach(e=>{e.innerHTML=txt});
-      const s=$('recargaIASaldo');
-      if(s)s.innerHTML=inf?'Sos CEO: generaciones ilimitadas.':'Te quedan <b>'+rest+'</b> generaciones: '+iaPlanRest()+' del plan (este mes) + <b>'+iaExtra()+'</b> compradas.';
-      actualizarBotonesIA();
-    }catch(e){console.warn('actualizarIAUI:',e.message)}
-  }
-  window.actualizarIAUI=actualizarIAUI;
-
-  /* ---- Botón "Mi perfil" al lado de Crear ---- */
-  function pintarPerfilTop(){
-    const b=$('navPerfilTop');if(!b)return;
-    const p=miPerfil;
-    const av=(p&&p.avatar_url)?'<img class="np-av" src="'+esc(p.avatar_url)+'" alt="">':'<span class="np-av np-ph">'+(p?esc((p.username||'?')[0].toUpperCase()):'👤')+'</span>';
-    b.innerHTML=av+'<span>Mi perfil</span>'+(p?insigniaHTML(p,'s'):'');
-  }
-  window.pintarPerfilTop=pintarPerfilTop;
-
-  /* ---- Enganches ---- */
-  const _rp=refrescarPerfil;
-  refrescarPerfil=async function(){await _rp();actualizarIAUI();pintarPerfilTop()};
-  const _ci=cargarInicio;
-  cargarInicio=async function(){await _ci();pintarPerfilTop();actualizarIAUI()};
-  const _cf=cambiarFotoPerfil;
-  cambiarFotoPerfil=async function(){await _cf();setTimeout(pintarPerfilTop,800)};
-  const _cs=cerrarSesion;
-  cerrarSesion=async function(){await _cs();pintarPerfilTop();actualizarIAUI()};
-  const _ac=aplicarConfig;
-  aplicarConfig=function(){_ac();actualizarIAUI()};
-  const _acp=abrirCrearPantalla;
-  abrirCrearPantalla=function(t){_acp(t);actualizarIAUI()};
-  const _ia=abrirIA;
-  abrirIA=async function(m,f){await _ia(m,f);actualizarIAUI()};
-
-  /* ---- Generar: descuenta en el servidor (la base es la única autoridad) ---- */
-  const _gen=iaGenerar;
-  iaGenerar=async function(){
-    if(!requireUser())return;
-    const modo=(typeof iaModo!=='undefined'&&iaModo==='lapiz')?'lapiz':'ia';
-    const est=iaEstadoBoton(modo);
-    if(!est.ok){
-      if(est.recarga)abrirRecargaIA();
-      else if(est.planes)abrirSuscripciones();
-      else alert(est.texto);
-      return;
-    }
-    let consumida=false;
-    if(!esCeoSync()){
-      const r=await sb.rpc('usar_generacion_ia',{modo});
-      if(r.error){
-        const m=r.error.message||'';
-        if(/function|PGRST202|schema cache/i.test(m))alert('Falta activar las generaciones IA en Supabase (el CEO tiene que correr el archivo ia_generaciones.sql).');
-        else alert(m);
-        return;
-      }
-      if(Number(r.data)<0){await refrescarPerfil();abrirRecargaIA();return}
-      consumida=true;
-    }
-    await _gen();
-    const salioBien=!!document.querySelector('#iaRes .ia-result-card');
-    if(consumida&&!salioBien){try{await sb.rpc('devolver_generacion_ia')}catch(e){}}
-    await refrescarPerfil();
-  };
-
-  /* ---- Recarga IA ---- */
-  window.abrirRecargaIA=function(){
-    ['sakuras-modal','suscripciones-modal'].forEach(id=>{const e=$(id);if(e)e.classList.remove('on')});
-    actualizarIAUI();
-    const m=$('recargaIAMsg');if(m)m.textContent='';
-    $('recarga-ia-modal').classList.add('on');
-  };
-  async function pagarRecarga(prov){
-    if(!requireUser())return;
-    const m=$('recargaIAMsg');
-    if(!esCeoSync()&&iaClave(miPerfil)==='gratis'){m.textContent='Para usar la IA necesitás un plan Pro o superior. Las generaciones compradas se suman a las de tu plan.';return}
-    try{
-      const j=await netlifyPost(prov==='mp'?'mercadopago-create-preference':'paypal-create-order',{tipo:'recarga_ia',item:'recarga_ia'});
-      const url=prov==='mp'?j.init_point:j.approve_url;
-      if(!url)throw new Error('No se recibió el link de pago');
-      location.href=url;
-    }catch(e){m.textContent='Error: '+e.message}
-  }
-  window.comprarRecargaIAMP=()=>pagarRecarga('mp');
-  window.comprarRecargaIAPP=()=>pagarRecarga('pp');
-
-  /* ---- Panel CEO (solo se usa en sala-ceo): interruptor "IA conectada" ---- */
-  try{
-    const _sis=CEO_R.sistema;
-    CEO_R.sistema=async function(b){
-      await _sis(b);
-      const on=CONFIG.ia_activa==='1';
-      b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:14px"><b>🤖 IA conectada</b><p style="font-size:12px;color:var(--text2);margin:6px 0">Estado: <b>'+(on?'ACTIVADA':'apagada')+'</b>. Apagada: los usuarios ven "Conectando IA..." en el botón Generar (el CEO siempre puede probar).</p><button class="btn-main" onclick="ceoIA('+!on+')">'+(on?'Apagar IA':'Activar IA')+'</button></div>');
-    };
-    window.ceoIA=async function(on){await ceoAccion(async()=>{if(await setConfig('ia_activa',on?'1':'0')){CONFIG.ia_activa=on?'1':'0';ceoTab('sistema')}})};
-  }catch(e){}
-
-  setTimeout(()=>{pintarPerfilTop();actualizarIAUI()},0);
-})();
-
-</script>
-<script>
-/* PWA: registra el service worker (va en su propio bloque, fuera del script principal) */
-if('serviceWorker' in navigator){
-  window.addEventListener('load',function(){
-    navigator.serviceWorker.register('/service-worker.js').catch(function(e){console.warn('Service worker:',e.message)});
-  });
-}
 </script>
 </body>
 </html>
