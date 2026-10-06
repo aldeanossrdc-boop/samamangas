@@ -1,6 +1,7 @@
 {
   "name": "salamangas",
-  "private": true,
+  "version": "1.0.0",
+  "description": "SalaMangaS - App de mangas",
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
   }
