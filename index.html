@@ -521,6 +521,111 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .chatfs[data-estilo="shonen"] .chatfs-header h2,.chatfs[data-estilo="comic"] .chatfs-header h2{text-shadow:2px 2px 0 #171021;-webkit-text-stroke:0}
 .chatfs[data-estilo="comic"] .chatfs-header h2{text-shadow:2px 2px 0 #fff}
 .chatfs[data-estilo] .chat-tema-opt{color:#3a1030}
+/* ===== TIENDA DE TEMAS DEL CHAT (4 temas de pago) ===== */
+#chatTemaMenu{max-height:72vh;overflow-y:auto;min-width:240px}
+.chat-tema-sep{font-size:10px;font-weight:800;letter-spacing:1px;text-align:center;color:#ffd166;padding:6px 0 0}
+#tema-opt-bnsimple{background:linear-gradient(135deg,#fff,#d6d6d6)}
+#tema-opt-bntone{background:linear-gradient(135deg,#f2f2f2,#8a8a8a)}
+#tema-opt-noir{background:linear-gradient(135deg,#2a2a2a,#000);color:#fff!important;border:1px solid #c40000}
+#tema-opt-dorado{background:linear-gradient(135deg,#ffd166,#7c4dff);color:#1a0a3a!important}
+#chatTemaMenu .chat-tema-opt.bloq{background:#d4d4d4!important;color:#6b6b6b!important;border:1px solid #b5b5b5;filter:grayscale(1);opacity:.85}
+.chatfs.tprev{display:flex!important;position:relative!important;inset:auto!important;z-index:auto!important;height:370px;border-radius:14px;overflow:hidden;border:2px solid rgba(255,209,102,.4);margin:10px 0}
+.tprev .chatfs-header{padding:8px 12px}.tprev .chatfs-header h2{font-size:17px;flex:1;margin:0}
+.tprev .chatfs-body{overflow:hidden}.tprev .chatfs-inputbar input{flex:1}
+#tpMsg{text-align:center;font-size:13px;font-weight:700;margin:6px 0 10px;color:var(--text2)}
+.chatfs[data-estilo="bnsimple"]{background-color:#fff!important;background-image:radial-gradient(rgba(0,0,0,.16) 1px,transparent 1.5px)!important;background-size:7px 7px!important}
+.chatfs[data-estilo="bnsimple"] .chatfs-header{background:#fff;border-bottom:2px solid #111}
+.chatfs[data-estilo="bnsimple"] .chatfs-header h2{color:#111}
+.chatfs[data-estilo="bnsimple"] .chatfs-back{background:#fff;border:1.5px solid #111;color:#111}
+.chatfs[data-estilo="bnsimple"] .chat-sub{background:#fff;color:#111;border-color:#111}
+.chatfs[data-estilo="bnsimple"] .chatfs-tabs{background:#fff}
+.chatfs[data-estilo="bnsimple"] .chat-room-tab{background:#fff;color:#111;border-color:#111}
+.chatfs[data-estilo="bnsimple"] .chat-room-tab.on{background:#111;border-color:#111;color:#fff}
+.chatfs[data-estilo="bnsimple"] .msg-avatar{background:#fff;color:#111;border:1.5px solid #111}
+.chatfs[data-estilo="bnsimple"] .msg-name{color:#111!important}
+.chatfs[data-estilo="bnsimple"] .msg-time{color:#555}
+.chatfs[data-estilo="bnsimple"] .chatfs-inputbar{background:#fff;border-top:2px solid #111}
+.chatfs[data-estilo="bnsimple"] .chatfs-inputbar input[type=text]{background:#fff;color:#111;border-color:#111}
+.chatfs[data-estilo="bnsimple"] .chat-plus-btn{background:#fff;color:#111;border-color:#111;box-shadow:2px 2px 0 #111}
+.chatfs[data-estilo="bnsimple"] .send-btn{background:#111;border-color:#111;box-shadow:none}
+.chatfs[data-estilo="bnsimple"] .msg-bubble.other{--bub:#fff;background:#fff!important;color:#111;border:1.5px solid #111!important;border-radius:16px!important;box-shadow:none!important}
+.chatfs[data-estilo="bnsimple"] .msg-bubble.mine{--bub:#111;background:#111!important;color:#fff;border:1.5px solid #111!important;border-radius:16px!important;box-shadow:none!important}
+.chatfs[data-estilo="bnsimple"] .msg-bubble.jisoo{--bub:#e2e2e2;background:#e2e2e2!important;color:#111;border:1.5px solid #111!important;border-radius:16px!important;box-shadow:none!important}
+.chatfs[data-estilo="bnsimple"] .msg-bubble.other::before,.chatfs[data-estilo="bnsimple"] .msg-bubble.jisoo::before{border-right-color:#111}
+.chatfs[data-estilo="bnsimple"] .msg-bubble.mine::before{border-left-color:#111}
+.chatfs[data-estilo="bnsimple"] .msg-ono{color:#fff;-webkit-text-stroke:2px #111;paint-order:stroke fill;text-shadow:none;background:none;border:0;padding:0}
+.chatfs[data-estilo="bnsimple"] .msg-ono::before,.chatfs[data-estilo="bnsimple"] .msg-ono::after{content:none}
+.chatfs[data-estilo="bntone"]{background-color:#f1f1f1!important;background-image:radial-gradient(rgba(0,0,0,.5) 1.3px,transparent 1.8px),radial-gradient(rgba(0,0,0,.5) 1.3px,transparent 1.8px)!important;background-size:8px 8px,8px 8px!important;background-position:0 0,4px 4px!important}
+.chatfs[data-estilo="bntone"] .chatfs-header{background:#fff;border-bottom:4px solid #000}
+.chatfs[data-estilo="bntone"] .chatfs-header h2{color:#000;text-shadow:2px 2px 0 #ccc}
+.chatfs[data-estilo="bntone"] .chatfs-back{background:#fff;border:3px solid #000;color:#000}
+.chatfs[data-estilo="bntone"] .chat-sub{background:#fff;color:#000;border-color:#000;border-width:2px}
+.chatfs[data-estilo="bntone"] .chatfs-tabs{background:#fff}
+.chatfs[data-estilo="bntone"] .chat-room-tab{background:#fff;color:#000;border-color:#000}
+.chatfs[data-estilo="bntone"] .chat-room-tab.on{background:#000;border-color:#000;color:#fff}
+.chatfs[data-estilo="bntone"] .msg-avatar{background:#fff;color:#000;border:3px solid #000}
+.chatfs[data-estilo="bntone"] .msg-name{color:#000!important}
+.chatfs[data-estilo="bntone"] .msg-time{color:#222}
+.chatfs[data-estilo="bntone"] .chatfs-inputbar{background:#fff;border-top:4px solid #000}
+.chatfs[data-estilo="bntone"] .chatfs-inputbar input[type=text]{background:#fff;color:#000;border:3px solid #000}
+.chatfs[data-estilo="bntone"] .chat-plus-btn{background:#fff;color:#000;border:3px solid #000;box-shadow:3px 3px 0 #000}
+.chatfs[data-estilo="bntone"] .send-btn{background:#000;border:3px solid #000;box-shadow:none}
+.chatfs[data-estilo="bntone"] .msg-bubble.other{--bub:#fff;background:#fff!important;color:#000;border:3.5px solid #000!important;border-radius:22px!important;box-shadow:4px 4px 0 rgba(0,0,0,.85)!important}
+.chatfs[data-estilo="bntone"] .msg-bubble.mine{--bub:#fff;background:#fff!important;color:#000;border:3.5px solid #000!important;border-radius:22px!important;box-shadow:4px 4px 0 rgba(0,0,0,.85)!important}
+.chatfs[data-estilo="bntone"] .msg-bubble.jisoo{--bub:#dcdcdc;background:#dcdcdc!important;color:#000;border:3.5px solid #000!important;border-radius:22px!important;box-shadow:4px 4px 0 rgba(0,0,0,.85)!important}
+.chatfs[data-estilo="bntone"] .msg-bubble.other::before,.chatfs[data-estilo="bntone"] .msg-bubble.jisoo::before{border-right-color:transparent}
+.chatfs[data-estilo="bntone"] .msg-bubble.mine::before{border-left-color:transparent}
+.chatfs[data-estilo="bntone"] .msg-bubble.other::before,.chatfs[data-estilo="bntone"] .msg-bubble.jisoo::before{content:"";position:absolute;left:-14px;right:auto;bottom:0;width:10px;height:10px;border:3px solid #000;border-radius:50%;background:var(--bub)}
+.chatfs[data-estilo="bntone"] .msg-bubble.other::after,.chatfs[data-estilo="bntone"] .msg-bubble.jisoo::after{content:"";position:absolute;left:-24px;right:auto;bottom:-9px;width:5px;height:5px;border:2.5px solid #000;border-radius:50%;background:var(--bub)}
+.chatfs[data-estilo="bntone"] .msg-bubble.mine::before{content:"";position:absolute;right:-14px;left:auto;bottom:0;width:10px;height:10px;border:3px solid #000;border-radius:50%;background:var(--bub)}
+.chatfs[data-estilo="bntone"] .msg-bubble.mine::after{content:"";position:absolute;right:-24px;left:auto;bottom:-9px;width:5px;height:5px;border:2.5px solid #000;border-radius:50%;background:var(--bub)}
+.chatfs[data-estilo="bntone"] .msg-ono{color:#000;font-weight:900;font-size:clamp(26px,9vw,40px);-webkit-text-stroke:0;text-shadow:3px 3px 0 #fff,5px 5px 0 #000;transform:rotate(-10deg);background:none;border:0;padding:0}
+.chatfs[data-estilo="bntone"] .msg-ono::before,.chatfs[data-estilo="bntone"] .msg-ono::after{content:none}
+.chatfs[data-estilo="noir"]{background-color:#000!important;background-image:repeating-linear-gradient(105deg,rgba(255,255,255,.05) 0 1px,transparent 1px 9px)!important;background-size:auto!important}
+.chatfs[data-estilo="noir"] .chatfs-header{background:#000;border-bottom:2px solid #fff}
+.chatfs[data-estilo="noir"] .chatfs-header h2{color:#fff;text-shadow:0 0 8px rgba(196,0,0,.9)}
+.chatfs[data-estilo="noir"] .chatfs-back{background:#000;border:1px solid #fff;color:#fff;border-radius:2px}
+.chatfs[data-estilo="noir"] .chat-sub{background:#000;color:#fff;border-color:#444}
+.chatfs[data-estilo="noir"] .chatfs-tabs{background:#000}
+.chatfs[data-estilo="noir"] .chat-room-tab{background:#0b0b0b;color:#ddd;border-color:#555}
+.chatfs[data-estilo="noir"] .chat-room-tab.on{background:#b00000;border-color:#b00000;color:#fff}
+.chatfs[data-estilo="noir"] .msg-avatar{background:#000;color:#fff;border:2px solid #fff}
+.chatfs[data-estilo="noir"] .msg-name{color:#fff!important}
+.chatfs[data-estilo="noir"] .msg-time{color:#888}
+.chatfs[data-estilo="noir"] .chatfs-inputbar{background:#000;border-top:2px solid #fff}
+.chatfs[data-estilo="noir"] .chatfs-inputbar input[type=text]{background:#0d0d0d;color:#fff;border:2px solid #fff;border-radius:3px}
+.chatfs[data-estilo="noir"] .chat-plus-btn{background:#000;color:#fff;border:2px solid #fff;box-shadow:none;border-radius:3px}
+.chatfs[data-estilo="noir"] .send-btn{background:#b00000;border:2px solid #fff;box-shadow:none;border-radius:3px}
+.chatfs[data-estilo="noir"] .msg-bubble.other{--bub:#000;background:#000!important;color:#fff;border:2px solid #fff!important;border-radius:2px!important;box-shadow:3px 3px 0 rgba(196,0,0,.6)!important}
+.chatfs[data-estilo="noir"] .msg-bubble.mine{--bub:#fff;background:#fff!important;color:#000;border:2px solid #fff!important;border-radius:2px!important;box-shadow:3px 3px 0 rgba(196,0,0,.6)!important}
+.chatfs[data-estilo="noir"] .msg-bubble.jisoo{--bub:#2a0000;background:#2a0000!important;color:#fff;border:2px solid #fff!important;border-radius:2px!important;box-shadow:3px 3px 0 rgba(196,0,0,.6)!important}
+.chatfs[data-estilo="noir"] .msg-bubble.other::before,.chatfs[data-estilo="noir"] .msg-bubble.jisoo::before{border-right-color:#fff}
+.chatfs[data-estilo="noir"] .msg-bubble.mine::before{border-left-color:#fff}
+.chatfs[data-estilo="noir"] .msg-ono{color:#d10000;font-style:italic;font-weight:900;letter-spacing:2px;-webkit-text-stroke:1.5px #000;paint-order:stroke fill;text-shadow:0 0 12px rgba(209,0,0,.85),3px 3px 0 #000;background:none;border:0;padding:0}
+.chatfs[data-estilo="noir"] .msg-ono::before,.chatfs[data-estilo="noir"] .msg-ono::after{content:none}
+.chatfs[data-estilo="dorado"]{background-color:#14082e!important;background-image:radial-gradient(#ffd166 1px,transparent 1.6px),radial-gradient(#fff 0.8px,transparent 1.3px),radial-gradient(circle at 50% 0%,#3b1a7a 0,#14082e 55%,#07031a 100%)!important;background-size:83px 83px,47px 47px,auto!important;background-position:10px 14px,30px 5px,0 0!important;background-repeat:repeat,repeat,no-repeat!important}
+.chatfs[data-estilo="dorado"] .chatfs-header{background:rgba(20,8,46,.96);border-bottom:2px solid #ffd166}
+.chatfs[data-estilo="dorado"] .chatfs-header h2{color:#ffd166;font-family:"Cinzel",serif;text-shadow:0 0 10px rgba(255,209,102,.8)}
+.chatfs[data-estilo="dorado"] .chatfs-back{background:#2a1260;border:1px solid #ffd166;color:#ffd166}
+.chatfs[data-estilo="dorado"] .chat-sub{background:#1d0d45;color:#ffd166;border-color:#ffd166}
+.chatfs[data-estilo="dorado"] .chatfs-tabs{background:#14082e}
+.chatfs[data-estilo="dorado"] .chat-room-tab{background:#2a1260;color:#ffe9a8;border-color:#a07a2a}
+.chatfs[data-estilo="dorado"] .chat-room-tab.on{background:#ffd166;border-color:#ffd166;color:#2a1250}
+.chatfs[data-estilo="dorado"] .msg-avatar{background:#2a1260;color:#ffd166;border:2px solid #ffd166}
+.chatfs[data-estilo="dorado"] .msg-name{color:#ffd166!important}
+.chatfs[data-estilo="dorado"] .msg-time{color:#c9b27a}
+.chatfs[data-estilo="dorado"] .chatfs-inputbar{background:rgba(20,8,46,.96);border-top:2px solid #ffd166}
+.chatfs[data-estilo="dorado"] .chatfs-inputbar input[type=text]{background:#1d0d45;color:#fff3c4;border:2px solid #ffd166}
+.chatfs[data-estilo="dorado"] .chat-plus-btn{background:#2a1260;color:#ffd166;border:2px solid #ffd166;box-shadow:0 0 8px rgba(255,209,102,.5)}
+.chatfs[data-estilo="dorado"] .send-btn{background:linear-gradient(135deg,#ffd166,#e0a82e);color:#2a1250;border:2px solid #ffd166;box-shadow:0 0 8px rgba(255,209,102,.5)}
+.chatfs[data-estilo="dorado"] .msg-bubble.other{--bub:#2d1566;background:linear-gradient(135deg,#3a1c7a,#1d0d45)!important;color:#fff3c4;border:2px solid #ffd166!important;border-radius:18px!important;box-shadow:0 0 10px rgba(255,209,102,.4)!important}
+.chatfs[data-estilo="dorado"] .msg-bubble.mine{--bub:#f0b93d;background:linear-gradient(135deg,#ffe08a,#e0a82e)!important;color:#2a1250;border:2px solid #b8860b!important;border-radius:18px!important;box-shadow:0 0 10px rgba(255,209,102,.4)!important}
+.chatfs[data-estilo="dorado"] .msg-bubble.jisoo{--bub:#6a2f9a;background:linear-gradient(135deg,#8a3fc0,#4a1f80)!important;color:#fff;border:2px solid #ffd166!important;border-radius:18px!important;box-shadow:0 0 10px rgba(255,209,102,.4)!important}
+.chatfs[data-estilo="dorado"] .msg-bubble.other::before,.chatfs[data-estilo="dorado"] .msg-bubble.jisoo::before{border-right-color:#ffd166}
+.chatfs[data-estilo="dorado"] .msg-bubble.mine::before{border-left-color:#b8860b}
+.chatfs[data-estilo="dorado"] .msg-ono{font-family:"Cinzel",serif;color:#ffd166;font-weight:900;-webkit-text-stroke:2px #2a0a5a;paint-order:stroke fill;text-shadow:0 0 12px rgba(255,209,102,.9),2px 2px 0 #4a148c;background:none;border:0;padding:0}
+.chatfs[data-estilo="dorado"] .msg-ono::before,.chatfs[data-estilo="dorado"] .msg-ono::after{content:none}
+
 </style>
 </head>
 <body>
@@ -786,6 +891,25 @@ Entrar con Google
 <div id="infoTexto" style="font-size:13px;color:var(--text2);line-height:1.6;max-height:50vh;overflow-y:auto;margin-top:10px"></div>
 </div>
 </div>
+<div id="temaPreviewModal" class="modal-overlay" onclick="if(event.target===this)cerrarPreviewTema()">
+<div class="modal-box">
+<button class="modal-close" onclick="cerrarPreviewTema()">✕</button>
+<h2 id="tpTitulo" style="font-family:'Cinzel',serif;color:var(--gold);text-align:center;font-size:18px"></h2>
+<p style="text-align:center;font-size:12px;color:var(--text2);margin-top:4px">Vista previa: así se vería tu chat</p>
+<div id="tpPreview" class="chatfs tprev" data-estilo="noir">
+<div class="chatfs-header"><div class="chatfs-back">←</div><h2>SalaMangaS</h2></div>
+<div class="chatfs-body">
+<div class="msg-row"><div class="msg-side"><div class="msg-avatar">H</div><div class="msg-name">Hana</div></div><div class="msg-col"><div class="msg-main"><div class="msg-bubble other">¿Leíste el capítulo 5?</div></div><div class="msg-time">20:41 • Seen</div></div></div>
+<div class="msg-row mine"><div class="msg-col"><div class="msg-main"><div class="msg-bubble mine">¡Sí! Ese final...</div><div class="msg-ono ono-gasp">GASP!!!</div></div><div class="msg-time">20:42 • Read</div></div></div>
+<div class="msg-row"><div class="msg-side"><div class="msg-avatar">K</div><div class="msg-name">Kenji</div></div><div class="msg-col"><div class="msg-main"><div class="msg-bubble other">¡Plot twist total!</div><div class="msg-ono ono-pop">BOOM!!</div></div><div class="msg-time">20:43 • Seen</div></div></div>
+</div>
+<div class="chatfs-inputbar"><input type="text" disabled placeholder="Message... SalaMangaS"></div>
+</div>
+<div id="tpMsg"></div>
+<button id="tpComprar" class="btn btn-main" style="width:100%" onclick="comprarTemaActual()">Comprar</button>
+<button id="tpSakuras" class="btn" style="width:100%;margin-top:8px;display:none" onclick="irASakurasDesdeTema()">🪙 Conseguir Sakuras</button>
+</div>
+</div>
 <div id="sakuras-modal" class="modal-overlay">
 <div class="modal-box">
 <button class="modal-close" onclick="cerrarSakuras()">✕</button>
@@ -957,6 +1081,11 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div class="chat-tema-opt" style="background:linear-gradient(135deg,#ffcf70,#ff8a3d)" onclick="setChatEstilo('shonen')">⭐ Shonen</div>
 <div class="chat-tema-opt" style="background:linear-gradient(135deg,#9aa0ad,#4b5060);color:#fff" onclick="setChatEstilo('seinen')">🖤 Seinen</div>
 <div class="chat-tema-opt" style="background:linear-gradient(135deg,#d8f1ff,#c9b8ff)" onclick="setChatEstilo('chibi')">🍡 Chibi</div>
+<div class="chat-tema-sep">🛍️ TIENDA DE TEMAS</div>
+<div id="tema-opt-bnsimple" class="chat-tema-opt bloq" onclick="setChatEstilo('bnsimple')">🔒 Manga B/N Simple · 150 🪙</div>
+<div id="tema-opt-bntone" class="chat-tema-opt bloq" onclick="setChatEstilo('bntone')">🔒 Manga B/N Screentone · 300 🪙</div>
+<div id="tema-opt-noir" class="chat-tema-opt bloq" onclick="setChatEstilo('noir')">🔒 Noir Dramático · 500 🪙</div>
+<div id="tema-opt-dorado" class="chat-tema-opt bloq" onclick="setChatEstilo('dorado')">🔒 Dorado Premium · 800 🪙</div>
 </div>
 <div id="chatSearchBar"><input id="chatSearchIn" type="text" placeholder="Buscar en el chat..." oninput="chatFiltrar()"></div>
 <div class="chat-sub"><i>●</i> Creators online now • <span id="chatOnlineN">1 online</span> • Group Chat</div>
@@ -1224,14 +1353,85 @@ async function procesarSakurasDiarias(perfil){
 function cerrarSuscripciones(){document.getElementById('suscripciones-modal').classList.remove('on')}
 /* ===== TEMA DE CHAT ===== */
 function abrirChatTema(){document.getElementById('chatTemaMenu').classList.toggle('on')}
-const ESTILOS_CHAT=['rosa','comic','shojo','shonen','seinen','chibi'];
-function setChatEstilo(k){
+const ESTILOS_CHAT=['rosa','comic','shojo','shonen','seinen','chibi','bnsimple','bntone','noir','dorado'];
+/* Precios SOLO para mostrar. El precio real lo valida el servidor (función comprar_tema en Supabase). */
+const TEMAS_PAGO={bnsimple:{n:'Manga B/N Simple',p:150,i:'⚪'},bntone:{n:'Manga B/N Screentone',p:300,i:'⚫'},noir:{n:'Noir Dramático',p:500,i:'🕶️'},dorado:{n:'Dorado Premium',p:800,i:'👑'}};
+let TEMAS_COMPRADOS=new Set(),_tpActual=null,_tpBusy=false;
+function aplicarEstiloChat(k,guardar){
   if(!ESTILOS_CHAT.includes(k))k='rosa';
   const c=document.getElementById('chatfs');if(!c)return;
   c.classList.remove('tema-rosa','tema-celeste','tema-amarillo');
   if(k==='rosa')c.removeAttribute('data-estilo');else c.setAttribute('data-estilo',k);
-  try{localStorage.setItem('chatEstilo',k)}catch(e){}
+  if(guardar){try{localStorage.setItem('chatEstilo',k)}catch(e){}}
   const m=document.getElementById('chatTemaMenu');if(m)m.classList.remove('on');
+}
+function setChatEstilo(k){
+  if(!ESTILOS_CHAT.includes(k))k='rosa';
+  if(TEMAS_PAGO[k]&&!TEMAS_COMPRADOS.has(k)){abrirPreviewTema(k);return}
+  aplicarEstiloChat(k,true);
+}
+function aplicarEstiloGuardado(){
+  let k='rosa';try{k=localStorage.getItem('chatEstilo')||'rosa'}catch(e){}
+  if(!ESTILOS_CHAT.includes(k)||(TEMAS_PAGO[k]&&!TEMAS_COMPRADOS.has(k)))k='rosa';
+  aplicarEstiloChat(k,false);
+}
+function renderTiendaTemas(){
+  Object.keys(TEMAS_PAGO).forEach(k=>{
+    const el=document.getElementById('tema-opt-'+k);if(!el)return;
+    const t=TEMAS_PAGO[k],own=TEMAS_COMPRADOS.has(k);
+    el.classList.toggle('bloq',!own);
+    el.textContent=own?(t.i+' '+t.n):('🔒 '+t.n+' · '+t.p+' 🪙');
+  });
+}
+async function cargarTemasComprados(){
+  if(!miPerfil)return;
+  try{
+    const {data,error}=await sb.from('temas_comprados').select('tema').eq('user_id',miPerfil.id);
+    if(error)throw error;
+    TEMAS_COMPRADOS=new Set((data||[]).map(x=>x.tema));
+  }catch(e){console.warn('Temas comprados:',e.message||e)}
+  renderTiendaTemas();aplicarEstiloGuardado();
+}
+function abrirPreviewTema(k){
+  const t=TEMAS_PAGO[k];if(!t)return;_tpActual=k;
+  document.getElementById('tpTitulo').textContent=t.i+' '+t.n;
+  document.getElementById('tpPreview').setAttribute('data-estilo',k);
+  const m=document.getElementById('chatTemaMenu');if(m)m.classList.remove('on');
+  document.getElementById('temaPreviewModal').classList.add('on');
+  actualizarEstadoPreview();
+  refrescarPerfil().then(()=>{if(_tpActual===k)actualizarEstadoPreview()});
+}
+function cerrarPreviewTema(){document.getElementById('temaPreviewModal').classList.remove('on');_tpActual=null}
+function actualizarEstadoPreview(){
+  const k=_tpActual,t=TEMAS_PAGO[k];if(!t)return;
+  const msg=document.getElementById('tpMsg'),bc=document.getElementById('tpComprar'),bs=document.getElementById('tpSakuras');
+  msg.style.color='';bs.style.display='none';bc.style.display='block';bc.disabled=false;
+  if(TEMAS_COMPRADOS.has(k)){msg.textContent='✅ Ya es tuyo.';bc.textContent='Aplicar este tema';return}
+  bc.textContent='Comprar por '+t.p+' Sakuras 🪙';
+  if(!miPerfil){msg.textContent='Iniciá sesión para comprar temas.';bc.style.display='none';return}
+  const saldo=Number(miPerfil.sakuras)||0;
+  if(saldo<t.p){msg.textContent='Te faltan '+(t.p-saldo)+' Sakuras. Conseguí más en 🪙';msg.style.color='#ff6b81';bc.style.display='none';bs.style.display='block';return}
+  msg.textContent='Tenés '+saldo+' 🪙 · Quedarían '+(saldo-t.p)+' 🪙';
+}
+function irASakurasDesdeTema(){cerrarPreviewTema();abrirSakuras()}
+async function comprarTemaActual(){
+  const k=_tpActual,t=TEMAS_PAGO[k];if(!t||_tpBusy)return;
+  if(TEMAS_COMPRADOS.has(k)){cerrarPreviewTema();aplicarEstiloChat(k,true);return}
+  if(!miPerfil){alert('Iniciá sesión para comprar temas.');return}
+  _tpBusy=true;const bc=document.getElementById('tpComprar');bc.disabled=true;bc.textContent='Comprando…';
+  try{
+    const {data,error}=await sb.rpc('comprar_tema',{tema_id:k});
+    if(error)throw error;
+    if(data==='sin_sakuras'){await refrescarPerfil();actualizarEstadoPreview();return}
+    if(data!=='ok'&&data!=='ya_comprado')throw new Error('Respuesta inesperada del servidor: '+data);
+    TEMAS_COMPRADOS.add(k);await refrescarPerfil();renderTiendaTemas();
+    cerrarPreviewTema();aplicarEstiloChat(k,true);
+    alert('✅ ¡Listo! Compraste "'+t.n+'". Es tuyo para siempre.');
+  }catch(e){
+    const m=e.message||String(e);
+    alert(/comprar_tema|PGRST202|schema cache|temas_comprados/i.test(m)?'Falta activar la tienda de temas en Supabase (el CEO tiene que correr el archivo tienda_temas.sql).':'No se pudo comprar: '+m);
+    actualizarEstadoPreview();
+  }finally{_tpBusy=false}
 }
 function setChatTema(t){
 const chatfs = document.getElementById('chatfs');
@@ -1566,6 +1766,7 @@ const _fresh = await sb.from('profiles').select('*').eq('id',perfil.id).single()
 if(_fresh.data) perfil=_fresh.data;
 miPerfil = perfil;AUTORES[perfil.id]=perfil;
 actualizarSakurasUI();
+cargarTemasComprados();
 document.getElementById('login-modal').classList.add('hide');
 document.getElementById('chatbar').style.display='flex';postLogin();
 cambiarSala('mangakars');
@@ -2317,7 +2518,7 @@ const PAYMENT_PLANS={basico:'Plan Básico',pro:'Plan Pro',superpro:'Plan Súper 
 const SAKURA_PACKS=['250','700','2200'];
 async function netlifyPost(fn,body){
   const {data:{session}}=await sb.auth.getSession();
-  const r=await fetch('/.netlify/functions/'+fn,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(session?session.access_token:'')},body:JSON.stringify(body)});
+  const r=await fetch('/api/'+fn,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(session?session.access_token:'')},body:JSON.stringify(body)});
   const j=await r.json().catch(()=>({}));
   if(!r.ok) throw new Error(j.error||'Error del servidor');
   return j;
@@ -2599,7 +2800,7 @@ async function importarPDF(file){
 function iniciarApp(){
   renderGeneros();renderEstilos();agregarFilaPuntitos();cargarConfig();capturarRef();abrirPerfilDesdeURL();
   const tema=localStorage.getItem('chatTema');if(tema)setChatTema(tema);
-  setChatEstilo(localStorage.getItem('chatEstilo')||'rosa');
+  aplicarEstiloGuardado();renderTiendaTemas();
   limpiarMensajesAntiguos();
   if(localStorage.getItem('modoClaro')==='1')document.body.classList.add('light-mode');
   manejarRetornoPayPal();
