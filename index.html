@@ -263,6 +263,11 @@ body.light-mode .mainnav-bottom{background:rgba(255,255,255,.92)}
 /* ===== ESPECIFICACION 02/10/2026 ===== */
 .create-opts-4{grid-template-columns:1fr 1fr 1fr 1fr}
 .create-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.create-head-v{position:relative;flex-direction:column;justify-content:center;gap:2px;padding-top:2px}
+.create-head-v .chatfs-back{position:absolute;left:0;top:0}
+.create-head-title{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.create-head-ico{font-size:30px;line-height:1}
+.create-head-txt{font-family:'Cinzel',serif;font-weight:800;font-size:18px;color:var(--gold);letter-spacing:.5px}
 .step-nav{display:flex;gap:8px;align-items:center;margin-top:16px}.step-nav>*{flex:1}
 .reference-box{min-height:220px;border:1px dashed rgba(255,209,102,.35);border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:rgba(0,0,0,.25);color:var(--text2)}
 .reference-box img{width:100%;max-height:300px;object-fit:contain}
@@ -270,8 +275,8 @@ body.light-mode .mainnav-bottom{background:rgba(255,255,255,.92)}
 .preview-full.on{display:block}.preview-full img{display:block;width:100%;margin:0 auto 8px}.preview-x{position:fixed;top:12px;right:12px;z-index:501;width:40px;height:40px;border-radius:50%;border:1px solid var(--gold);background:rgba(0,0,0,.7);color:var(--gold);font-size:20px}
 .plan-def{margin-bottom:12px}.plan-def h3{font-family:'Cinzel',serif;font-size:16px;color:var(--gold3)}.plan-def ul{font-size:12px;color:var(--text2);padding-left:18px;line-height:1.55;margin-top:6px}
 .plan-price{color:var(--gold);font-weight:800;margin-top:5px}.badge-plan{display:inline-block;margin-top:5px;padding:4px 8px;border-radius:10px;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.3);font-size:10px;color:var(--gold3)}
-.chat-room-tab{flex:1;text-align:center;padding:8px 3px;border-radius:18px;font-size:11px;font-weight:700;cursor:pointer;background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.2);color:var(--text2);position:relative}
-.chat-room-tab.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a3a}.chat-room-lock{display:block;font-size:9px;margin-top:2px}
+.chat-room-tab{flex:1;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 6px 6px 12px;border-radius:18px;font-size:11px;font-weight:700;cursor:pointer;background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.2);color:var(--text2);position:relative}
+.chat-room-tab.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a3a}.chat-room-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-room-lock{display:none}
 /* ===== PARTE 1: chat silenciado + fotos + previews ===== */
 .chat-lock-btn{margin-left:auto;padding:5px 8px;border-radius:10px;border:1px solid rgba(255,209,102,.3);background:rgba(255,209,102,.08);color:var(--gold);cursor:pointer;font-size:10px}
 .chat-room-tab.is-muted{opacity:.72}
@@ -320,6 +325,8 @@ label.lbl{display:block;font-family:'Fredoka',sans-serif;font-size:13px;font-wei
 .input{padding:14px;border-radius:14px;margin-top:0;margin-bottom:16px}
 textarea.input{min-height:96px;resize:vertical}
 .chip{padding:10px 16px;border-radius:22px;margin:6px 6px 0 0}
+.chip-mas-oculto{display:none}
+.chip-mas{border-style:dashed;opacity:.8;font-weight:700}
 #lapizGeneros,#lapizEstilos,#paginaGeneros,#pdfGeneros,#generos-wrap,#estilos-wrap{display:flex;flex-wrap:wrap;margin:10px 0 20px}
 .create-opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:8px}
 .create-opts-4{grid-template-columns:repeat(2,1fr)}
@@ -340,7 +347,8 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .modal-overlay{padding:20px}
 .modal-box{padding:22px;max-width:420px;border-radius:24px;box-shadow:0 12px 40px rgba(0,0,0,.5);max-height:88vh;overflow-y:auto}
 .chatfs-tabs{gap:8px;overflow-x:auto}
-.chat-room-tab,.chatfs-tab{padding:12px 10px;border-radius:20px;font-size:13px;font-weight:700}
+.chatfs-tab{padding:12px 10px;border-radius:20px;font-size:13px;font-weight:700}
+.chat-room-tab{padding:6px 6px 6px 12px;border-radius:20px;font-size:12px;font-weight:700}
 #screen-ceo{position:fixed;inset:0;width:100%;padding:16px}
 #ceoTabs{gap:8px;overflow-x:auto;flex-wrap:nowrap}
 #ceoTabs .chip{padding:10px 14px;margin:0;flex:0 0 auto}
@@ -456,7 +464,7 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .sp-foto-bar{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:12px 6px 4px;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75))}
 #fotoModal{z-index:300}
 
-.ins-img{display:inline-block;vertical-align:middle;object-fit:contain;margin-left:5px}
+.ins-img{display:inline-block;vertical-align:middle;object-fit:contain;margin-left:5px;mix-blend-mode:screen}
 .ins-s{width:19px;height:19px}.ins-m{width:40px;height:40px;margin:0 0 4px}.ins-xl{width:80px;height:80px;margin:0}.ins-xxl{width:100px;height:100px;margin:0}
 .ins-s.ins-ceo{width:24px;height:24px}.ins-m.ins-ceo{width:48px;height:48px}.ins-xl.ins-ceo{width:96px;height:96px}.ins-xxl.ins-ceo{width:120px;height:120px}
 .ins-ceo{animation:ceoGlow 2.4s ease-in-out infinite}
@@ -619,7 +627,7 @@ Entrar con Google
 </div>
 </div>
 <div id="screen-crear-lapiz-1" class="screen">
-<div class="create-head"><button class="chatfs-back" onclick="volverCrear()">←</button><h1 class="title" style="flex:1;margin:0">✏️ Subir dibujos a lápiz</h1></div>
+<div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">✏️</span><span class="create-head-txt">Subir dibujos a lápiz</span></div></div>
 <div class="card">
 <div class="ai-coming-soon">
 <div class="ai-coming-icon">✏️✨</div>
@@ -642,7 +650,7 @@ Entrar con Google
 </div>
 </div>
 <div id="screen-crear-lapiz-2" class="screen">
-<div class="create-head"><button class="chatfs-back" onclick="volverCrear()">←</button><h1 class="title" style="flex:1;margin:0">✏️ Renacer</h1></div>
+<div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">✏️</span><span class="create-head-txt">Renacer</span></div></div>
 <div class="card">
 <div class="ai-coming-soon">
 <div class="ai-coming-icon">✏️✨</div>
@@ -666,7 +674,7 @@ Entrar con Google
 </div>
 </div>
 <div id="screen-crear-pagina" class="screen">
-<div class="create-head"><button class="chatfs-back" onclick="volverCrear()">←</button><h1 class="title" style="flex:1;margin:0">🖼️ Imagen por imagen</h1></div>
+<div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">🖼️</span><span class="create-head-txt">Imagen por imagen</span></div></div>
 <div class="card">
 <label class="lbl">Título</label><input id="paginaTitulo" class="input" placeholder="Título del manga">
 <label class="lbl">Subtítulos</label><input id="paginaSubtitulo" class="input" placeholder="Subtítulo">
@@ -681,7 +689,7 @@ Entrar con Google
 </div>
 </div>
 <div id="screen-crear-pdf" class="screen">
-<div class="create-head"><button class="chatfs-back" onclick="volverCrear()">←</button><h1 class="title" style="flex:1;margin:0">📄 PDF</h1></div>
+<div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">📄</span><span class="create-head-txt">PDF</span></div></div>
 <div class="card">
 <label class="lbl">Título</label><input id="pdfTitulo" class="input" placeholder="Título del manga">
 <label class="lbl">Subtítulos</label><input id="pdfSubtitulo" class="input" placeholder="Subtítulo">
@@ -695,7 +703,7 @@ Entrar con Google
 </div>
 </div>
 <div id="screen-crear-ia" class="screen">
-<div class="create-head"><button class="chatfs-back" onclick="volverCrear()">←</button><h1 class="title" style="flex:1;margin:0">🤖 SalaMangaS IA</h1></div>
+<div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">🤖</span><span class="create-head-txt">SalaMangaS IA</span></div></div>
 <div class="card">
 <div class="ai-coming-soon">
 <div class="ai-coming-icon">🤖✨</div>
@@ -1005,7 +1013,7 @@ const CLOUD_PRESET = 'SalaMangas';
 const CEO_EMAILS = [
   'aldeanossrdc@gmail.com',
   'srdcceo1992@gmail.com',
-  'salamangas.oficial@gmail.com'
+  'salamangas.oficial.92@gmail.com'
 ];
 /* ===== VERIFICACIÓN REAL DE CEO =====
    La única fuente de verdad es el servidor: sb.auth.getUser() valida la sesión
@@ -1278,7 +1286,7 @@ w.appendChild(c);
 }
 function setModoCrear(m){
 if((m==='img'||m==='ia') && !puedeUsarIA()){
-alert('El plan Mangakars (y el plan Gratis) no tienen acceso a "Dibujo a lápiz → IA". Necesitás Mangakars Pro o Súper Mangakars.');
+alert('El plan Mangakers Pro (y el plan Gratis) no tienen acceso incluido a "Dibujo a lápiz → IA". Necesitás Súper Mangakers Pro, Semi Dios o Dios.');
 return;
 }
 document.querySelectorAll('.create-opt').forEach(o=>o.classList.remove('on'));
@@ -1291,7 +1299,7 @@ if(m==='img'){document.getElementById('lapizInput').click();}else if(m==='pdf'){
 function puedeUsarIA(){
 if(esCeoSync())return true;
 if(!miPerfil)return false;
-return planVigente()&&['pro','superpro','semidios','dios'].includes(planClave(miPerfil));
+return planVigente()&&['superpro','semidios','dios'].includes(planClave(miPerfil));
 }
 function subirPortada(e){
 const file = e.target.files[0];if(!file) return;
@@ -2309,7 +2317,7 @@ const PAYMENT_PLANS={basico:'Plan Básico',pro:'Plan Pro',superpro:'Plan Súper 
 const SAKURA_PACKS=['250','700','2200'];
 async function netlifyPost(fn,body){
   const {data:{session}}=await sb.auth.getSession();
-  const r=await fetch('/api/'+fn,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(session?session.access_token:'')},body:JSON.stringify(body)});
+  const r=await fetch('/.netlify/functions/'+fn,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(session?session.access_token:'')},body:JSON.stringify(body)});
   const j=await r.json().catch(()=>({}));
   if(!r.ok) throw new Error(j.error||'Error del servidor');
   return j;
@@ -2601,13 +2609,13 @@ function iniciarApp(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciarApp);else iniciarApp();
 /* ===== SALAMANGAS DEFINITIVO 02/10/2026 ===== */
 const PLANES_SALAMANGAS={
- gratis:{nombre:'Mangakars Gratis',precioARS:0,precioUSD:0,mangas:1,capitulos:1,sakuras:100,chats:['mangakars'],monetiza:false},
- pro:{nombre:'Mangakars Pro',precioARS:3000,precioUSD:3,mangas:1,capitulos:2,sakuras:500,chats:['mangakars','pro'],monetiza:false,insignia:'Pro plata'},
- superpro:{nombre:'Súper Mangakars Pro',precioARS:5000,precioUSD:5,mangas:2,capitulos:4,sakuras:2000,chats:['mangakars','pro'],monetiza:false,insignia:'Pro oro'},
- semidios:{nombre:'Semi Dios Mangakars',precioARS:12000,precioUSD:12,mangas:3,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:false,porcentaje:0,insignia:'Dios'},
- dios:{nombre:'Mangakars Dios',precioARS:30000,precioUSD:30,mangas:4,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:true,porcentaje:100,insignia:'Dios'}
+ gratis:{nombre:'Mangakers Gratis',precioARS:0,precioUSD:0,mangas:1,capitulos:1,sakuras:100,chats:['mangakars'],monetiza:false},
+ pro:{nombre:'Mangakers Pro',precioARS:3000,precioUSD:3,mangas:1,capitulos:2,sakuras:500,chats:['mangakars','pro'],monetiza:false,insignia:'Pro plata'},
+ superpro:{nombre:'Súper Mangakers Pro',precioARS:5000,precioUSD:5,mangas:2,capitulos:4,sakuras:2000,chats:['mangakars','pro'],monetiza:false,insignia:'Pro oro'},
+ semidios:{nombre:'Semi Dios Mangakers',precioARS:12000,precioUSD:12,mangas:3,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:false,porcentaje:0,insignia:'Dios'},
+ dios:{nombre:'Mangakers Dios',precioARS:30000,precioUSD:30,mangas:4,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:true,porcentaje:100,insignia:'Dios'}
 };
-const SALAS={mangakars:'SalaMankers',pro:'SalaMankers Pro',dios:'Dios del Manga'};
+const SALAS={mangakars:'SalaMangakers',pro:'SalaMangakers Pro',dios:'Dios del Manga'};
 const GENEROS_DEFINITIVOS=["Acción","Romance","Terror","Drama","Comedia","Isekai","Fantasía","Ciencia Ficción","Slice of Life","Misterio","Aventura","Sobrenatural","Suspense","Religioso"];
 const COSTOS_SAKURAS={pagina:50,capitulo:500,pdf:500,leerNueva:25,releer:10,extra:500};
 function planClave(p){
@@ -2662,9 +2670,9 @@ function renderSalasChat(){
   allowed.forEach(k=>{
     const isMuted=muted.includes(k);
     const b=document.createElement('div');b.className='chat-room-tab'+(salaActual===k?' on':'')+(isMuted?' is-muted':'');
-    b.innerHTML=esc(salaNombre(k))+'<span class=\"chat-room-lock\">'+(isMuted?'🔕 silenciada':'🔔 activa')+'</span>';
+    b.innerHTML='<span class=\"chat-room-name\">'+esc(salaNombre(k))+'</span>';
     b.onclick=()=>cambiarSala(k);
-    const lock=document.createElement('button');lock.className='chat-lock-btn';lock.textContent=isMuted?'Activar':'Silenciar';
+    const lock=document.createElement('button');lock.className='chat-lock-btn';lock.textContent=isMuted?'🔕 Activar':'🔔 Silenciar';
     lock.onclick=e=>{e.stopPropagation();toggleSilenciarSala(k)};
     b.appendChild(lock);
     w.appendChild(b);
@@ -2747,9 +2755,9 @@ function renderPlanesDefinitivos(){
   const p=PLANES_SALAMANGAS[k],d=document.createElement('div');d.className='card plan-def';
   const precio=p.precioARS?`$${p.precioARS.toLocaleString('es-AR')} ARS / $${p.precioUSD} USD`:'Gratis';
   let bullets='';
-  if(k==='gratis')bullets='<li>1 manga para crear</li><li>1 capítulo de 15 a 20 páginas o 1 PDF por mes</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMankers</li><li>No monetiza</li>';
-  if(k==='pro')bullets='<li>1 manga para crear</li><li>2 capítulos de 15 a 20 páginas o 2 PDF por mes</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMankers + SalaMankers Pro</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Insignia Pro plata</li><li>No monetiza</li>';
-  if(k==='superpro')bullets='<li>2 mangas para crear</li><li>4 capítulos de 15 a 20 páginas o 4 PDF por mes</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMankers + SalaMankers Pro</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Insignia Pro oro</li><li>No monetiza</li>';
+  if(k==='gratis')bullets='<li>1 manga para crear</li><li>1 capítulo de 15 a 20 páginas o 1 PDF por mes</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMangakers</li><li>No monetiza</li>';
+  if(k==='pro')bullets='<li>1 manga para crear</li><li>2 capítulos de 15 a 20 páginas o 2 PDF por mes</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>Insignia Pro plata</li><li>No monetiza</li>';
+  if(k==='superpro')bullets='<li>2 mangas para crear</li><li>4 capítulos de 15 a 20 páginas o 4 PDF por mes</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Insignia Pro oro</li><li>No monetiza</li>';
   if(k==='semidios')bullets='<li>3 mangas para crear, publicar y gratis TODOS los meses</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>No monetiza</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li><li>Botón con contador exacto del apoyo, se abona cada 30 días</li>';
   if(k==='dios')bullets='<li>4 creaciones gratis TODOS los meses</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>Lectura ilimitada todo el mes</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>💰 Monetiza: 100% de las donaciones para el creador</li><li>Alias del creador para Mercado Pago Argentina / PayPal internacional</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li>';
   d.innerHTML=`<h3>${p.nombre}</h3><div class="plan-ins">${insigniaGrande(k,'xl')}<p>${INSIGNIAS[k].corto}</p></div><div class="plan-price">${precio}</div><ul>${bullets}</ul>`;
@@ -2835,8 +2843,21 @@ function reabrirCrear(){
  abrirCrearPantalla(m==='lapiz'?'lapiz-2':m);
 }
 function renderCrearAux(){
- ['lapizGeneros','paginaGeneros','pdfGeneros','iaCrearGeneros'].forEach(id=>{const w=$(id);if(!w||w.children.length)return;GENEROS_DEFINITIVOS.forEach(g=>{const c=document.createElement('span');c.className='chip';c.textContent=g;c.onclick=()=>c.classList.toggle('on');w.appendChild(c)})});
- ['lapizEstilos','paginaEstilos','iaCrearEstilos'].forEach(id=>{const w=$(id);if(!w||w.children.length)return;ESTILOS.forEach(e=>{const c=document.createElement('span');c.className='chip';c.textContent=e;c.onclick=()=>{w.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')};w.appendChild(c)})});
+ const pintarColapsable=(id,items,esEstilo)=>{
+  const w=$(id);if(!w||w.children.length)return;
+  items.forEach((txt,i)=>{
+   const c=document.createElement('span');c.className='chip'+(i>=4?' chip-mas-oculto':'');c.textContent=txt;
+   c.onclick=esEstilo?()=>{w.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')}:()=>c.classList.toggle('on');
+   w.appendChild(c);
+  });
+  if(items.length>4){
+   const mas=document.createElement('span');mas.className='chip chip-mas';mas.textContent='+ más';
+   mas.onclick=()=>{w.querySelectorAll('.chip-mas-oculto').forEach(x=>x.classList.remove('chip-mas-oculto'));mas.remove()};
+   w.appendChild(mas);
+  }
+ };
+ ['lapizGeneros','paginaGeneros','pdfGeneros','iaCrearGeneros'].forEach(id=>pintarColapsable(id,GENEROS_DEFINITIVOS,false));
+ ['lapizEstilos','paginaEstilos','iaCrearEstilos'].forEach(id=>pintarColapsable(id,ESTILOS,true));
 }
 function renderIASlots(){
  const w=$('iaCrearSlots');if(!w)return;w.innerHTML='';
@@ -2970,7 +2991,7 @@ function setGiftTipo(tipo){
  <p style="font-size:12px;color:var(--text2);margin-top:12px">Paso 3: Cantidad o tiempo</p><div id="giftQty"></div><button class="btn-main" style="margin-top:12px" onclick="confirmarRegaloCEO()">Paso 4: Confirmar</button>`;
  const q=$('giftQty');
  if(tipo==='sakuras')q.innerHTML='<input id="giftSakuras" class="input" type="number" min="1" placeholder="Cantidad de Sakuras">';
- else if(tipo==='plan')q.innerHTML='<select id="giftPlan" class="input"><option value="pro">Mangakars Pro — 30 días</option><option value="superpro">Súper Mangakars Pro — 30 días</option><option value="semidios">Semi Dios Mangakars — 30 días</option><option value="dios">Mangakars Dios — 30 días</option></select>';
+ else if(tipo==='plan')q.innerHTML='<select id="giftPlan" class="input"><option value="pro">Mangakers Pro — 30 días</option><option value="superpro">Súper Mangakers Pro — 30 días</option><option value="semidios">Semi Dios Mangakers — 30 días</option><option value="dios">Mangakers Dios — 30 días</option></select>';
  else if(tipo==='paginas')q.innerHTML='<input id="giftPaginas" class="input" type="number" min="1" placeholder="Cantidad de páginas">';
  else if(tipo==='capitulos')q.innerHTML='<input id="giftCapitulos" class="input" type="number" min="1" placeholder="Cantidad de capítulos">';
  else q.innerHTML='<p class="warn-mini">Se regalará 1 manga extra.</p>';
@@ -3068,13 +3089,13 @@ subirACloudinary=async function(file){
    (y su clave en ORDEN_INSIGNIAS), 3) si depende de una regla nueva, tocá claveInsignia(). */
 const INSIGNIAS={
   ceo:{img:'/ceo.png',emoji:'🐉',nombre:'CEO',corto:'🐉 El creador supremo de SalaMangaS. Solo uno en toda la plataforma. Es el dueño, el que construyó todo desde cero.',largo:'El creador supremo de SalaMangaS. Solo existe uno en toda la plataforma: el dueño, el que construyó todo desde cero.',gana:'No se compra ni se regala. Es única.'},
-  dios:{img:'/dios.png',emoji:'👑',nombre:'Mangakars Dios',corto:'👑 El máximo poder. Corona imperial.',largo:'El máximo poder dentro de SalaMangaS. La corona imperial es para quienes lo apoyan todo.',gana:'4 creaciones gratis por mes, lectura ilimitada, monetiza el 100% de las donaciones, chat directo con el CEO y chat Dios del Manga.'},
+  dios:{img:'/dios.png',emoji:'👑',nombre:'Mangakers Dios',corto:'👑 El máximo poder. Corona imperial.',largo:'El máximo poder dentro de SalaMangaS. La corona imperial es para quienes lo apoyan todo.',gana:'4 creaciones gratis por mes, lectura ilimitada, monetiza el 100% de las donaciones, chat directo con el CEO y chat Dios del Manga.'},
   semidios:{img:'/semidios.png',emoji:'🌟',nombre:'Semi Dios',corto:'🦊 A un paso de lo divino. Máscara del zorro.',largo:'A un paso de lo divino. La máscara del zorro marca a quienes ya están cerca de la cima.',gana:'3 mangas gratis por mes, capítulos sin límite, 4000 Sakuras para leer, chat directo con el CEO y chat Dios del Manga. No monetiza.'},
-  superpro:{img:'/superpro.png',emoji:'🥇',nombre:'Súper Mangakars Pro',corto:'⚔️ El que domina el arte. Espada del guerrero.',largo:'El que domina el arte. Las espadas cruzadas son del guerrero que ya conoce su oficio.',gana:'2 mangas, 4 capítulos por mes, 2000 Sakuras y chat SalaMankers Pro. No monetiza.'},
-  pro:{img:'/pro.png',emoji:'🥈',nombre:'Mangakars Pro',corto:'🖋️ El que escribe y crea. Pluma de autor.',largo:'El que escribe y crea. La pluma con el libro es la marca del autor.',gana:'1 manga, 2 capítulos por mes, 500 Sakuras y chat SalaMankers Pro. No monetiza.'},
-  gratis:{img:'/gratis.png',emoji:'🌱',nombre:'Mangakars Gratis',corto:'🌱 El que recién arranca. Sin insignia especial.',largo:'El que recién arranca su camino en SalaMangaS. La estrella dorada es el primer paso.',gana:'1 manga, 1 capítulo por mes y 200 Sakuras diarias (no acumulables). No monetiza.'}
+  superpro:{img:'/superpro.png',emoji:'🥇',nombre:'Súper Mangakers Pro',corto:'⚔️ El que domina el arte. Espada del guerrero.',largo:'El que domina el arte. Las espadas cruzadas son del guerrero que ya conoce su oficio.',gana:'2 mangas, 4 capítulos por mes, 2000 Sakuras y chat SalaMangakers Pro. No monetiza.'},
+  pro:{img:'/pro.png',emoji:'🥈',nombre:'Mangakers Pro',corto:'🖋️ El que escribe y crea. Pluma de autor.',largo:'El que escribe y crea. La pluma con el libro es la marca del autor.',gana:'1 manga, 2 capítulos por mes, 500 Sakuras y chat SalaMangakers Pro. No monetiza.'},
+  gratis:{img:'/gratis.png',emoji:'🌱',nombre:'Mangakers Gratis',corto:'🌱 El que recién arranca. Sin insignia especial.',largo:'El que recién arranca su camino en SalaMangaS. La estrella dorada es el primer paso.',gana:'1 manga, 1 capítulo por mes y 200 Sakuras diarias (no acumulables). No monetiza.'}
 };
-const ORDEN_INSIGNIAS=['ceo','dios','semidios','superpro','pro','gratis'];
+const ORDEN_INSIGNIAS=['gratis','pro','superpro','semidios','dios','ceo'];
 function esCuentaCEO(p){
   try{if(!p)return false;const e=String(p.email||'').trim().toLowerCase();if(e&&CEO_EMAILS.includes(e))return true;
     return !!(miPerfil&&p.id===miPerfil.id&&esCeoSync())}catch(x){return false}
@@ -3112,7 +3133,7 @@ async function ceoIdCuenta(){
   try{
     const {data}=await sb.from('profiles').select('id,email').in('email',CEO_EMAILS);
     if(data&&data.length){
-      const pref=data.find(x=>(x.email||'').toLowerCase()==='salamangas.oficial@gmail.com')||data[0];
+      const pref=data.find(x=>(x.email||'').toLowerCase()==='salamangas.oficial.92@gmail.com')||data[0];
       window._ceoId=pref.id;return pref.id;
     }
   }catch(e){}
@@ -3288,7 +3309,7 @@ iniciarApp=function(){
       '<div class="social-profile-name">'+esc(d.nombre||p.username||'Usuario')+'</div>'+
       '<div class="social-profile-meta">'+(d.edad?esc(d.edad)+' años · ':'')+'@'+esc(p.username||'usuario')+'</div>'+
       (function(){const k=claveInsignia(p),x=INSIGNIAS[k];return k?'<div><span class="social-plan'+(k==='ceo'?' ceo':'')+'">'+x.emoji+' '+esc(x.nombre)+'</span></div>':''})()+
-      '<div class="social-profile-stats"><div class="social-profile-stat"><b>'+followers+'</b><span>personas suscriptas</span></div><div class="social-profile-stat"><b>'+mangas.length+'</b><span>mangas publicados</span></div></div>'+
+      '<div class="social-profile-stats"><div class="social-profile-stat"><b>'+followers+'</b><span>Seguidores</span></div><div class="social-profile-stat"><b>'+mangas.length+'</b><span>mangas publicados</span></div></div>'+
       '<button class="btn-main" style="margin-top:10px" onclick="compartirPerfil(\''+esc(uid)+'\')">🔗 '+(isMine?'Compartir mi perfil':'Compartir este perfil')+'</button>'+
       (isMine?'<button class="btn-ghost" style="width:100%;margin-top:8px" onclick="editarMiPerfilSocial()">✏️ Editar perfil social</button>':
         (miPerfil?'<button class="btn'+(SEGUIDOS.has(uid)?' on':'')+'" style="width:100%;margin-top:8px" onclick="toggleSeguir(\''+esc(uid)+'\',this)">'+(SEGUIDOS.has(uid)?'✓ Suscripto':'＋ Suscribirme')+'</button>':''))+
