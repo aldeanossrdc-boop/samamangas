@@ -1,3 +1,4 @@
+//v2
 // functions/api/_shared.js — helpers comunes (Cloudflare Pages Functions)
 // Archivo con "_" al inicio: Cloudflare NO lo expone como ruta pública,
 // pero sí lo pueden importar los demás archivos de /functions/api con
