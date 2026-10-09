@@ -533,6 +533,33 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .tprev .chatfs-header{padding:8px 12px}.tprev .chatfs-header h2{font-size:17px;flex:1;margin:0}
 .tprev .chatfs-body{overflow:hidden}.tprev .chatfs-inputbar input{flex:1}
 #tpMsg{text-align:center;font-size:13px;font-weight:700;margin:6px 0 10px;color:var(--text2)}
+/* Perfil social: sus personajes */
+.sp-pjs{display:flex;flex-direction:column;gap:12px}
+.sp-pj{display:flex;gap:12px;align-items:flex-start}
+.sp-pj img,.sp-pj .msg-avatar{width:64px;height:64px;flex:0 0 64px;border-radius:12px;object-fit:cover}
+.sp-pj-t{min-width:0}.sp-pj-t b{display:block;color:var(--gold3);font-size:14px}
+.sp-pj-t small{display:block;color:var(--text2);font-size:12px;line-height:1.4;white-space:pre-wrap;word-break:break-word}
+/* IA: imágenes por generación + ayuda de prompts */
+.ia-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ia-cell img{width:100%;aspect-ratio:832/1216;object-fit:cover;border-radius:10px;display:block;background:rgba(0,0,0,.35)}
+.ia-cell-btns{display:flex;gap:4px;margin-top:4px}.ia-cell-btns button{flex:1;padding:8px 2px;font-size:11px;margin:0}
+.ia-ayuda{margin:8px 0;border:1px solid rgba(255,209,102,.25);border-radius:12px;padding:8px 12px;background:rgba(124,77,255,.06)}
+.ia-ayuda summary{cursor:pointer;font-weight:700;color:var(--gold3);font-size:13px}
+.ia-aviso{margin:8px 0;padding:8px 10px;border-radius:10px;background:rgba(255,71,87,.10);border:1px solid rgba(255,71,87,.35);font-size:12px;line-height:1.45;color:var(--text)}
+.ia-ayuda-t{margin:10px 0 2px;font-size:12px;font-weight:700;color:var(--text2)}
+.ia-tips{margin:6px 0 0 16px;font-size:12px;line-height:1.5;color:var(--text2)}
+/* ===== TANDA B ===== */
+.u-name{cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:2px}
+.msg-avatar[data-ulink]{cursor:pointer}
+.pj-foto-lg{width:96px;height:96px;flex:0 0 96px;object-fit:cover;border-radius:14px;cursor:pointer;background:rgba(0,0,0,.3)}
+.rk.pj-row{align-items:flex-start;cursor:default}
+.rk.pj-row small{font-size:11px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
+.sp-pj img{cursor:pointer}
+.pj-like{margin-top:6px;padding:5px 12px;border-radius:16px;border:1px solid rgba(255,107,129,.5);background:rgba(255,107,129,.08);color:var(--text);font-size:12px;font-weight:700;cursor:pointer}
+.pj-like.on{background:rgba(255,107,129,.25)}
+.sp-redes{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sp-red{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:18px;border:1px solid rgba(255,209,102,.3);background:rgba(255,209,102,.06);color:var(--gold3);font-size:12px;font-weight:700;text-decoration:none}
+.ia-aviso2{margin-top:12px;padding:8px 10px;border-radius:10px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.3);font-size:12px;line-height:1.45;color:var(--text)}
 .chatfs[data-estilo="bnsimple"]{background-color:#fff!important;background-image:radial-gradient(rgba(0,0,0,.16) 1px,transparent 1.5px)!important;background-size:7px 7px!important}
 .chatfs[data-estilo="bnsimple"] .chatfs-header{background:#fff;border-bottom:2px solid #111}
 .chatfs[data-estilo="bnsimple"] .chatfs-header h2{color:#111}
@@ -627,6 +654,28 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .chatfs[data-estilo="dorado"] .msg-ono::before,.chatfs[data-estilo="dorado"] .msg-ono::after{content:none}
 
 </style>
+<script>
+/* ===== Actualización automática (service worker) ===== */
+(function(){
+  if(!('serviceWorker' in navigator))return;
+  var habiaControlador=!!navigator.serviceWorker.controller,pendiente=false,visibleDesde=Date.now();
+  function recargar(){try{location.reload()}catch(e){}}
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+    if(!habiaControlador){habiaControlador=true;return} /* primera instalación: no recargar */
+    if(document.visibilityState==='visible'&&Date.now()-visibleDesde<10000)recargar(); /* recién abrió la app */
+    else pendiente=true; /* recarga cuando vuelva a abrirla */
+  });
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('/service-worker.js',{updateViaCache:'none'}).then(function(reg){
+      function buscar(){try{reg.update()}catch(e){}}
+      document.addEventListener('visibilitychange',function(){
+        if(document.visibilityState==='visible'){visibleDesde=Date.now();if(pendiente){pendiente=false;recargar();return}buscar()}
+      });
+      setInterval(buscar,30*60*1000);
+    }).catch(function(){});
+  });
+})();
+</script>
 </head>
 <body>
 <!-- LOGIN MODAL -->
@@ -676,6 +725,7 @@ Entrar con Google
 <button class="icon-btn" onclick="abrirBuscar()" title="Buscar">🔍</button>
 <button class="icon-btn" onclick="abrirNotifs()" title="Avisos">🔔<span id="notifBadge" class="badge" style="display:none">0</span></button>
 <button class="icon-btn coin-btn" onclick="abrirSakuras()" title="Sakuras">🪙 <b id="sakurasCount">0</b></button>
+<button class="icon-btn coin-btn" onclick="abrirSakuras('ia')" title="Sakuras IA" style="font-size:12px">🔴 IA: <b id="sakurasIACount">0</b></button>
 <button class="icon-btn" onclick="abrirSuscripciones()" title="Suscripciones">⭐</button>
 </div>
 </div>
@@ -914,7 +964,8 @@ Entrar con Google
 <div class="modal-box">
 <button class="modal-close" onclick="cerrarSakuras()">✕</button>
 <h2 style="font-family:'Cinzel',serif;color:var(--gold);text-align:center">🪙 Sakuras</h2>
-<p style="font-size:30px;font-weight:800;color:var(--gold3);text-align:center;margin:8px 0"><span id="sakurasSaldo">0</span></p>
+<p style="font-size:22px;font-weight:800;color:var(--gold3);text-align:center;margin:8px 0 2px">🪙 Sakuras: <span id="sakurasSaldo">0</span></p><p style="font-size:22px;font-weight:800;color:#ff6b81;text-align:center;margin:2px 0 8px">🔴 Sakuras IA: <span id="sakurasIASaldo">0</span></p><div style="display:flex;gap:8px;margin:10px 0 14px"><button id="sakBtnNormal" class="btn btn-main" style="flex:1;margin-top:0" onclick="sakTab('normal')">🪙 Sakuras</button><button id="sakBtnIA" class="btn" style="flex:1" onclick="sakTab('ia')">🔴 Sakuras IA</button></div>
+<div id="sakTabNormal">
 <label class="lbl">🔗 Tu link de invitación</label><div style="display:flex;gap:8px;margin-bottom:12px"><input id="refLinkInput" class="input" readonly style="margin:0"><button class="btn" onclick="copiarRefLink()">Copiar</button></div>
 <div class="warn-mini">200 Sakuras diarias para todos los planes. No se acumulan. Si no las usás ese día, se pierden.</div>
 <h3 class="section">💸 Costos</h3>
@@ -927,6 +978,12 @@ Entrar con Google
 <div class="pack-card"><div class="cant">700 🪙</div><div class="precio">$2000 ARS / $2 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(700)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(700)">🅿️ PayPal</button></div>
 <div class="pack-card"><div class="cant">1500 🪙</div><div class="precio">$3000 ARS / $3 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(1500)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(1500)">🅿️ PayPal</button></div>
 <div class="pack-card"><div class="cant">3000 🪙</div><div class="precio">$5000 ARS / $5 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(3000)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(3000)">🅿️ PayPal</button></div>
+</div>
+</div>
+<div id="sakTabIA" style="display:none">
+<div class="warn-mini">🔴 Las Sakuras IA sirven <b>solo</b> para generar imágenes con IA (1 generación = 1 Sakura IA). No se ganan gratis: solo se compran. Se acumulan, no vencen y se usan cuando se acaban las generaciones de tu plan. Para usarlas necesitás un plan Pro o superior. No se mezclan con las Sakuras normales.</div>
+<h3 class="section">🛒 Comprar Sakuras IA</h3>
+<div id="sakPacksIA" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
 </div>
 </div></div>
 <div id="suscripciones-modal" class="modal-overlay">
@@ -998,11 +1055,18 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div id="iaDibujoBox" style="display:none"><img id="iaDibujo" class="iaImg" style="width:100%;max-height:220px;object-fit:contain;border-radius:12px;background:rgba(0,0,0,.3)"></div>
 <label class="lbl">📝 Instrucción para la IA</label>
 <textarea id="iaTxt" class="input" placeholder="Describí la escena, ambiente, ropa, expresión, encuadre y lo que querés modificar..."></textarea>
+<details id="iaAyuda" class="ia-ayuda"><summary>💡 Ayuda para escribir mejor</summary>
+<div class="ia-aviso">⚠️ <b>Antes de generar:</b> en <b>Dibujo a lápiz</b> la IA crea <b>1 imagen</b> y en <b>SalaMangaS IA</b> crea <b>2 imágenes</b> para que elijas. Cada vez que tocás Generar se gasta <b>1 generación</b> (de tu plan o 1 Sakura IA), y si tocás Regenerar se gasta otra. Si la IA falla, la generación se te devuelve sola. No pidas <b>texto o letras</b> dentro de la imagen (la IA suele deformarlas), ni <b>personajes con derechos de autor</b>, ni contenido sexual o violento extremo: la IA lo bloquea.</div>
+<div class="ia-ayuda-t">Ejemplos (tocá uno para usarlo)</div><div id="iaEjemplos"></div>
+<div class="ia-ayuda-t">Sumá detalles (tocá para agregar)</div><div id="iaSugerencias"></div>
+<ul class="ia-tips"><li>Contá <b>quién</b> es, <b>qué hace</b>, <b>dónde</b> está y cómo se ve (encuadre y ambiente).</li><li>Una sola escena por imagen: es más fácil que salga bien.</li><li>Si querés un personaje tuyo, elegilo abajo en 👥 Personajes y la IA usa su foto.</li><li>En modo Lápiz la IA respeta tu dibujo: contale qué querés cambiar o agregar.</li></ul></details>
 <label class="lbl">🎨 Colores (opcional)</label><input id="iaColores" class="input" placeholder="Ej.: blanco y negro con detalles dorados">
 <label class="lbl">✨ Estilo visual</label><div id="iaEstilos"></div>
+<label class="lbl" style="display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-weight:500"><input type="checkbox" id="iaBorrador" style="margin-top:3px"> <span>⚡ Modo borrador: más rápido y barato, con menos detalle. Igual gasta 1 generación.</span></label>
 <label class="lbl">🖼️ Imágenes de referencia (opcional)</label>
 <input id="iaRefInput" class="input" type="file" accept="image/*" multiple>
 <label class="lbl">👥 Personajes (opcional)</label><div id="iaPjs"></div>
+<div id="iaAviso2" class="ia-aviso2"></div>
 <button class="btn-main" id="iaBtn" style="margin-top:16px" onclick="iaGenerar()">✨ Generar</button>
 <div id="iaRes" style="margin-top:14px"></div>
 </div>
@@ -1049,18 +1113,25 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 </div></div>
 <div id="pj-modal" class="modal-overlay"><div class="modal-box">
 <button class="modal-close" onclick="cerrarOv('pj-modal')">✕</button>
-<h2 style="font-family:'Cinzel',serif;color:var(--gold)">Nuevo personaje</h2>
+<h2 id="pjModalTitulo" style="font-family:'Cinzel',serif;color:var(--gold)">Nuevo personaje</h2>
 <label class="lbl">Nombre</label><input id="pjNom" class="input" maxlength="60">
 <label class="lbl">Descripción detallada</label><textarea id="pjDesc" class="input" placeholder="Pelo, ojos, ropa, edad, altura, marcas especiales..."></textarea>
 <div class="warn-mini">Cuanto más detalle pongas, mejor va a mantener la IA al personaje en cada página.</div>
-<label class="lbl">Foto de referencia (opcional)</label><input id="pjFoto" type="file" accept="image/*" class="input">
+<label class="lbl">Foto de referencia (opcional)</label><div id="pjFotoNota" class="warn-mini" style="display:none"></div><input id="pjFoto" type="file" accept="image/*" class="input">
 <button id="pjGuardar" class="btn-main" style="margin-top:16px" onclick="guardarPersonaje()">Guardar personaje</button>
+</div></div>
+<div id="um-modal" class="modal-overlay" onclick="if(event.target===this)cerrarOv('um-modal')"><div class="modal-box" style="max-width:320px;text-align:center">
+<button class="modal-close" onclick="cerrarOv('um-modal')">✕</button>
+<h2 id="umTitulo" style="font-family:'Cinzel',serif;color:var(--gold);font-size:18px"></h2>
+<button id="umVer" class="btn-main" style="width:100%;margin-top:14px">👤 Ver perfil</button>
+<button id="umReg" class="btn" style="width:100%;margin-top:8px">🎁 Regalar</button>
 </div></div>
 <div id="pj-preview-modal" class="modal-overlay"><div class="modal-box">
 <button class="modal-close" onclick="cerrarOv('pj-preview-modal')">✕</button>
 <h2 id="pjPreviewTitulo" style="font-family:'Cinzel',serif;color:var(--gold)">👤 Personaje</h2>
 <div id="pjPreviewFoto" style="margin-top:12px;text-align:center"></div>
 <div id="pjPreviewDesc" class="pj-preview-desc"></div>
+<div id="pjPreviewAcc"></div>
 </div></div>
 <div id="chatfs" class="chatfs">
 <div class="chatfs-header">
@@ -1286,8 +1357,8 @@ document.getElementById('info-modal').classList.add('on');
 }
 function cerrarInfo(){document.getElementById('info-modal').classList.remove('on')}
 /* ===== SAKURAS ===== */
-function abrirSakuras(){
-document.getElementById('sakurasSaldo').innerText = (miPerfil && miPerfil.sakuras) || 0;
+function abrirSakuras(tab){
+pintarSaldosModal();sakTab(tab==='ia'?'ia':'normal');
 const ref = miPerfil ? (window.location.origin+window.location.pathname+'?ref='+miPerfil.id) : 'Iniciá sesión para tener tu link';
 document.getElementById('refLinkInput').value = ref;
 document.getElementById('sakuras-modal').classList.add('on');
@@ -1301,7 +1372,7 @@ alert('Link copiado ✅');
 }
 function actualizarSakurasUI(){
 const el = document.getElementById('sakurasCount');
-if(el) el.innerText = (miPerfil && miPerfil.sakuras) || 0;
+if(el) el.innerText = fmtSak(miPerfil&&miPerfil.sakuras);const _ei=document.getElementById('sakurasIACount');if(_ei)_ei.innerText=fmtSak(miPerfil&&miPerfil.sakuras_ia);pintarSaldosModal();
 }
 /* SEGURIDAD: dar_sakuras/gastar_sakuras NO se llaman más directo desde
    acá (permitía a cualquier usuario regalarse sakuras infinitas desde la
@@ -1486,7 +1557,7 @@ w.appendChild(c);
 }
 function setModoCrear(m){
 if((m==='img'||m==='ia') && !puedeUsarIA()){
-alert('El plan Mangakers Pro (y el plan Gratis) no tienen acceso incluido a "Dibujo a lápiz → IA". Necesitás Súper Mangakers Pro, Semi Dios o Dios.');
+alert('Tu plan Gratis no incluye la IA. Necesitás Mangakers Pro, Súper Mangakers Pro, Semi Dios o Dios.');
 return;
 }
 document.querySelectorAll('.create-opt').forEach(o=>o.classList.remove('on'));
@@ -1499,7 +1570,7 @@ if(m==='img'){document.getElementById('lapizInput').click();}else if(m==='pdf'){
 function puedeUsarIA(){
 if(esCeoSync())return true;
 if(!miPerfil)return false;
-return planVigente()&&['superpro','semidios','dios'].includes(planClave(miPerfil));
+return planVigente()&&['pro','superpro','semidios','dios'].includes(planClave(miPerfil));
 }
 function subirPortada(e){
 const file = e.target.files[0];if(!file) return;
@@ -1855,10 +1926,10 @@ const row = document.createElement('div');
 row.className = 'msg-row'+(esMio?' mine':''); if(m.id) row.dataset.msgId=String(m.id); row.dataset.ts=m.created_at||'';
 if(!esMio){
   const side=document.createElement('div');side.className='msg-side';
-  const av=document.createElement('div');av.className='msg-avatar';av.dataset.uid=m.user_id||'';
+  const av=document.createElement('div');av.className='msg-avatar';av.dataset.uid=m.user_id||'';if(!esJisoo&&m.user_id){av.dataset.ulink=m.user_id;av.dataset.uname=m.username||'Usuario'}
   if(esJisoo)av.innerText='🌸';else pintarAvatar(av,AUTORES[m.user_id],m.username);
   const nm=document.createElement('div');nm.className='msg-name';
-  nm.innerHTML=esJisoo?'Jisoo':esc(m.username||'Usuario')+slotInsignia(m.user_id);
+  nm.innerHTML=esJisoo?'Jisoo':uNombre(m.user_id,m.username)+slotInsignia(m.user_id);
   side.appendChild(av);side.appendChild(nm);row.appendChild(side);
 }
 const col=document.createElement('div');col.className='msg-col';
@@ -1958,6 +2029,32 @@ const ids=[...new Set(MANGAS.map(m=>m.user_id))];
 if(ids.length){const {data:ps}=await sb.from('profiles').select('*').in('id',ids);(ps||[]).forEach(p=>AUTORES[p.id]=p);}
 }catch(e){}
 }
+/* ==== TOCAR UN NOMBRE = VER PERFIL (CEO: menú Ver perfil / Regalar) ==== */
+function uNombre(uid,nombre){
+  const n=String(nombre||'Usuario');
+  if(!uid||uid==='jisoo')return esc(n);
+  return '<span class="u-name" data-ulink="'+esc(uid)+'" data-uname="'+esc(n)+'">'+esc(n)+'</span>';
+}
+function usuarioTap(uid,nombre){
+  if(!uid||uid==='jisoo')return;
+  const ceo=(typeof esCeoSync==='function')&&esCeoSync();
+  if(!ceo){abrirCreador(uid);return}
+  $('umTitulo').textContent='👤 '+(nombre||'Usuario');
+  $('umVer').onclick=()=>{cerrarOv('um-modal');abrirCreador(uid)};
+  $('umReg').onclick=()=>{cerrarOv('um-modal');regalarA(uid,nombre)};
+  $('um-modal').classList.add('on');
+}
+function regalarA(uid,nombre){
+  if(location.pathname.indexOf('sala-ceo')>-1&&typeof ceoTab==='function'){window._giftPre={uid:uid,nombre:nombre||''};cerrarOv('cre');ceoTab('regalar');return}
+  location.href='/sala-ceo.html?regalar='+encodeURIComponent(uid)+'&n='+encodeURIComponent(nombre||'');
+}
+document.addEventListener('click',function(e){
+  const t=e.target.closest&&e.target.closest('[data-ulink]');
+  if(!t)return;
+  e.preventDefault();e.stopPropagation();
+  usuarioTap(t.dataset.ulink,t.dataset.uname||'');
+},true);
+/* ==== FIN TOCAR NOMBRE ==== */
 function cardManga(m){
 const d=document.createElement('div');d.className='mcard';
 const k=String(m.id),uid=m.user_id;
@@ -1967,7 +2064,7 @@ const mio=!!miPerfil&&miPerfil.id===uid,sig=SEGUIDOS.has(uid);
 d.innerHTML=`${pags.length?'<img class="mcover" loading="lazy" src="'+esc(pags[0])+'">':'<div class="noimg"></div>'}<span class="mpg"></span><img class="manga-logo-mark" src="logo.jpg" alt="SalaMangaS" onerror="this.style.display='none'"><div class="heart${FAVS.has(k)?' on':''}" data-fav="${esc(k)}">❤️</div><div class="t">${esc(m.titulo)}</div>${m.subtitulo?'<div class="st">'+esc(m.subtitulo)+'</div>':''}<div class="a">${esc(nomAutor(uid))}${insigniaHTML(AUTORES[uid])}</div><div class="mstats" data-stat="${esc(k)}">👍 ${m.likes||0} · 👁️ ${m.vistas||0}</div><div class="mbtns"><button type="button" class="mb-seg${sig?' on':''}"${mio?' disabled':''}>${mio?'Sos vos':(sig?'✓ Siguiendo':'＋ Seguir')}</button><button type="button" class="mb-sig"${pags.length<2?' disabled':''}>Siguiente ▶</button></div>`;
 d.onclick=()=>abrirLector(m.id);
 d.querySelector('.heart').onclick=e=>{e.stopPropagation();toggleFav(m.id)};
-d.querySelector('.a').onclick=e=>{e.stopPropagation();abrirCreador(uid)};
+d.querySelector('.a').onclick=e=>{e.stopPropagation();usuarioTap(uid,(AUTORES[uid]&&AUTORES[uid].username)||'')};
 d.querySelector('.mb-seg').onclick=e=>{e.stopPropagation();toggleSeguir(uid,e.currentTarget)};
 d.querySelector('.mb-sig').onclick=e=>{
  e.stopPropagation();if(pags.length<2)return;
@@ -2159,7 +2256,7 @@ const v=$('comVacio');if(v)v.remove();
 if($('c'+c.id))return;
 const d=document.createElement('div');d.id='c'+c.id;d.className='com';
 const mio=miPerfil&&c.user_id===miPerfil.id;
-d.innerHTML='<b>'+esc(c.username||'Usuario')+'</b>'+slotInsignia(c.user_id)+'<span class="cf">'+new Date(c.created_at).toLocaleDateString('es')+'</span>'+(mio?'<span class="cdel" onclick="borrarComentario(\''+c.id+'\')">🗑️</span>':'')+'<p>'+esc(c.contenido)+'</p>';
+d.innerHTML='<b>'+uNombre(c.user_id,c.username)+'</b>'+slotInsignia(c.user_id)+'<span class="cf">'+new Date(c.created_at).toLocaleDateString('es')+'</span>'+(mio?'<span class="cdel" onclick="borrarComentario(\''+c.id+'\')">🗑️</span>':'')+'<p>'+esc(c.contenido)+'</p>';
 $('comList').appendChild(d);
 }
 async function cargarComentarios(){
@@ -2516,6 +2613,42 @@ XLSX.writeFile(wb,'salamangas_'+new Date().toISOString().slice(0,10)+'.xlsx');
 /* ===== TANDA C: PAGOS + SAKURAS ===== */
 const PAYMENT_PLANS={basico:'Plan Básico',pro:'Plan Pro',superpro:'Plan Súper Pro'};
 const SAKURA_PACKS=['250','700','2200'];
+/* ===== 2 MONEDAS: Sakuras (🪙) y Sakuras IA (🔴) =====
+   Las Sakuras IA solo se compran con plata y solo sirven para generar con IA.
+   INTERRUPTOR (prendido): requiere haber corrido sakuras_ia.sql e ia_generaciones.sql en Supabase
+   y tener subidas las funciones de pagos. Si hay que apagar las compras de IA: false. */
+const SAKURAS_IA_SERVER_LISTO=true;
+const SAKURAS_IA_PACKS=[{n:5,ars:'1.000',usd:1},{n:15,ars:'2.000',usd:2},{n:30,ars:'3.000',usd:3},{n:80,ars:'5.000',usd:5}];
+function fmtSak(n){return (Number(n)||0).toLocaleString('es-AR')}
+function pintarSaldosModal(){
+  const a=document.getElementById('sakurasSaldo'),b=document.getElementById('sakurasIASaldo');
+  if(a)a.textContent=fmtSak(miPerfil&&miPerfil.sakuras);
+  if(b)b.textContent=fmtSak(miPerfil&&miPerfil.sakuras_ia);
+}
+function pintarPacksIA(){
+  const w=document.getElementById('sakPacksIA');if(!w)return;
+  w.innerHTML=SAKURAS_IA_PACKS.map(p=>'<div class="pack-card"'+(SAKURAS_IA_SERVER_LISTO?'':' style="opacity:.6"')+'><div class="cant">'+p.n+' 🔴 IA</div><div class="precio">$'+p.ars+' ARS / $'+p.usd+' USD</div>'+(SAKURAS_IA_SERVER_LISTO?'<button class="btn btn-main" onclick="comprarSakurasIAMP('+p.n+')">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasIAPayPal('+p.n+')">🅿️ PayPal</button>':'<div style="font-size:12px;color:var(--text2);margin-top:6px">Próximamente</div>')+'</div>').join('');
+}
+function sakTab(t){
+  const ia=(t==='ia');
+  const n=document.getElementById('sakTabNormal'),i=document.getElementById('sakTabIA');
+  if(n)n.style.display=ia?'none':'';if(i)i.style.display=ia?'':'none';
+  const bn=document.getElementById('sakBtnNormal'),bi=document.getElementById('sakBtnIA');
+  if(bn)bn.className=ia?'btn':'btn btn-main';if(bi)bi.className=ia?'btn btn-main':'btn';
+  if(ia)pintarPacksIA();
+}
+async function comprarSakurasIAMP(n){
+  if(!requireUser())return;
+  if(!(esCeoSync()||(planVigente()&&planClave(miPerfil)!=='gratis'))){alert('Para usar la IA necesitás un plan Pro o superior. Suscribite primero y después comprá Sakuras IA.');return}
+  if(!SAKURAS_IA_SERVER_LISTO){alert('Las Sakuras IA se habilitan muy pronto 🔴');return}
+  try{const j=await netlifyPost('mercadopago-create-preference',{tipo:'sakuras_ia',item:String(n)});if(j.init_point)location.href=j.init_point;else throw new Error('Mercado Pago no devolvió el link de pago');}catch(e){alert('Mercado Pago: '+e.message)}
+}
+async function comprarSakurasIAPayPal(n){
+  if(!requireUser())return;
+  if(!(esCeoSync()||(planVigente()&&planClave(miPerfil)!=='gratis'))){alert('Para usar la IA necesitás un plan Pro o superior. Suscribite primero y después comprá Sakuras IA.');return}
+  if(!SAKURAS_IA_SERVER_LISTO){alert('Las Sakuras IA se habilitan muy pronto 🔴');return}
+  try{const j=await netlifyPost('paypal-create-order',{tipo:'sakuras_ia',item:String(n)});if(j.approve_url)location.href=j.approve_url;else throw new Error('PayPal no devolvió el link de aprobación');}catch(e){alert('PayPal: '+e.message)}
+}
 async function netlifyPost(fn,body){
   const {data:{session}}=await sb.auth.getSession();
   const r=await fetch('/api/'+fn,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+(session?session.access_token:'')},body:JSON.stringify(body)});
@@ -2662,39 +2795,61 @@ async function cargarPersonajes(){
   catch(e){PERSONAJES=[]}
 }
 async function abrirPersonajes(){if(!miPerfil){alert('Iniciá sesión primero');return}$('pj').classList.add('on');await cargarPersonajes();pintarPersonajes()}
+let _pjEditId=null;
 function nuevoPersonaje(){
+  _pjEditId=null;
+  $('pjModalTitulo').innerText='Nuevo personaje';$('pjFotoNota').style.display='none';$('pjGuardar').innerText='Guardar personaje';
   $('pjNom').value='';$('pjDesc').value='';$('pjFoto').value='';$('pj-modal').classList.add('on')
+}
+function editarPersonaje(id){
+  const p=PERSONAJES.find(x=>String(x.id)===String(id))||(window._spPjs||[]).find(x=>String(x.id)===String(id));if(!p)return;
+  _pjEditId=p.id;
+  $('pjModalTitulo').innerText='Editar personaje';$('pjGuardar').innerText='Guardar cambios';
+  $('pjNom').value=p.nombre||'';$('pjDesc').value=p.descripcion||'';$('pjFoto').value='';
+  const n=$('pjFotoNota');n.style.display='block';n.textContent=p.foto_url?'Ya tiene foto. Si no elegís otra, se mantiene la actual.':'Todavía no tiene foto de referencia.';
+  cerrarOv('pj-preview-modal');$('pj-modal').classList.add('on');
 }
 async function guardarPersonaje(){
   if(!requireUser())return;
   const nombre=$('pjNom').value.trim(),desc=$('pjDesc').value.trim(),f=$('pjFoto').files[0];
   if(!nombre||!desc){alert('Completá nombre y descripción');return}
-  const btn=$('pjGuardar');if(btn){btn.disabled=true;btn.innerText='Guardando...'}
+  const btn=$('pjGuardar'),txt0=btn?btn.innerText:'Guardar personaje';
+  if(btn){btn.disabled=true;btn.innerText='Guardando...'}
   try{
     const foto_url=f?await subirACloudinary(f):null;
-    const payload={user_id:miPerfil.id,nombre,descripcion:desc,foto_url:foto_url||null};
-    const {data,error}=await sb.from('personajes').insert(payload).select('*').single();
-    if(error)throw error;
-    if(!data)throw new Error('Supabase no devolvió el personaje guardado');
-    $('pj-modal').classList.remove('on');
+    if(_pjEditId!==null){
+      const cambios={nombre,descripcion:desc};if(foto_url)cambios.foto_url=foto_url;
+      const {data,error}=await sb.from('personajes').update(cambios).eq('id',_pjEditId).eq('user_id',miPerfil.id).select('*');
+      if(error)throw error;
+      if(!data||!data.length)throw new Error('La base no dejó editar el personaje. Falta correr tanda_b.sql en Supabase.');
+    }else{
+      const payload={user_id:miPerfil.id,nombre,descripcion:desc,foto_url:foto_url||null};
+      const {data,error}=await sb.from('personajes').insert(payload).select('*').single();
+      if(error)throw error;
+      if(!data)throw new Error('Supabase no devolvió el personaje guardado');
+    }
+    $('pj-modal').classList.remove('on');_pjEditId=null;
     await cargarPersonajes();pintarPersonajes();
+    if(typeof window.renderSocialProfile==='function'&&$('cre')&&$('cre').classList.contains('on')&&miPerfil)window.renderSocialProfile(miPerfil.id);
   }catch(e){alert('No se pudo guardar el personaje: '+(e.message||e))}
-  if(btn){btn.disabled=false;btn.innerText='Guardar personaje'}
+  if(btn){btn.disabled=false;btn.innerText=txt0}
 }
 function pintarPersonajes(){
-  const b=$('pjLista');if(!b)return;b.innerHTML=PERSONAJOS.length?'':vacio('Todavía no hay personajes');
-  PERSONAJOS.forEach(p=>{
-    const d=document.createElement('div');d.className='rk';
-    const foto=p.foto_url?'<img src="'+esc(p.foto_url)+'" style="width:48px;height:48px;object-fit:cover;border-radius:10px">':'<div class="msg-avatar">👤</div>';
-    d.innerHTML=foto+'<div style="flex:1"><b style="color:var(--gold3)">'+esc(p.nombre)+'</b><small>'+esc(p.descripcion)+'</small></div><button class="mini" onclick="verPersonaje(\''+p.id+'\')">👁️ Ver</button><button class="mini red" onclick="borrarPersonaje(\''+p.id+'\')">🗑️</button>';
+  const b=$('pjLista');if(!b)return;b.innerHTML=PERSONAJES.length?'':vacio('Todavía no hay personajes');
+  PERSONAJES.forEach(p=>{
+    const d=document.createElement('div');d.className='rk pj-row';
+    const foto=p.foto_url?'<img class="pj-foto-lg" src="'+esc(p.foto_url)+'" alt="'+esc(p.nombre)+'" loading="lazy" onclick="verPersonaje(\''+p.id+'\')">':'<div class="msg-avatar" style="width:96px;height:96px;flex:0 0 96px;border-radius:14px;font-size:34px;cursor:pointer" onclick="verPersonaje(\''+p.id+'\')">👤</div>';
+    d.innerHTML=foto+'<div style="flex:1;min-width:0"><b style="color:var(--gold3);font-size:14px">'+esc(p.nombre)+'</b><small>'+esc(p.descripcion)+'</small><div style="display:flex;gap:6px;margin-top:8px"><button class="mini" onclick="verPersonaje(\''+p.id+'\')">👁️ Ver</button><button class="mini" onclick="editarPersonaje(\''+p.id+'\')">✏️ Editar</button><button class="mini red" onclick="borrarPersonaje(\''+p.id+'\')">🗑️</button></div></div>';
     b.appendChild(d);
   });
 }
 function verPersonaje(id){
-  const p=PERSONAJOS.find(x=>String(x.id)===String(id));if(!p)return;
+  const p=PERSONAJES.find(x=>String(x.id)===String(id))||(window._spPjs||[]).find(x=>String(x.id)===String(id));if(!p)return;
+  const mio=!!miPerfil&&String(p.user_id)===String(miPerfil.id);
   $('pjPreviewTitulo').innerText='👤 '+p.nombre;
   $('pjPreviewFoto').innerHTML=p.foto_url?'<img class="pj-preview-modal-img" src="'+esc(p.foto_url)+'" alt="'+esc(p.nombre)+'">':'<div class="msg-avatar" style="margin:auto;width:72px;height:72px;font-size:28px">👤</div>';
   $('pjPreviewDesc').innerText=p.descripcion||'Sin descripción.';
+  const acc=$('pjPreviewAcc');if(acc)acc.innerHTML=mio?'<button class="btn-main" style="width:100%;margin-top:14px" onclick="editarPersonaje(\''+p.id+'\')">✏️ Editar</button>':'';
   $('pj-preview-modal').classList.add('on');
 }
 async function borrarPersonaje(id){
@@ -2708,38 +2863,131 @@ async function borrarPersonaje(id){
    como referencia visual), así que la ficha de personaje no servía para
    nada en la práctica. Ahora la descripción se mete en el prompt y la
    foto de referencia viaja como imagen adicional. */
+const IA_MAX_PJ=3; /* máximo de personajes por generación */
+function iaActualizarAviso(){
+  const e=$('iaAviso2');if(!e)return;
+  const n=iaPjSel.length;
+  const cant=iaModo==='lapiz'?'1 imagen':'2 imágenes';
+  let t='💡 Esta generación gasta <b>1 generación</b> y crea '+cant+'.';
+  const r=(typeof window.iaResumenSaldo==='function')?window.iaResumenSaldo():null;
+  if(r){
+    if(r.ceo)t+=' <b>(CEO: no gastás nada)</b>';
+    else{const tot=r.plan+r.extra;t+=' Te quedan <b>'+tot+'</b> ('+r.plan+' del plan + '+r.extra+' Sakuras IA); después de generar te van a quedar <b>'+Math.max(0,tot-1)+'</b>.'}
+  }
+  if(n){
+    t+=' Personajes: <b>'+n+'/'+IA_MAX_PJ+'</b>.';
+    const conFoto=PERSONAJES.filter(p=>iaPjSel.includes(String(p.id))).find(p=>p.foto_url);
+    if(n>1)t+=' La IA usa la foto de <b>'+esc(conFoto?conFoto.nombre:'ninguno (sin foto)')+'</b> como referencia visual; a los demás los toma de su descripción. Cada personaje de más hace la imagen más difícil de lograr, por eso el máximo es '+IA_MAX_PJ+'.';
+  }
+  e.innerHTML=t;
+}
+async function iaToken(){const {data:{session}}=await sb.auth.getSession();return session?session.access_token:''}
+let iaEstiloKey='clasico',iaLoteUrls=[],iaUltimoId=null;
+const IA_EJEMPLOS=[
+  'Un samurái bajo la lluvia, plano medio, mirada seria, tinta negra con mucho contraste',
+  'Chica con una espada sobre un tejado de noche, luna llena, el viento mueve su pelo',
+  'Dos amigos corriendo hacia la cámara riendo, ciudad de fondo, mucha energía',
+  'Dragón gigante sobre una montaña, plano general, atmósfera épica y oscura',
+  'Personaje chibi comiendo ramen en un puesto callejero, luces de neón',
+  'Escena de suspenso: detective en un callejón, sombras largas y gabardina'
+];
+const IA_SUGERENCIAS=['primer plano','plano general','vista desde arriba','de noche','bajo la lluvia','atardecer','expresión de sorpresa','líneas de velocidad','fondo detallado','fondo simple'];
+function iaAgregarTexto(t,reemplazar){
+  const e=$('iaTxt');if(!e)return;
+  e.value=(reemplazar||!e.value.trim())?t:e.value.trim().replace(/[.,;]$/,'')+', '+t;e.focus();
+}
 async function abrirIA(modo,file){
   if(!miPerfil){alert('Iniciá sesión primero');return}
-  iaModo=modo;iaImg=null;iaBlob=null;iaEstilo=null;iaPjSel=[];$('iaRes').innerHTML='';
+  iaModo=modo;iaImg=null;iaBlob=null;iaEstilo=null;iaEstiloKey='clasico';iaPjSel=[];iaLoteUrls=[];iaUltimoId=null;$('iaRes').innerHTML='';
   $('iaTitulo').innerText=modo==='lapiz'?'Dibujo a lápiz → Manga':'SalaMangas IA';
   $('iaDibujoBox').style.display=modo==='lapiz'?'block':'none';
   if(file){iaBlob=file;const u=URL.createObjectURL(file);$('iaDibujo').src=u}
-  const estilos=['Manga clásico B/N','Dark Fantasy','Chibi','Realista','Noir','Screentone'];
-  $('iaEstilos').innerHTML=estilos.map((x,i)=>'<span class="chip" data-iae="'+i+'">'+x+'</span>').join('');
-  document.querySelectorAll('#iaEstilos .chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('#iaEstilos .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaEstilo=c.innerText});
+  const estilos=[['clasico','Manga clásico B/N'],['dark','Dark Fantasy'],['chibi','Chibi'],['realista','Realista'],['noir','Noir'],['screentone','Screentone'],['anime','Anime (color)']];
+  $('iaEstilos').innerHTML=estilos.map(x=>'<span class="chip" data-k="'+x[0]+'">'+x[1]+'</span>').join('');
+  document.querySelectorAll('#iaEstilos .chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('#iaEstilos .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaEstilo=c.innerText;iaEstiloKey=c.dataset.k});
+  const bor=$('iaBorrador');if(bor)bor.checked=false;
+  const ej=$('iaEjemplos');if(ej){ej.innerHTML=IA_EJEMPLOS.map((t,i)=>'<span class="chip" data-ej="'+i+'">'+esc(t)+'</span>').join('');ej.querySelectorAll('.chip').forEach(c=>c.onclick=()=>iaAgregarTexto(IA_EJEMPLOS[c.dataset.ej],true))}
+  const sg=$('iaSugerencias');if(sg){sg.innerHTML=IA_SUGERENCIAS.map((t,i)=>'<span class="chip" data-sg="'+i+'">+ '+esc(t)+'</span>').join('');sg.querySelectorAll('.chip').forEach(c=>c.onclick=()=>iaAgregarTexto(IA_SUGERENCIAS[c.dataset.sg],false))}
   await cargarPersonajes();
   $('iaPjs').innerHTML=PERSONAJES.length?PERSONAJES.map(p=>'<span class="chip" data-pj="'+p.id+'">👤 '+esc(p.nombre)+'</span>').join(''):vacio('Guardá personajes para usarlos como referencia');
-  document.querySelectorAll('#iaPjs .chip').forEach(c=>c.onclick=()=>{const id=c.dataset.pj;c.classList.toggle('on');iaPjSel=c.classList.contains('on')?[...new Set([...iaPjSel,id])]:iaPjSel.filter(x=>x!==id)});
+  document.querySelectorAll('#iaPjs .chip').forEach(c=>c.onclick=()=>{const id=c.dataset.pj;if(!c.classList.contains('on')&&iaPjSel.length>=IA_MAX_PJ){alert('Máximo '+IA_MAX_PJ+' personajes por generación. Cada personaje de referencia hace la imagen más difícil de lograr. Sacá uno para elegir otro.');return}c.classList.toggle('on');iaPjSel=c.classList.contains('on')?[...new Set([...iaPjSel,id])]:iaPjSel.filter(x=>x!==id);iaActualizarAviso()});
+  iaActualizarAviso();
   $('iaov').classList.add('on')
 }
+/* Achica la imagen (JPG) antes de mandarla: más rápido y liviano */
+async function iaRedimBlob(src,max){
+  const blob=src instanceof Blob?src:await (async()=>{const r=await fetch(src);if(!r.ok)throw new Error('No se pudo descargar la imagen de referencia');return r.blob()})();
+  const u=URL.createObjectURL(blob);
+  try{
+    return await new Promise((ok,ko)=>{
+      const im=new Image();
+      im.onload=()=>{try{const s=Math.min(1,(max||1000)/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*s));c.height=Math.max(1,Math.round(im.height*s));const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);c.toBlob(b=>b?ok(b):ko(new Error('No se pudo preparar la imagen')),'image/jpeg',.88)}catch(e){ko(e)}};
+      im.onerror=()=>ko(new Error('No se pudo leer la imagen'));im.src=u;
+    });
+  }finally{URL.revokeObjectURL(u)}
+}
+/* El SERVIDOR descuenta la generación, pide las imágenes a Leonardo y la devuelve si algo falla */
 async function iaGenerar(){
   if(!requireUser())return;
-  const btn=$('iaBtn');btn.disabled=true;btn.innerText='✨ Generando...';$('iaRes').innerHTML=vacio('La IA está trabajando...');
+  const btn=$('iaBtn');btn.disabled=true;btn.innerText='✨ Generando...';
+  $('iaRes').innerHTML=vacio('🎨 La IA está dibujando '+(iaModo==='lapiz'?'tu imagen':'tus 2 imágenes')+'... puede tardar entre 20 y 60 segundos. No cierres esta pantalla.');
   try{
-    const images=[];
-    if(iaBlob){const d=await b64Redim(iaBlob,1200);if(d)images.push(d)}
+    if(iaModo==='lapiz'&&!iaBlob)throw new Error('Falta el dibujo a lápiz');
+    if(iaPjSel.length>IA_MAX_PJ)throw new Error('Elegí como máximo '+IA_MAX_PJ+' personajes');
     const pj=PERSONAJES.filter(p=>iaPjSel.includes(String(p.id)));
-    for(const p of pj){if(p.foto_url){try{const d=await b64Redim(p.foto_url,1000);if(d)images.push(d)}catch(e){console.warn('Referencia de personaje:',e.message)}}}
-    let prompt='Crear una ilustración manga para SalaMangaS. '+(iaModo==='lapiz'?'Transformar el dibujo de referencia en una página/escena manga limpia, respetando composición y personajes. ':'Generar una escena manga original. ')+'Estilo: '+(iaEstilo||'Manga clásico B/N')+'. Colores: '+($('iaColores').value.trim()||'blanco y negro con detalles dorados y púrpura')+'. Detalles: '+($('iaTxt').value.trim()||'escena manga dinámica, expresiva y coherente')+'.';
+    const coloresDef=iaEstiloKey==='anime'?'colores vivos de anime':'blanco y negro con detalles dorados y púrpura';
+    let prompt='Crear una ilustración manga para SalaMangaS. '+(iaModo==='lapiz'?'Transformar el dibujo de referencia en una página/escena manga limpia, respetando composición y personajes. ':'Generar una escena manga original. ')+'Estilo: '+(iaEstilo||'Manga clásico B/N')+'. Colores: '+($('iaColores').value.trim()||coloresDef)+'. Detalles: '+($('iaTxt').value.trim()||'escena manga dinámica, expresiva y coherente')+'.';
     if(pj.length)prompt+=' Personajes que deben respetarse exactamente: '+pj.map(p=>p.nombre+': '+p.descripcion).join(' | ')+'.';
-    const j=await netlifyPost('gemini',{prompt,images});
-    const raw=j&&j.image?j.image:(j&&j.data&&j.data.image?j.data.image:(j&&j.result&&j.result.image?j.result.image:null));
-    const mime=(j&&j.mime)||(j&&j.mimeType)||(j&&j.data&&j.data.mime)||(j&&j.result&&j.result.mime)||'image/png';
-    if(!raw)throw new Error((j&&j.error)||'Gemini no devolvió una imagen');
-    iaImg=String(raw).startsWith('data:')?String(raw):'data:'+mime+';base64,'+raw;
-    $('iaRes').innerHTML='<div class="ia-result-card"><img src="'+esc(iaImg)+'"><div style="display:flex;gap:8px;margin-top:8px"><button class="btn-main" style="flex:1;padding:10px" onclick="usarIAPortada()">📕 Usar portada</button><button class="btn" style="flex:1" onclick="usarIAPagina()">📄 Agregar página</button></div></div>';
-  }catch(e){$('iaRes').innerHTML='<p style="color:#ff4757;font-size:12px">Error IA: '+esc(e.message||e)+'</p>'}
+    const fd=new FormData();
+    fd.append('prompt',prompt);fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey||'clasico');
+    const bor=$('iaBorrador');fd.append('borrador',bor&&bor.checked?'1':'0');
+    if(iaBlob)fd.append('dibujo',await iaRedimBlob(iaBlob,1280),'dibujo.jpg');
+    const conFoto=pj.find(p=>p.foto_url);
+    if(conFoto){try{fd.append('personaje',await iaRedimBlob(conFoto.foto_url,1000),'personaje.jpg')}catch(e){console.warn('Referencia de personaje:',e.message)}}
+    const tk=await iaToken();
+    const r=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:fd});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok){
+      if(j.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}
+      throw new Error(j.error||'Error del servidor');
+    }
+    iaUltimoId=j.id;
+    iaMostrar(await iaEsperar(j.id,tk));
+  }catch(e){iaError(e)}
   btn.disabled=false;btn.innerText='✨ Generar';
+}
+async function iaEsperar(id,tk){
+  const t0=Date.now();
+  while(Date.now()-t0<150000){
+    await new Promise(r=>setTimeout(r,3000));
+    let ej={};
+    try{const e=await fetch('/api/ia-estado?id='+encodeURIComponent(id),{headers:{Authorization:'Bearer '+tk}});ej=await e.json().catch(()=>({}))}catch(err){continue}
+    if(ej.estado==='listo')return ej.imagenes||[];
+    if(ej.estado==='fallo')throw new Error(ej.error||'La IA no pudo crear la imagen.');
+  }
+  const er=new Error('Está tardando más de lo normal.');er.pendiente=true;throw er;
+}
+async function iaReanudar(){
+  if(!iaUltimoId)return;
+  $('iaRes').innerHTML=vacio('Buscando tu resultado...');
+  try{iaMostrar(await iaEsperar(iaUltimoId,await iaToken()))}catch(e){iaError(e)}
+}
+function iaMostrar(urls){
+  iaLoteUrls=(urls||[]).map(u=>'/api/ia-imagen?u='+encodeURIComponent(u));
+  $('iaRes').innerHTML='<div class="ia-result-card"><div class="ia-grid"'+(iaLoteUrls.length===1?' style="grid-template-columns:1fr;max-width:260px;margin:0 auto"':'')+'>'+iaLoteUrls.map((u,i)=>'<div class="ia-cell"><img src="'+esc(u)+'" alt="Opción '+(i+1)+'" loading="lazy"><div class="ia-cell-btns"><button class="btn-main" onclick="iaElegir('+i+',\'portada\')">📕 Portada</button><button class="btn" onclick="iaElegir('+i+',\'pagina\')">📄 Página</button></div></div>').join('')+'</div><p style="font-size:11px;color:var(--text2);margin:8px 0 6px;text-align:center">'+(iaLoteUrls.length===1?'Si no te convence, regenerá para ver otra versión.':'Elegí la que más te guste, o regenerá para ver '+iaLoteUrls.length+' opciones nuevas.')+'</p><button class="btn" style="width:100%" onclick="iaGenerar()">🔄 Regenerar (gasta 1 generación)</button></div>';
+}
+function iaError(e){
+  if(e&&e.pendiente){$('iaRes').innerHTML='<p style="color:var(--gold3);font-size:13px;text-align:center">'+esc(e.message)+' Tu generación sigue en proceso y no se vuelve a descontar.</p><button class="btn-main" style="width:100%;margin-top:8px" onclick="iaReanudar()">⏳ Seguir esperando</button>';return}
+  $('iaRes').innerHTML='<p style="color:#ff4757;font-size:13px">⚠️ '+esc((e&&e.message)||String(e))+'</p>';
+}
+async function iaElegir(i,tipo){
+  const u=iaLoteUrls[i];if(!u)return;
+  try{
+    const r=await fetch(u);if(!r.ok)throw new Error('No se pudo descargar la imagen');
+    const blob=await r.blob();
+    iaImg=await new Promise((ok,ko)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=()=>ko(new Error('No se pudo leer la imagen'));fr.readAsDataURL(blob)});
+    if(tipo==='portada')usarIAPortada();else usarIAPagina();
+  }catch(e){alert(e.message||e)}
 }
 async function b64Redim(src,max){
   const blob=src instanceof Blob?src:await (async()=>{
@@ -2810,8 +3058,8 @@ function iniciarApp(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciarApp);else iniciarApp();
 /* ===== SALAMANGAS DEFINITIVO 02/10/2026 ===== */
 const PLANES_SALAMANGAS={
- gratis:{nombre:'Mangakers Gratis',precioARS:0,precioUSD:0,mangas:1,capitulos:1,sakuras:100,chats:['mangakars'],monetiza:false},
- pro:{nombre:'Mangakers Pro',precioARS:3000,precioUSD:3,mangas:1,capitulos:2,sakuras:500,chats:['mangakars','pro'],monetiza:false,insignia:'Pro plata'},
+ gratis:{nombre:'Mangakers Gratis',precioARS:0,precioUSD:0,mangas:1,capitulos:2,sakuras:100,chats:['mangakars'],monetiza:false},
+ pro:{nombre:'Mangakers Pro',precioARS:3000,precioUSD:3,mangas:1,capitulos:3,sakuras:500,chats:['mangakars','pro'],monetiza:false,insignia:'Pro plata'},
  superpro:{nombre:'Súper Mangakers Pro',precioARS:5000,precioUSD:5,mangas:2,capitulos:4,sakuras:2000,chats:['mangakars','pro'],monetiza:false,insignia:'Pro oro'},
  semidios:{nombre:'Semi Dios Mangakers',precioARS:12000,precioUSD:12,mangas:3,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:false,porcentaje:0,insignia:'Dios'},
  dios:{nombre:'Mangakers Dios',precioARS:30000,precioUSD:30,mangas:4,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:true,porcentaje:100,insignia:'Dios'}
@@ -2956,8 +3204,8 @@ function renderPlanesDefinitivos(){
   const p=PLANES_SALAMANGAS[k],d=document.createElement('div');d.className='card plan-def';
   const precio=p.precioARS?`$${p.precioARS.toLocaleString('es-AR')} ARS / $${p.precioUSD} USD`:'Gratis';
   let bullets='';
-  if(k==='gratis')bullets='<li>1 manga para crear</li><li>1 capítulo de 15 a 20 páginas o 1 PDF por mes</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMangakers</li><li>No monetiza</li>';
-  if(k==='pro')bullets='<li>1 manga para crear</li><li>2 capítulos de 15 a 20 páginas o 2 PDF por mes</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>Insignia Pro plata</li><li>No monetiza</li>';
+  if(k==='gratis')bullets='<li>1 manga para crear</li><li>2 capítulos de 15 a 20 páginas o 2 PDF por mes</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMangakers</li><li>No monetiza</li>';
+  if(k==='pro')bullets='<li>1 manga para crear</li><li>3 capítulos de 15 a 20 páginas o 3 PDF por mes</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>Insignia Pro plata</li><li>No monetiza</li>';
   if(k==='superpro')bullets='<li>2 mangas para crear</li><li>4 capítulos de 15 a 20 páginas o 4 PDF por mes</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Insignia Pro oro</li><li>No monetiza</li>';
   if(k==='semidios')bullets='<li>3 mangas para crear, publicar y gratis TODOS los meses</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>No monetiza</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li><li>Botón con contador exacto del apoyo, se abona cada 30 días</li>';
   if(k==='dios')bullets='<li>4 creaciones gratis TODOS los meses</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>Lectura ilimitada todo el mes</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>💰 Monetiza: 100% de las donaciones para el creador</li><li>Alias del creador para Mercado Pago Argentina / PayPal internacional</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li>';
@@ -3126,8 +3374,8 @@ function limiteCapitulosGratisMensual(){
  const k=planClave(miPerfil);
  if(k==='semidios'||k==='dios')return Infinity;
  if(k==='superpro')return 4;
- if(k==='pro')return 2;
- return 1;
+ if(k==='pro')return 3;
+ return 2;
 }
 function cuotasCreacion(){
  const key=claveCuotaCreacion();if(!key)return {usados:0,limite:1};
@@ -3182,16 +3430,19 @@ document.addEventListener('dragstart',e=>{if(e.target?.tagName==='IMG')e.prevent
 CEO_R.regalar=async b=>{
   b.innerHTML=`<div class="card"><h3 class="section">🎁 Regalar</h3><p style="font-size:12px;color:var(--text2)">Paso 1: ¿Qué querés regalar?</p>
   <div class="ceo-gift-grid" style="margin-top:8px">
-  <button class="btn" onclick="setGiftTipo('sakuras')">🪙 Sakuras</button><button class="btn" onclick="setGiftTipo('plan')">⭐ Plan</button>
+  <button class="btn" onclick="setGiftTipo('sakuras')">🪙 Sakuras</button><button class="btn" onclick="setGiftTipo('sakuras_ia')">🔴 Sakuras IA</button><button class="btn" onclick="setGiftTipo('plan')">⭐ Plan</button>
   <button class="btn" onclick="setGiftTipo('manga')">📚 Manga extra</button><button class="btn" onclick="setGiftTipo('paginas')">📄 Páginas</button><button class="btn" onclick="setGiftTipo('capitulos')">📖 Capítulos</button></div>
   <div id="giftWizard" style="margin-top:12px"></div></div>`;
+ if(window._giftPre){window._giftUid=window._giftPre.uid;$('giftWizard').innerHTML='<p class="warn-mini">🎁 Regalo para: <b>'+esc(window._giftPre.nombre||'Usuario')+'</b>. Elegí arriba qué querés regalarle.</p>'}
 };
 function setGiftTipo(tipo){
  const w=$('giftWizard');window._giftTipo=tipo;
  w.innerHTML=`<p style="font-size:12px;color:var(--text2)">Paso 2: ¿A quién?</p><input id="giftUser" class="input" placeholder="Buscar usuario..." oninput="buscarUsuariosGift()"><div id="giftUserSug"></div>
  <p style="font-size:12px;color:var(--text2);margin-top:12px">Paso 3: Cantidad o tiempo</p><div id="giftQty"></div><button class="btn-main" style="margin-top:12px" onclick="confirmarRegaloCEO()">Paso 4: Confirmar</button>`;
  const q=$('giftQty');
+ if(window._giftPre){$('giftUser').value=window._giftPre.nombre||'';window._giftUid=window._giftPre.uid;$('giftUserSug').innerHTML='<p class="warn-mini">✅ Elegido: '+esc(window._giftPre.nombre||'Usuario')+'</p>'}
  if(tipo==='sakuras')q.innerHTML='<input id="giftSakuras" class="input" type="number" min="1" placeholder="Cantidad de Sakuras">';
+ else if(tipo==='sakuras_ia')q.innerHTML='<input id="giftSakurasIA" class="input" type="number" min="1" placeholder="Cantidad de Sakuras IA (1 = 1 generación)"><p class="warn-mini">Las Sakuras IA solo sirven para generar imágenes con IA. Ideal para dar pruebas gratis.</p>';
  else if(tipo==='plan')q.innerHTML='<select id="giftPlan" class="input"><option value="pro">Mangakers Pro — 30 días</option><option value="superpro">Súper Mangakers Pro — 30 días</option><option value="semidios">Semi Dios Mangakers — 30 días</option><option value="dios">Mangakers Dios — 30 días</option></select>';
  else if(tipo==='paginas')q.innerHTML='<input id="giftPaginas" class="input" type="number" min="1" placeholder="Cantidad de páginas">';
  else if(tipo==='capitulos')q.innerHTML='<input id="giftCapitulos" class="input" type="number" min="1" placeholder="Cantidad de capítulos">';
@@ -3231,7 +3482,13 @@ async function confirmarRegaloCEO(){
    const n=Number($('giftSakuras').value);
    const r=await ceoDarSakuras(u,n,'🎁 ¡El CEO te regaló '+n+' Sakuras! 🪙');
    if(!r.ok)alert(r.error);else fin(true,'',r.aviso);
-  }else if(t==='paginas'){
+  }else if(t==='sakuras_ia'){
+    const n=Math.floor(Number($('giftSakurasIA').value));
+    if(!Number.isFinite(n)||n<=0){alert('Cantidad inválida');return}
+    const r=await sb.rpc('ceo_dar_sakuras_ia',{destino:u,cant:n});
+    if(r.error){alert(r.error.message+(/ceo_dar_sakuras_ia/.test(r.error.message)?' (falta correr tanda_b.sql en Supabase)':''));return}
+    fin(true,n+' Sakuras IA entregadas.',await avisarRegalo(u,'🎁 ¡El CEO te regaló '+n+' Sakuras IA para generar imágenes! 🔴','regalo'));
+   }else if(t==='paginas'){
    const n=Number($('giftPaginas').value);
    const r=await ceoDarSakuras(u,n*50,'🎁 ¡El CEO te regaló '+n+' página(s) para leer! ('+(n*50)+' Sakuras) 📄');
    if(!r.ok)alert(r.error);else fin(true,'',r.aviso);
@@ -3293,8 +3550,8 @@ const INSIGNIAS={
   dios:{img:'/dios.png',emoji:'👑',nombre:'Mangakers Dios',corto:'👑 El máximo poder. Corona imperial.',largo:'El máximo poder dentro de SalaMangaS. La corona imperial es para quienes lo apoyan todo.',gana:'4 creaciones gratis por mes, lectura ilimitada, monetiza el 100% de las donaciones, chat directo con el CEO y chat Dios del Manga.'},
   semidios:{img:'/semidios.png',emoji:'🌟',nombre:'Semi Dios',corto:'🦊 A un paso de lo divino. Máscara del zorro.',largo:'A un paso de lo divino. La máscara del zorro marca a quienes ya están cerca de la cima.',gana:'3 mangas gratis por mes, capítulos sin límite, 4000 Sakuras para leer, chat directo con el CEO y chat Dios del Manga. No monetiza.'},
   superpro:{img:'/superpro.png',emoji:'🥇',nombre:'Súper Mangakers Pro',corto:'⚔️ El que domina el arte. Espada del guerrero.',largo:'El que domina el arte. Las espadas cruzadas son del guerrero que ya conoce su oficio.',gana:'2 mangas, 4 capítulos por mes, 2000 Sakuras y chat SalaMangakers Pro. No monetiza.'},
-  pro:{img:'/pro.png',emoji:'🥈',nombre:'Mangakers Pro',corto:'🖋️ El que escribe y crea. Pluma de autor.',largo:'El que escribe y crea. La pluma con el libro es la marca del autor.',gana:'1 manga, 2 capítulos por mes, 500 Sakuras y chat SalaMangakers Pro. No monetiza.'},
-  gratis:{img:'/gratis.png',emoji:'🌱',nombre:'Mangakers Gratis',corto:'🌱 El que recién arranca. Sin insignia especial.',largo:'El que recién arranca su camino en SalaMangaS. La estrella dorada es el primer paso.',gana:'1 manga, 1 capítulo por mes y 200 Sakuras diarias (no acumulables). No monetiza.'}
+  pro:{img:'/pro.png',emoji:'🥈',nombre:'Mangakers Pro',corto:'🖋️ El que escribe y crea. Pluma de autor.',largo:'El que escribe y crea. La pluma con el libro es la marca del autor.',gana:'1 manga, 3 capítulos por mes, 500 Sakuras y chat SalaMangakers Pro. No monetiza.'},
+  gratis:{img:'/gratis.png',emoji:'🌱',nombre:'Mangakers Gratis',corto:'🌱 El que recién arranca. Sin insignia especial.',largo:'El que recién arranca su camino en SalaMangaS. La estrella dorada es el primer paso.',gana:'1 manga, 2 capítulos por mes y 200 Sakuras diarias (no acumulables). No monetiza.'}
 };
 const ORDEN_INSIGNIAS=['gratis','pro','superpro','semidios','dios','ceo'];
 function esCuentaCEO(p){
@@ -3461,6 +3718,37 @@ iniciarApp=function(){
     d.bio=raw;
     return d;
   }
+  /* ==== REDES (Tanda B): todos pueden poner TikTok, Instagram y Facebook (nada más) ==== */
+  const REDES_DEF={
+    tiktok:{n:'TikTok',i:'🎵',base:'https://www.tiktok.com/@',host:'tiktok.com'},
+    instagram:{n:'Instagram',i:'📸',base:'https://www.instagram.com/',host:'instagram.com'},
+    facebook:{n:'Facebook',i:'👍',base:'https://www.facebook.com/',host:'facebook.com'}
+  };
+  function redLimpia(k,v){
+    v=String(v||'').trim();if(!v||!REDES_DEF[k])return null;
+    if(/^https?:\/\//i.test(v)){
+      try{
+        const u=new URL(v);
+        if(u.protocol!=='https:'&&u.protocol!=='http:')return null;
+        const h=u.hostname.toLowerCase().replace(/^(www|m)\./,'');
+        if(h===REDES_DEF[k].host||h.endsWith('.'+REDES_DEF[k].host))return {url:u.href.slice(0,200)};
+      }catch(e){}
+      return null;
+    }
+    const h=v.replace(/^@/,'').replace(/\s+/g,'');
+    if(!/^[A-Za-z0-9._-]{1,50}$/.test(h))return null;
+    return {url:REDES_DEF[k].base+h,handle:h};
+  }
+  function socialRedesNorm(r){
+    const o={};if(!r||typeof r!=='object')return o;
+    Object.entries(r).forEach(([k,v])=>{const kk=String(k).trim().toLowerCase();if(REDES_DEF[kk]&&!o[kk]){const x=redLimpia(kk,v);if(x)o[kk]=x.handle?x.handle:x.url}});
+    return o;
+  }
+  function socialRedesHTML(r){
+    const n=socialRedesNorm(r),ks=Object.keys(n);if(!ks.length)return '';
+    return '<div class="sp-redes">'+ks.map(k=>{const x=redLimpia(k,n[k]);return '<a class="sp-red" href="'+esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+REDES_DEF[k].i+' '+REDES_DEF[k].n+(x.handle?' · @'+esc(x.handle):'')+'</a>'}).join('')+'</div>';
+  }
+  /* ==== FIN REDES ==== */
   function socialPayload(d){
     return PROFILE_MARK+JSON.stringify({
       nombre:String(d.nombre||'').slice(0,80),
@@ -3470,7 +3758,7 @@ iniciarApp=function(){
       fotos:Array.isArray(d.fotos)?d.fotos.slice(0,5):[],
       bio:String(d.bio||'').slice(0,500),
       telefono:String(d.telefono||'').slice(0,40),
-      redes:d.redes&&typeof d.redes==='object'?d.redes:{}
+      redes:socialRedesNorm(d.redes)
     });
   }
   function socialSafeBio(p){
@@ -3504,6 +3792,11 @@ iniciarApp=function(){
     try{const r=await sb.from('seguidores').select('*',{count:'exact',head:true}).eq('creador_id',uid);followers=r.count||0}catch(e){}
     const isMine=!!miPerfil&&uid===miPerfil.id;
     const mangas=MANGAS.filter(m=>m.user_id===uid);
+    let pjs=[];
+    try{const r=await sb.from('personajes').select('id,user_id,nombre,descripcion,foto_url').eq('user_id',uid).order('created_at',{ascending:false});if(!r.error)pjs=r.data||[]}catch(e){}
+    const pjLikes={},pjMine=new Set();
+    if(pjs.length){try{const r=await sb.from('personaje_likes').select('personaje_id,user_id').in('personaje_id',pjs.map(x=>String(x.id)));(r.data||[]).forEach(x=>{pjLikes[x.personaje_id]=(pjLikes[x.personaje_id]||0)+1;if(miPerfil&&x.user_id===miPerfil.id)pjMine.add(x.personaje_id)})}catch(e){}}
+    window._spPjs=pjs;
     b.innerHTML=
       '<div class="social-profile-head">'+socialAvatar(p)+
       '<div class="social-profile-badge">'+insigniaHTML(p,'m')+'</div>'+
@@ -3515,11 +3808,11 @@ iniciarApp=function(){
       (isMine?'<button class="btn-ghost" style="width:100%;margin-top:8px" onclick="editarMiPerfilSocial()">✏️ Editar perfil social</button>':
         (miPerfil?'<button class="btn'+(SEGUIDOS.has(uid)?' on':'')+'" style="width:100%;margin-top:8px" onclick="toggleSeguir(\''+esc(uid)+'\',this)">'+(SEGUIDOS.has(uid)?'✓ Suscripto':'＋ Suscribirme')+'</button>':''))+
       '</div>'+
+      (isMine?'<div class="card" style="margin-top:14px;text-align:center"><div style="font-size:16px;font-weight:800;color:var(--gold3)">🪙 Sakuras: '+fmtSak(miPerfil.sakuras)+'</div><div style="font-size:16px;font-weight:800;color:#ff6b81;margin-top:4px">🔴 Sakuras IA: '+fmtSak(miPerfil.sakuras_ia)+'</div></div>':'')+
       '<div class="card" style="margin-top:14px"><h3 class="section">📝 Sobre mí</h3><p style="font-size:13px;line-height:1.5;color:var(--text2)">'+esc(d.bio||'Todavía no agregó una descripción.')+'</p>'+
-      (d.gustos.length?'<h3 class="section">❤️ Gustos</h3><div class="social-profile-tags">'+socialTags(d.gustos)+'</div>':'')+
-      (d.estilos.length?'<h3 class="section">🎨 Estilos de manga favoritos</h3><div class="social-profile-tags">'+socialTags(d.estilos)+'</div>':'')+
-      ((d.telefono||Object.keys(d.redes||{}).length)?'<p class="social-contact-note">📱 Contacto público configurado por el CEO.</p>':'')+
+      socialRedesHTML(d.redes)+
       '</div>'+
+      (pjs.length?'<div class="card"><h3 class="section">👥 Sus personajes</h3><div class="sp-pjs">'+pjs.map(p=>{const k=String(p.id),mine=pjMine.has(k);return '<div class="sp-pj">'+(p.foto_url?'<img src="'+esc(p.foto_url)+'" alt="'+esc(p.nombre)+'" loading="lazy" onclick="verPersonaje(\''+esc(k)+'\')">':'<div class="msg-avatar" onclick="verPersonaje(\''+esc(k)+'\')">👤</div>')+'<div class="sp-pj-t"><b>'+esc(p.nombre)+'</b><small>'+esc(p.descripcion||'')+'</small><button class="pj-like'+(mine?' on':'')+'" data-pjlike="'+esc(k)+'">'+(mine?'❤️ ':'🤍 ')+'<span>'+(pjLikes[k]||0)+'</span></button></div></div>'}).join('')+'</div></div>':'')+
       (d.fotos.length?'<div class="card"><h3 class="section">📸 Fotos</h3><div class="social-profile-grid">'+d.fotos.slice(0,5).map(u=>'<div class="sp-foto" data-u="'+esc(u)+'"><img src="'+esc(u)+'" alt="Foto de perfil"><div class="sp-foto-bar"><span data-k="l">❤️ 0</span><span data-k="c">💬 0</span></div></div>').join('')+'</div></div>':'')+
       '<div class="row-title"><h3>📚 Sus mangas y diseños</h3></div><div id="creGrid" class="manga-grid"></div>'+
       '<div class="warn-mini">Los mangas mostrados acá pasan por el mismo filtro público: solo aparecen los aprobados/publicados.</div>';
@@ -3555,10 +3848,9 @@ iniciarApp=function(){
       '<label class="lbl">Nombre público</label><input id="spNombre" class="input" maxlength="80" value="'+esc(d.nombre||miPerfil.username||'')+'">'+
       '<label class="lbl">Edad</label><input id="spEdad" class="input" type="number" min="1" max="120" value="'+esc(d.edad||'')+'">'+
       '<label class="lbl">Bio / descripción</label><textarea id="spBio" class="input" maxlength="500">'+esc(d.bio||'')+'</textarea>'+
-      '<label class="lbl">Gustos (separados por coma)</label><input id="spGustos" class="input" value="'+esc((d.gustos||[]).join(', '))+'">'+
-      '<label class="lbl">Estilos de manga favoritos (separados por coma)</label><input id="spEstilos" class="input" value="'+esc((d.estilos||[]).join(', '))+'">'+
       '<label class="lbl">Fotos — máximo 5</label><div id="spFotos" class="social-photo-row"></div>'+
-      (isCEO?'<label class="lbl">📱 Teléfono (solo CEO)</label><input id="spTel" class="input" maxlength="40" value="'+esc(d.telefono||'')+'"><label class="lbl">🌐 Redes sociales (solo CEO)</label><input id="spRedes" class="input" maxlength="500" placeholder="Instagram: @usuario, TikTok: @usuario..." value="'+esc(Object.entries(d.redes||{}).map(([k,v])=>k+': '+v).join(', '))+'"><div class="warn-mini">Solo la cuenta CEO puede cargar teléfono o redes. Los usuarios comunes no tienen campos de contacto.</div>':'<div class="warn-mini">Los perfiles comunes no pueden publicar teléfonos ni redes sociales.</div>')+
+      (isCEO?'<label class="lbl">📱 Teléfono (solo CEO)</label><input id="spTel" class="input" maxlength="40" value="'+esc(d.telefono||'')+'">':'')+
+      (function(){const r=socialRedesNorm(d.redes),v=k=>esc(r[k]?(/^https?:/.test(r[k])?r[k]:'@'+r[k]):'');return '<label class="lbl">🌐 Mis redes (opcional)</label><input id="spRedTik" class="input" maxlength="200" placeholder="🎵 TikTok: @usuario o link" value="'+v('tiktok')+'"><input id="spRedIg" class="input" maxlength="200" placeholder="📸 Instagram: @usuario o link" value="'+v('instagram')+'" style="margin-top:8px"><input id="spRedFb" class="input" maxlength="200" placeholder="👍 Facebook: usuario o link" value="'+v('facebook')+'" style="margin-top:8px"><div class="warn-mini">Solo se muestran TikTok, Instagram y Facebook. Poné tu @usuario o el link de tu perfil.</div>'})()+
       '<div class="social-edit-actions" style="margin-top:14px"><button class="btn-ghost" onclick="window.cancelarEdicionPerfilSocial()">Cancelar</button><button class="btn-main" style="margin-top:0" onclick="guardarMiPerfilSocial()">💾 Guardar</button></div>';
     _spFotos=(d.fotos||[]).slice(0,5);
     renderSocialPhotos(_spFotos);
@@ -3591,17 +3883,11 @@ iniciarApp=function(){
     d.edad=$('spEdad')?.value.trim()||'';
     d.bio=$('spBio')?.value.trim()||'';
     if(Array.isArray(_spFotos))d.fotos=_spFotos.slice(0,5);
-    d.gustos=socialEscArr(($('spGustos')?.value||'').split(','));
-    d.estilos=socialEscArr(($('spEstilos')?.value||'').split(','));
-    if(isCEO){
-      d.telefono=$('spTel')?.value.trim()||'';
-      const rr={};
-      ($('spRedes')?.value||'').split(',').forEach(x=>{const z=x.split(':');if(z.length>=2){const k=z.shift().trim();const v=z.join(':').trim();if(k&&v)rr[k]=v}});
-      d.redes=rr;
-    }else{
-      d.telefono='';
-      d.redes={};
-    }
+    d.telefono=isCEO?($('spTel')?.value.trim()||''):'';
+    const nr={},mal=[];
+    [['tiktok','spRedTik'],['instagram','spRedIg'],['facebook','spRedFb']].forEach(([k,id])=>{const v=($(id)?.value||'').trim();if(!v)return;const x=redLimpia(k,v);if(x)nr[k]=x.handle?x.handle:x.url;else mal.push(REDES_DEF[k].n)});
+    if(mal.length){alert('Revisá estas redes (poné @usuario o el link de tu perfil): '+mal.join(', '));return}
+    d.redes=nr;
     if(await socialGuardar(d)){_spFotos=null;alert('Perfil social guardado ✅');await renderSocialProfile(miPerfil.id)}
   };
 
@@ -3628,7 +3914,7 @@ iniciarApp=function(){
     _fotoLiked=!!miPerfil&&likes.some(x=>x.user_id===miPerfil.id);
     $('fotoLikeBtn').textContent=(_fotoLiked?'❤️ ':'🤍 ')+likes.length;
     $('fotoComN').textContent='💬 '+cs.length;
-    $('fotoComList').innerHTML=cs.length?cs.map(x=>'<div style="padding:6px 0;border-bottom:1px solid rgba(255,209,102,.12)"><b style="font-size:12px;color:var(--gold)">'+esc(x.username||'Usuario')+'</b> <small style="color:var(--text2)">'+esc(new Date(x.created_at).toLocaleString([],{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}))+'</small><div style="font-size:13px;color:var(--text)">'+esc(x.contenido)+'</div></div>').join(''):'<p style="font-size:12px;color:var(--text2)">Sé el primero en comentar 💬</p>';
+    $('fotoComList').innerHTML=cs.length?cs.map(x=>'<div style="padding:6px 0;border-bottom:1px solid rgba(255,209,102,.12)"><b style="font-size:12px;color:var(--gold)">'+uNombre(x.user_id,x.username)+'</b> <small style="color:var(--text2)">'+esc(new Date(x.created_at).toLocaleString([],{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}))+'</small><div style="font-size:13px;color:var(--text)">'+esc(x.contenido)+'</div></div>').join(''):'<p style="font-size:12px;color:var(--text2)">Sé el primero en comentar 💬</p>';
   }
   window.abrirFotoPerfil=async function(url){
     _fotoActual=url;$('fotoModalImg').src=url;$('fotoComIn').value='';
@@ -3655,6 +3941,20 @@ iniciarApp=function(){
     if(error){inp.value=txt;alert('No se pudo comentar: '+error.message);return}
     await refrescarFoto();
   };
+  /* ❤️ en personajes del perfil (solo like, sin comentarios) */
+  document.addEventListener('click',async function(e){
+    const b=e.target.closest&&e.target.closest('[data-pjlike]');if(!b)return;
+    e.preventDefault();
+    if(!miPerfil){alert('Iniciá sesión para dar like');return}
+    if(b.dataset.busy)return;b.dataset.busy='1';
+    const id=b.dataset.pjlike,on=b.classList.contains('on'),sp=b.querySelector('span');
+    try{
+      const {error}=await (on?sb.from('personaje_likes').delete().eq('personaje_id',id).eq('user_id',miPerfil.id):sb.from('personaje_likes').insert({personaje_id:id,user_id:miPerfil.id}));
+      if(error)throw error;
+      sp.textContent=Math.max(0,(Number(sp.textContent)||0)+(on?-1:1));b.classList.toggle('on',!on);b.firstChild.nodeValue=on?'🤍 ':'❤️ ';
+    }catch(err){alert('No se pudo dar like: '+(err.message||err)+(/personaje_likes/.test(err.message||'')?' (falta correr tanda_b.sql en Supabase)':''))}
+    delete b.dataset.busy;
+  });
   document.addEventListener('click',function(e){
     const c=e.target.closest&&e.target.closest('.sp-foto');
     if(c&&c.dataset.u)window.abrirFotoPerfil(c.dataset.u);
