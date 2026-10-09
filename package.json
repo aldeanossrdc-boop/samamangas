@@ -1,8 +1,13 @@
 {
-  "name": "salamangas",
+  "name": "samamangas",
   "version": "1.0.0",
-  "description": "SalaMangaS - App de mangas v2",
+  "description": "Sitio web Samamangas con Cloudflare Pages",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo \"No build step required\""
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
-  }
+  },
+  "devDependencies": {}
 }

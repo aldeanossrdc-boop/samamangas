@@ -1,25 +1,17 @@
 {
   "name": "SalaMangaS",
   "short_name": "SalaMangaS",
-  "description": "Leé, creá y chateá manga en SalaMangaS",
-  "id": "/",
+  "description": "SalaMangaS: la plataforma para leer, crear y compartir manga.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
   "lang": "es",
   "background_color": "#07041a",
-  "theme_color": "#7c4dff",
+  "theme_color": "#07041a",
   "icons": [
     {
       "src": "/logo.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/logo.png",
-      "sizes": "512x512",
+      "sizes": "2048x2048",
       "type": "image/png",
       "purpose": "any"
     }

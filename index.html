@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#07041a">
+  <link rel="apple-touch-icon" href="/logo.jpg">
+  <meta name="apple-mobile-web-app-title" content="SalaMangaS">
 <title>SalaMangaS</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -3274,6 +3278,7 @@ function renderPDFSlots(){
 /* ===== CREAR: pantallas nuevas conectadas a publicar/borradores ===== */
 const CREAR_PFX={lapiz:'lapiz',pagina:'pagina',pdf:'pdf',ia:'iaCrear'};
 function abrirCrearPantalla(tipo){
+ try{aplicarVisibilidadIA()}catch(e){}
  ocultarCrearPantallas();
  if(tipo==='lapiz'||tipo==='lapiz1')tipo='lapiz-1';
  if(tipo==='lapiz2')tipo='lapiz-2';
@@ -3285,6 +3290,19 @@ function abrirCrearPantalla(tipo){
  if(tipo==='pagina')renderPaginaSlots();
  if(tipo==='ia')renderIASlots();
  window.scrollTo(0,0);
+}
+/* ===== IA visible: SOLO el CEO; y todos cuando el CEO prende "IA conectada" en el panel ===== */
+function aplicarVisibilidadIA(esCeoConfirmado){
+  const ceo=esCeoConfirmado===true||((typeof esCeoSync==='function')&&esCeoSync());
+  const on=(typeof CONFIG==='object')&&!!CONFIG&&CONFIG.ia_activa==='1';
+  const ver=ceo||on;
+  document.querySelectorAll('.ai-coming-soon').forEach(e=>{e.style.display=ver?'none':''});
+  ['ia-legacy-ui','lapiz-legacy-ui-1','lapiz-legacy-ui-2'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display=ver?'':'none';e.setAttribute('aria-hidden',ver?'false':'true')}});
+  /* si todavía no se verificó si es CEO, se verifica una sola vez y se vuelve a aplicar */
+  if(!ver&&typeof miPerfil!=='undefined'&&miPerfil&&typeof esCeoReal==='function'&&!aplicarVisibilidadIA._chk){
+    aplicarVisibilidadIA._chk=1;
+    Promise.resolve(esCeoReal(true)).then(ok=>{if(ok)aplicarVisibilidadIA(true)}).catch(()=>{});
+  }
 }
 function nuevoCrear(tipo){limpiarCrearUI(true);abrirCrearPantalla(tipo)}
 function reabrirCrear(){
