@@ -586,6 +586,17 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .lz-box{min-height:0!important;aspect-ratio:2/3;cursor:pointer;text-align:center;padding:6px;font-size:12px}
 .lz-box img{width:100%;height:100%;max-height:none!important;object-fit:contain}
 .lz-row{display:flex;gap:8px;margin-top:12px}.lz-row>*{flex:1;margin:0!important}
+
+/* ===== TANDA FINAL: asistentes IA + crear personaje ===== */
+.as-msgs{flex:1;overflow-y:auto;min-height:180px;max-height:46vh;margin:8px 0;display:flex;flex-direction:column;gap:6px}
+.as-m{padding:8px 11px;border-radius:12px;font-size:13px;line-height:1.45;white-space:pre-wrap;word-break:break-word;max-width:90%}
+.as-m.u{align-self:flex-end;background:#7c4dff;color:#fff}
+.as-m.a{align-self:flex-start;background:rgba(255,209,102,.14);border:1px solid rgba(255,209,102,.3);color:var(--text)}
+.as-m.e{align-self:center;background:rgba(255,71,87,.15);border:1px solid rgba(255,71,87,.4);color:#ff9aa5;font-size:12px}
+.as-row{display:flex;gap:6px}.as-row input{flex:1;margin:0}
+.as-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.as-tools button{font-size:11px;padding:6px 9px}
+#ayudaFlotante{position:fixed;right:14px;bottom:82px;z-index:90;border:2px solid #ffd166;background:#2a0f5c;color:#fff3b0;border-radius:24px;padding:9px 14px;font-weight:700;font-size:13px;box-shadow:0 3px 0 #1a0a3a;cursor:pointer}
+.pj-ia-res img{width:100%;height:100%;object-fit:contain}
 .chatfs[data-estilo="bnsimple"]{background-color:#fff!important;background-image:radial-gradient(rgba(0,0,0,.16) 1px,transparent 1.5px)!important;background-size:7px 7px!important}
 .chatfs[data-estilo="bnsimple"] .chatfs-header{background:#fff;border-bottom:2px solid #111}
 .chatfs[data-estilo="bnsimple"] .chatfs-header h2{color:#111}
@@ -794,7 +805,7 @@ Entrar con Google
 <h3 class="section">✨ Crear</h3>
 <div class="create-opts create-opts-4">
 <div class="create-opt" onclick="nuevoCrear('pagina')"><span class="ico">🖼️</span><span class="name">Imagen por imagen</span><span class="desc">Página por página</span></div>
-<div class="create-opt" onclick="nuevoCrear('ia')"><span class="ico">🤖</span><span class="name">SalaMangaS IA</span><span class="desc">Próximamente 🔒</span></div>
+<div class="create-opt" onclick="nuevoCrear('ia')"><span class="ico">🤖</span><span class="name">SalaMangaS IA</span><span class="desc">Crear desde cero o referencias</span></div>
 <div class="create-opt" onclick="lapizAbrir()"><span class="ico">✏️</span><span class="name">Subir dibujos a lápiz</span><span class="desc">Renacer con IA</span></div>
 <div class="create-opt" onclick="nuevoCrear('pdf')"><span class="ico">📄</span><span class="name">PDF</span><span class="desc">10 a 25 páginas</span></div>
 </div>
@@ -817,7 +828,7 @@ Entrar con Google
 <div class="lz-titulo"><input id="lapizTitulo" class="input" placeholder="Título del manga (obligatorio)" maxlength="120"><input id="lapizSubtitulo" class="input" placeholder="Subtítulo (opcional)" maxlength="160"></div>
 <div class="lz-grid">
 <div><div id="lapizCoverTile" class="lz-cover" onclick="lapizCoverTap()"><span>＋ Portada<br><small>tocá para subirla</small></span></div><input id="lapizPortada" type="file" accept="image/*" style="display:none"></div>
-<div class="lz-sino"><textarea id="lapizSinopsis" class="input" placeholder="Sinopsis"></textarea></div>
+<div class="lz-sino"><textarea id="lapizSinopsis" class="input" placeholder="Sinopsis"></textarea><button type="button" class="btn-ghost" style="font-size:11px;padding:5px 9px;margin-top:6px" onclick="abrirAsistente('sinopsis',{campo:'lapizSinopsis'})">🤖 Ayudame a escribirla</button></div>
 </div>
 <label class="lbl">Género</label><div id="lapizGeneros"></div>
 <div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button><button class="btn-main" onclick="crearLapizPaso2()">Seguir →</button></div>
@@ -859,7 +870,7 @@ Entrar con Google
 <label class="lbl">Título</label><input id="paginaTitulo" class="input" placeholder="Título del manga">
 <label class="lbl">Subtítulos</label><input id="paginaSubtitulo" class="input" placeholder="Subtítulo">
 <label class="lbl">Portada</label><input id="paginaPortada" class="input" type="file" accept="image/*">
-<label class="lbl">Sinopsis</label><textarea id="paginaSinopsis" class="input" placeholder="Sinopsis"></textarea>
+<label class="lbl">Sinopsis</label><textarea id="paginaSinopsis" class="input" placeholder="Sinopsis"></textarea><button type="button" class="btn-ghost" style="font-size:11px;padding:5px 9px;margin-top:6px" onclick="abrirAsistente('sinopsis',{campo:'paginaSinopsis'})">🤖 Ayudame a escribirla</button>
 <label class="lbl">Géneros</label><div id="paginaGeneros"></div>
 <label class="lbl">Estilo visual</label><div id="paginaEstilos"></div>
 <h3 class="section">📄 Páginas (máximo 20)</h3><div id="paginaSlots" class="pages-dots"></div>
@@ -875,7 +886,7 @@ Entrar con Google
 <label class="lbl">Subtítulos</label><input id="pdfSubtitulo" class="input" placeholder="Subtítulo">
 <label class="lbl">Portada (opcional: si no, se usa la 1ª página)</label><input id="pdfPortada" class="input" type="file" accept="image/*">
 <label class="lbl">Géneros</label><div id="pdfGeneros"></div>
-<label class="lbl">Sinopsis</label><textarea id="pdfSinopsis" class="input" placeholder="Sinopsis"></textarea>
+<label class="lbl">Sinopsis</label><textarea id="pdfSinopsis" class="input" placeholder="Sinopsis"></textarea><button type="button" class="btn-ghost" style="font-size:11px;padding:5px 9px;margin-top:6px" onclick="abrirAsistente('sinopsis',{campo:'pdfSinopsis'})">🤖 Ayudame a escribirla</button>
 <div id="pdfPlanSlots" style="margin-top:14px"></div>
 <div id="pdfPreview" class="pdf-preview"></div>
 <p class="plan-note">PDF permitido: 10 a 25 páginas. Después de publicar podés seguir creando según tu plan.</p>
@@ -886,16 +897,7 @@ Entrar con Google
 <div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">🤖</span><span class="create-head-txt">SalaMangaS IA</span></div></div>
 <div class="card">
 <div class="ia-status" data-ia-status>⏳ Conectando IA...</div>
-<div class="ai-coming-soon">
-<div class="ai-coming-icon">🤖✨</div>
-<h2>✨ SalaMangaS IA — PRÓXIMAMENTE</h2>
-<p>Esta función estará disponible solo para suscriptores pagos.<br>Con la ayuda de los suscriptores y donaciones, la implementaremos lo antes posible. ¡Gracias por bancar el proyecto! 🌸</p>
-<div class="ai-coming-actions">
-<button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button>
-<button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button>
-</div>
-</div>
-<div id="ia-legacy-ui" style="display:none" aria-hidden="true">
+<div id="ia-legacy-ui">
 <p class="subtitle" style="margin-bottom:16px">Podés empezar de cero o subir imágenes de referencia.</p>
 <button class="btn-main" id="btnIAAbrir" data-ia-btn="ia" data-label="✨ Abrir SalaMangaS IA" style="margin-top:0" onclick="abrirIA('ia')">✨ Abrir SalaMangaS IA</button>
 <button class="btn" data-ia-recarga="btnIAAbrir" style="display:none;width:100%;margin-top:8px" onclick="abrirRecargaIA()">🎨 Recarga IA</button>
@@ -1109,6 +1111,7 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div id="iaDibujoBox" style="display:none"><img id="iaDibujo" class="iaImg" style="width:100%;max-height:220px;object-fit:contain;border-radius:12px;background:rgba(0,0,0,.3)"></div>
 <label class="lbl">📝 Instrucción para la IA</label>
 <textarea id="iaTxt" class="input" placeholder="Describí la escena, ambiente, ropa, expresión, encuadre y lo que querés modificar..."></textarea>
+<button type="button" class="btn-ghost" style="font-size:12px;padding:6px 11px;margin-top:6px" onclick="abrirAsistente('historia',{campo:'iaTxt'})">📖 Ayudame con la historia</button>
 <details id="iaAyuda" class="ia-ayuda"><summary>💡 Ayuda para escribir mejor</summary>
 <div class="ia-aviso">⚠️ <b>Antes de generar:</b> en <b>Dibujo a lápiz</b> la IA crea <b>1 imagen</b> y en <b>SalaMangaS IA</b> crea <b>2 imágenes</b> para que elijas. Cada vez que tocás Generar se gasta <b>1 generación</b> (de tu plan o 1 Sakura IA), y si tocás Regenerar se gasta otra. Si la IA falla, la generación se te devuelve sola. No pidas <b>texto o letras</b> dentro de la imagen (la IA suele deformarlas), ni <b>personajes con derechos de autor</b>, ni contenido sexual o violento extremo: la IA lo bloquea.</div>
 <div class="ia-ayuda-t">Ejemplos (tocá uno para usarlo)</div><div id="iaEjemplos"></div>
@@ -1128,7 +1131,7 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div id="pj" class="ov">
 <div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('pj')">←</div><h2>👥 Personajes</h2></div>
 <div class="ov-body">
-<button class="btn-main" onclick="nuevoPersonaje()">＋ Nuevo personaje</button>
+<button class="btn-main" onclick="nuevoPersonaje()">＋ Nuevo personaje</button> <button class="btn" onclick="crearPersonajeIA()">✨ Crear con IA</button>
 <div class="warn-mini">💡 Cuanto más detalle pongas, mejor va a mantener la IA al personaje en cada página.</div>
 <div id="pjLista" style="margin-top:14px"></div>
 </div>
@@ -1173,6 +1176,27 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div class="warn-mini">Cuanto más detalle pongas, mejor va a mantener la IA al personaje en cada página.</div>
 <label class="lbl">Foto de referencia (opcional)</label><div id="pjFotoNota" class="warn-mini" style="display:none"></div><input id="pjFoto" type="file" accept="image/*" class="input">
 <button id="pjGuardar" class="btn-main" style="margin-top:16px" onclick="guardarPersonaje()">Guardar personaje</button>
+</div></div>
+<div id="asist-modal" class="modal-overlay"><div class="modal-box" style="max-width:440px;display:flex;flex-direction:column;max-height:88vh">
+<button class="modal-close" onclick="cerrarAsistente()">✕</button>
+<h2 id="asTitulo" style="font-family:'Cinzel',serif;color:var(--gold);font-size:17px"></h2>
+<div id="asInfo" class="warn-mini"></div>
+<div id="asMsgs" class="as-msgs"></div>
+<div class="as-row"><input id="asIn" class="input" maxlength="1000" placeholder="Escribí tu mensaje..."><button class="btn-main" onclick="asEnviar()">Enviar</button></div>
+<div class="as-tools"><button class="btn-ghost" onclick="asDescargar()">📥 Descargar historial</button><button class="btn-ghost" id="asBtnPegar" onclick="document.getElementById('asArchivo').click()">📤 Pegar historial</button><button class="btn-ghost" id="asBtnAplicar" onclick="asAplicar()" style="display:none">📋 Usar en el campo</button><button class="btn-ghost" onclick="asNueva()">🗑️ Nueva charla</button></div>
+<input id="asArchivo" type="file" accept=".json,application/json,text/plain" style="display:none">
+</div></div>
+<div id="pj-ia-modal" class="modal-overlay" onclick="if(event.target===this)cerrarOv('pj-ia-modal')"><div class="modal-box" style="max-width:420px">
+<button class="modal-close" onclick="cerrarOv('pj-ia-modal')">✕</button>
+<h2 style="font-family:'Cinzel',serif;color:var(--gold);font-size:18px">✨ Crear personaje con IA</h2>
+<div id="pjIAEstado" class="warn-mini"></div>
+<input id="pjIANom" class="input" maxlength="60" placeholder="Nombre del personaje">
+<textarea id="pjIADesc" class="input" maxlength="600" placeholder="Descripción: cómo se ve, ropa, personalidad..." style="min-height:90px;margin-top:8px"></textarea>
+<label class="lbl">Estilo</label><div id="pjIAEstilos"></div>
+<div id="pjIARes" class="reference-box pj-ia-res" style="margin-top:10px;aspect-ratio:2/3;max-height:340px;text-align:center"><div>Acá aparece tu personaje</div></div>
+<div id="pjIAAcc" class="lz-row" style="display:none"><button class="btn-main" onclick="pjIAAceptar()">✅ Aceptar y guardar</button><button class="btn" onclick="pjIAGenerar()">🔄 Regenerar</button></div>
+<button id="pjIABtn" class="btn-main" style="width:100%;margin-top:10px" onclick="pjIAGenerar()">✨ Generar personaje</button>
+<p class="warn-mini" style="margin-top:8px">Podés cambiar nombre y descripción y regenerar las veces que quieras: el cupo se gasta recién cuando aceptás.</p>
 </div></div>
 <div id="um-modal" class="modal-overlay" onclick="if(event.target===this)cerrarOv('um-modal')"><div class="modal-box" style="max-width:320px;text-align:center">
 <button class="modal-close" onclick="cerrarOv('um-modal')">✕</button>
@@ -2671,7 +2695,7 @@ const SAKURA_PACKS=['250','700','2200'];
    INTERRUPTOR (prendido): requiere haber corrido sakuras_ia.sql e ia_generaciones.sql en Supabase
    y tener subidas las funciones de pagos. Si hay que apagar las compras de IA: false. */
 const SAKURAS_IA_SERVER_LISTO=true;
-const SAKURAS_IA_PACKS=[{n:5,ars:'5.000',usd:3},{n:15,ars:'13.500',usd:8},{n:30,ars:'24.000',usd:14},{n:80,ars:'59.500',usd:35}];
+const SAKURAS_IA_PACKS=[{n:5,ars:'1.000',usd:1},{n:15,ars:'2.000',usd:2},{n:25,ars:'3.000',usd:3},{n:50,ars:'5.000',usd:5}];
 function fmtSak(n){return (Number(n)||0).toLocaleString('es-AR')}
 function pintarSaldosModal(){
   const a=document.getElementById('sakurasSaldo'),b=document.getElementById('sakurasIASaldo');
@@ -2680,7 +2704,7 @@ function pintarSaldosModal(){
 }
 function pintarPacksIA(){
   const w=document.getElementById('sakPacksIA');if(!w)return;
-  w.innerHTML=SAKURAS_IA_PACKS.map(p=>'<div class="pack-card"'+(SAKURAS_IA_SERVER_LISTO?'':' style="opacity:.6"')+'><div class="cant">'+p.n+' 🔴 IA</div><div class="precio">$'+p.ars+' ARS / $'+p.usd+' USD</div>'+(SAKURAS_IA_SERVER_LISTO?'<button class="btn btn-main" onclick="comprarSakurasIAMP('+p.n+')">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasIAPayPal('+p.n+')">🅿️ PayPal</button>':'<div style="font-size:12px;color:var(--text2);margin-top:6px">Próximamente</div>')+'</div>').join('');
+  w.innerHTML=SAKURAS_IA_PACKS.map(p=>'<div class="pack-card"'+(SAKURAS_IA_SERVER_LISTO?'':' style="opacity:.6"')+'><div class="cant">'+p.n+' 🔴 IA</div><div class="precio">$'+p.ars+' ARS / $'+p.usd+' USD</div><div style="font-size:11px;color:var(--text2);margin-top:2px">o '+Math.floor(p.n/2)+' personajes</div>'+(SAKURAS_IA_SERVER_LISTO?'<button class="btn btn-main" onclick="comprarSakurasIAMP('+p.n+')">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasIAPayPal('+p.n+')">🅿️ PayPal</button>':'<div style="font-size:12px;color:var(--text2);margin-top:6px">Próximamente</div>')+'</div>').join('');
 }
 function sakTab(t){
   const ia=(t==='ia');
@@ -2848,6 +2872,72 @@ async function cargarPersonajes(){
   catch(e){PERSONAJES=[]}
 }
 async function abrirPersonajes(){if(!miPerfil){alert('Iniciá sesión primero');return}$('pj').classList.add('on');await cargarPersonajes();pintarPersonajes()}
+/* ==== PERSONAJES IA ==== */
+let _pjIA={img:null,estilo:'Manga blanco y negro',info:null,busy:false};
+const PJ_IA_ESTILOS=['Manga blanco y negro','Anime a color','Chibi','Dark fantasy','Realista'];
+const pjEsCeo=()=>(typeof esCeoSync==='function')&&esCeoSync();
+async function pjIAEstado(){
+  const e=$('pjIAEstado');
+  if(pjEsCeo()){_pjIA.info={puede:true,ceo:true};e.innerHTML='👑 CEO: sin límite de personajes.';return}
+  try{
+    const {data,error}=await sb.rpc('estado_personajes_ia');if(error)throw error;
+    _pjIA.info=data;
+    e.innerHTML='Tu plan permite <b>'+data.limite+'</b> personajes con IA <b>de por vida</b> (no se renuevan): usaste <b>'+data.usados+'</b>'+(data.restantes_plan>0?' y te quedan <b>'+data.restantes_plan+'</b>.':'. Cada personaje extra cuesta <b>'+data.costo_extra+' Sakuras IA</b> (tenés <b>'+data.sakuras_ia+'</b>).');
+  }catch(err){_pjIA.info=null;e.textContent=/estado_personajes_ia|schema/i.test(err.message||'')?'Falta correr tanda_final.sql en Supabase.':'No se pudo leer tu cupo de personajes.'}
+}
+async function crearPersonajeIA(){
+  if(!requireUser())return;
+  _pjIA.img=null;$('pjIARes').innerHTML='<div>Acá aparece tu personaje</div>';$('pjIAAcc').style.display='none';
+  const box=$('pjIAEstilos');
+  if(!box.children.length){
+    box.innerHTML=PJ_IA_ESTILOS.map((t,i)=>'<span class="chip'+(i===0?' on':'')+'" data-e="'+esc(t)+'">'+esc(t)+'</span>').join('');
+    box.addEventListener('click',ev=>{const c=ev.target.closest('.chip');if(!c)return;box.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');_pjIA.estilo=c.dataset.e});
+  }
+  $('pj-ia-modal').classList.add('on');await pjIAEstado();
+}
+async function pjIAGenerar(){
+  if(_pjIA.busy||!requireUser())return;
+  const nombre=($('pjIANom').value||'').trim(),desc=($('pjIADesc').value||'').trim();
+  if(nombre.length<2||desc.length<5){alert('Poné el nombre y una descripción del personaje.');return}
+  if(!pjEsCeo()&&_pjIA.info&&_pjIA.info.puede===false){alert('Ya usaste los personajes de tu plan. Cada personaje extra cuesta 2 Sakuras IA.');abrirSakuras('ia');return}
+  _pjIA.busy=true;const b=$('pjIABtn');b.disabled=true;b.innerText='✨ Generando...';
+  $('pjIAAcc').style.display='none';$('pjIARes').innerHTML='<div>🎨 Creando tu personaje...</div>';
+  try{
+    const tk=await iaToken();
+    const r=await fetch('/api/ia-personaje',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({nombre:nombre,descripcion:desc,estilo:_pjIA.estilo})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok){if(j.codigo==='sin_credito')abrirSakuras('ia');throw new Error(j.error||'Error del servidor')}
+    _pjIA.img=j.imagen;
+    $('pjIARes').innerHTML='<img src="'+esc(j.imagen)+'" alt="Personaje generado">';$('pjIAAcc').style.display='flex';
+  }catch(e){$('pjIARes').innerHTML='<div style="color:#ff6b81">⚠️ '+esc(e.message||String(e))+'</div>'}
+  _pjIA.busy=false;b.disabled=false;b.innerText='✨ Generar personaje';
+}
+async function pjIAAceptar(){
+  if(!_pjIA.img||_pjIA.busy)return;
+  const nombre=($('pjIANom').value||'').trim(),desc=($('pjIADesc').value||'').trim();
+  if(nombre.length<2||desc.length<5){alert('Poné el nombre y una descripción del personaje.');return}
+  _pjIA.busy=true;let consumido=false;
+  try{
+    if(!pjEsCeo()){
+      const {data,error}=await sb.rpc('consumir_personaje_ia');if(error)throw error;
+      if(data==='sin_credito'){alert('No te quedan personajes. Cada personaje extra cuesta 2 Sakuras IA.');abrirSakuras('ia');_pjIA.busy=false;return}
+      consumido=true;
+    }
+    const blob=await (await fetch(_pjIA.img)).blob();
+    const foto_url=await subirACloudinary(new File([blob],'personaje.png',{type:blob.type||'image/png'}));
+    const {error:e2}=await sb.from('personajes').insert({user_id:miPerfil.id,nombre:nombre,descripcion:desc,foto_url:foto_url});
+    if(e2)throw e2;
+    cerrarOv('pj-ia-modal');$('pjIANom').value='';$('pjIADesc').value='';_pjIA.img=null;
+    await cargarPersonajes();pintarPersonajes();
+    if(typeof refrescarPerfil==='function')await refrescarPerfil();
+    alert('✅ ¡Personaje guardado en tu lista!');
+  }catch(e){
+    if(consumido){try{await sb.rpc('devolver_personaje_ia')}catch(x){}}
+    alert('No se pudo guardar el personaje: '+(e.message||e)+(consumido?' (no se te descontó el cupo)':''));
+  }
+  _pjIA.busy=false;
+}
+/* ==== FIN PERSONAJES IA ==== */
 let _pjEditId=null;
 function nuevoPersonaje(){
   _pjEditId=null;
@@ -2951,7 +3041,6 @@ function iaAgregarTexto(t,reemplazar){
 }
 async function abrirIA(modo,file){
   if(!miPerfil){alert('Iniciá sesión primero');return}
-  if(modo==='ia'){alert('SalaMangaS IA estará disponible próximamente. Por ahora solo está activo Dibujo a lápiz ✏️');return}
   iaModo=modo;iaImg=null;iaBlob=null;iaEstilo=null;iaEstiloKey='clasico';iaPjSel=[];iaLoteUrls=[];iaUltimoId=null;$('iaRes').innerHTML='';
   $('iaTitulo').innerText=modo==='lapiz'?'Dibujo a lápiz → Manga':'SalaMangas IA';
   $('iaDibujoBox').style.display=modo==='lapiz'?'block':'none';
@@ -3003,8 +3092,8 @@ async function iaGenerar(){
       if(j.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}
       throw new Error(j.error||'Error del servidor');
     }
-    iaUltimoId=j.id;
-    iaMostrar(await iaEsperar(j.id,tk));
+    if(j.sync&&j.imagenes){iaMostrar(j.imagenes)}
+    else{iaUltimoId=j.id;iaMostrar(await iaEsperar(j.id,tk))}
   }catch(e){iaError(e)}
   btn.disabled=false;btn.innerText='✨ Generar';
 }
@@ -3025,7 +3114,7 @@ async function iaReanudar(){
   try{iaMostrar(await iaEsperar(iaUltimoId,await iaToken()))}catch(e){iaError(e)}
 }
 function iaMostrar(urls){
-  iaLoteUrls=(urls||[]).map(u=>'/api/ia-imagen?u='+encodeURIComponent(u));
+  iaLoteUrls=(urls||[]).map(u=>String(u).indexOf('data:')===0?u:'/api/ia-imagen?u='+encodeURIComponent(u));
   $('iaRes').innerHTML='<div class="ia-result-card"><div class="ia-grid"'+(iaLoteUrls.length===1?' style="grid-template-columns:1fr;max-width:260px;margin:0 auto"':'')+'>'+iaLoteUrls.map((u,i)=>'<div class="ia-cell"><img src="'+esc(u)+'" alt="Opción '+(i+1)+'" loading="lazy"><div class="ia-cell-btns"><button class="btn-main" onclick="iaElegir('+i+',\'portada\')">📕 Portada</button><button class="btn" onclick="iaElegir('+i+',\'pagina\')">📄 Página</button></div></div>').join('')+'</div><p style="font-size:11px;color:var(--text2);margin:8px 0 6px;text-align:center">'+(iaLoteUrls.length===1?'Si no te convence, regenerá para ver otra versión.':'Elegí la que más te guste, o regenerá para ver '+iaLoteUrls.length+' opciones nuevas.')+'</p><button class="btn" style="width:100%" onclick="iaGenerar()">🔄 Regenerar (gasta 1 generación)</button></div>';
 }
 function iaError(e){
@@ -3259,8 +3348,8 @@ function renderPlanesDefinitivos(){
   if(k==='gratis')bullets='<li>2 capítulos de 15 a 20 páginas por mes</li><li>2 PDF por mes</li><li>0 generaciones IA — sin IA</li><li>1 manga para crear</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMangakers</li><li>No monetiza</li>';
   if(k==='pro')bullets='<li>3 capítulos por mes</li><li>3 PDF por mes</li><li>20 generaciones IA por mes</li><li>IA: Lápiz + SalaMangaS IA</li><li>1 manga para crear</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>No monetiza</li>';
   if(k==='superpro')bullets='<li>4 capítulos por mes</li><li>4 PDF por mes</li><li>50 generaciones IA por mes</li><li>IA: Lápiz + SalaMangaS IA</li><li>2 mangas para crear</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>No monetiza</li>';
-  if(k==='semidios')bullets='<li>Capítulos y PDF ilimitados (máximo 20 páginas por capítulo)</li><li>150 generaciones IA por mes</li><li>IA: todas las funciones</li><li>3 mangas para crear, publicar y gratis TODOS los meses</li><li>4000 Sakuras para leer</li><li>No monetiza</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Botón con contador exacto del apoyo, se abona cada 30 días</li>';
-  if(k==='dios')bullets='<li>Capítulos y PDF ilimitados (máximo 20 páginas por capítulo)</li><li>300 generaciones IA por mes</li><li>IA: todas las funciones</li><li>Lectura ilimitada todo el mes</li><li>4 creaciones gratis TODOS los meses</li><li>4000 Sakuras para leer</li><li>💰 Monetiza: 100% de las donaciones para el creador</li><li>Alias del creador para Mercado Pago Argentina / PayPal internacional</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li>';
+  if(k==='semidios')bullets='<li>Capítulos y PDF ilimitados (máximo 20 páginas por capítulo)</li><li>100 generaciones IA por mes</li><li>IA: todas las funciones</li><li>3 mangas para crear, publicar y gratis TODOS los meses</li><li>4000 Sakuras para leer</li><li>No monetiza</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Botón con contador exacto del apoyo, se abona cada 30 días</li>';
+  if(k==='dios')bullets='<li>Capítulos y PDF ilimitados (máximo 20 páginas por capítulo)</li><li>200 generaciones IA por mes</li><li>IA: todas las funciones</li><li>Lectura ilimitada todo el mes</li><li>4 creaciones gratis TODOS los meses</li><li>4000 Sakuras para leer</li><li>💰 Monetiza: 100% de las donaciones para el creador</li><li>Alias del creador para Mercado Pago Argentina / PayPal internacional</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li>';
   d.innerHTML=`<h3>${p.nombre}</h3><div class="plan-ins">${insigniaGrande(k,'xl')}<p>${INSIGNIAS[k].corto}</p></div><div class="plan-price">${precio}</div><ul>${bullets}</ul>`;
   if(k!=='gratis'){
     const row=document.createElement('div');row.style.cssText='display:flex;gap:8px;margin-top:10px';
@@ -3376,8 +3465,8 @@ async function renacerLapiz(){
       if(j.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}
       throw new Error(j.error||'Error del servidor');
     }
-    _lapizUltimoId=j.id;
-    await lapizMostrar(await iaEsperar(j.id,tk));
+    if(j.sync&&j.imagenes){await lapizMostrar(j.imagenes)}
+    else{_lapizUltimoId=j.id;await lapizMostrar(await iaEsperar(j.id,tk))}
   }catch(e){lapizError(e)}
   if(btn){btn.disabled=false;btn.innerText=txt0}
   try{await refrescarPerfil()}catch(e){}
@@ -3385,7 +3474,7 @@ async function renacerLapiz(){
 }
 async function lapizMostrar(urls){
   const u=(urls||[])[0];if(!u)throw new Error('La IA no devolvió ninguna imagen');
-  _lapizResUrl='/api/ia-imagen?u='+encodeURIComponent(u);_lapizAgregada=false;
+  _lapizResUrl=String(u).indexOf('data:')===0?u:'/api/ia-imagen?u='+encodeURIComponent(u);_lapizAgregada=false;
   $('lapizResultado').innerHTML='<img src="'+esc(_lapizResUrl)+'" alt="Manga generado por la IA">';
   $('lapizResAcc').style.display='flex';$('lapizMsg').textContent='';
   const b=$('lapizBtnUsar');if(b)b.disabled=false;
@@ -3425,6 +3514,106 @@ document.addEventListener('change',function(e){
   else if(t.id==='lapizDibujo'&&t.files&&t.files[0]){lapizSetDibujo(t.files[0])}
 });
 /* ==== FIN LAPIZ ==== */
+/* ==== ASISTENTES IA ==== */
+const AS_TITULOS={sinopsis:'🤖 Asistente de sinopsis',app:'❓ Ayuda de SalaMangaS',historia:'📖 Asistente de historias'};
+const AS_HOLA={sinopsis:'¡Hola! Contame de qué trata tu manga (género, protagonista, conflicto) y armamos la sinopsis juntos.',app:'¡Hola! Preguntame lo que quieras sobre cómo usar SalaMangaS.',historia:'¡Hola! Contame tu idea y te ayudo con la trama, los personajes y los diálogos.'};
+let _as={tipo:null,msgs:[],campo:null,acc:null,busy:false};
+/* Súper Pro y Semi Dios: historial por archivo · Dios: se guarda solo · CEO: todo · Gratis/Pro: sin asistente */
+function asAcceso(){
+  if((typeof esCeoSync==='function')&&esCeoSync())return {ok:true,hist:'supabase'};
+  const k=(typeof planVigente==='function'&&planVigente()&&miPerfil)?planClave(miPerfil):'gratis';
+  if(k==='dios')return {ok:true,hist:'supabase'};
+  if(k==='superpro'||k==='semidios')return {ok:true,hist:'archivo'};
+  return {ok:false};
+}
+function asLimpio(arr){
+  return (Array.isArray(arr)?arr:[]).filter(m=>m&&(m.role==='user'||m.role==='assistant')&&typeof m.content==='string'&&m.content.trim()).slice(-60).map(m=>({role:m.role,content:m.content.slice(0,4000)}));
+}
+async function abrirAsistente(tipo,opts){
+  if(!miPerfil){alert('Iniciá sesión para usar el asistente');return}
+  const acc=asAcceso();
+  if(!acc.ok){alert('El asistente está disponible desde Súper Mangakers Pro. ¡Mejorá tu plan para usarlo! ✨');if(typeof abrirSuscripciones==='function')abrirSuscripciones();return}
+  _as={tipo:tipo,msgs:[],campo:(opts&&opts.campo)||null,acc:acc,busy:false};
+  $('asTitulo').textContent=AS_TITULOS[tipo]||'Asistente';
+  $('asBtnAplicar').style.display=_as.campo?'inline-block':'none';
+  $('asBtnPegar').style.display=acc.hist==='archivo'?'inline-block':'none';
+  $('asInfo').textContent=acc.hist==='supabase'?'Tu charla se guarda sola y la IA se acuerda cuando vuelvas. También podés descargarla.':'Tu charla no se guarda en la app: al cerrar se descarga un archivo. Para seguir otro día, tocá "Pegar historial" y subilo.';
+  if(acc.hist==='supabase'){try{const r=await sb.from('asistente_historial').select('mensajes').eq('user_id',miPerfil.id).eq('tipo',tipo).maybeSingle();if(r.data&&r.data.mensajes)_as.msgs=asLimpio(r.data.mensajes)}catch(e){}}
+  asPintar();$('asist-modal').classList.add('on');
+}
+function asPintar(esperando,error){
+  const b=$('asMsgs');
+  let h=_as.msgs.length?'':'<div class="as-m a">'+esc(AS_HOLA[_as.tipo]||'¡Hola!')+'</div>';
+  h+=_as.msgs.map(m=>'<div class="as-m '+(m.role==='user'?'u':'a')+'">'+esc(m.content)+'</div>').join('');
+  if(esperando)h+='<div class="as-m a">✍️ Escribiendo...</div>';
+  if(error)h+='<div class="as-m e">⚠️ '+esc(error)+'</div>';
+  b.innerHTML=h;b.scrollTop=b.scrollHeight;
+}
+function asContexto(){
+  if(!_as.campo)return '';
+  const campo=$(_as.campo),tit=$(_as.campo.replace('Sinopsis','Titulo'));
+  return ((tit&&tit.value?'Título: '+tit.value+'. ':'')+(campo&&campo.value?'Texto actual: '+campo.value:'')).slice(0,800);
+}
+async function asEnviar(){
+  if(_as.busy||!_as.tipo)return;
+  const inp=$('asIn'),t=(inp.value||'').trim();if(!t)return;
+  _as.busy=true;inp.value='';_as.msgs.push({role:'user',content:t});asPintar(true);
+  try{
+    const tk=await iaToken();
+    const r=await fetch('/api/asistente',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({tipo:_as.tipo,mensajes:_as.msgs.slice(-14),contexto:asContexto()})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(j.error||'Error del servidor');
+    _as.msgs.push({role:'assistant',content:j.respuesta});asPintar();
+    await asGuardar();
+  }catch(e){_as.msgs.pop();inp.value=t;asPintar(false,e.message||String(e))}
+  _as.busy=false;
+}
+async function asGuardar(){
+  if(!_as.acc||_as.acc.hist!=='supabase'||!miPerfil)return;
+  try{const r=await sb.from('asistente_historial').upsert({user_id:miPerfil.id,tipo:_as.tipo,mensajes:_as.msgs.slice(-60),updated_at:new Date().toISOString()},{onConflict:'user_id,tipo'});if(r.error)console.warn('historial:',r.error.message)}catch(e){console.warn('historial:',e.message)}
+}
+function asDescargar(){
+  if(!_as.msgs.length){alert('Todavía no hay charla para descargar.');return}
+  const fecha=new Date().toISOString().slice(0,10);
+  const blob=new Blob([JSON.stringify({app:'SalaMangaS',tipo:_as.tipo,fecha:fecha,mensajes:_as.msgs},null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='asistente-'+_as.tipo+'-'+fecha+'.json';document.body.appendChild(a);a.click();a.remove();
+}
+function cerrarAsistente(){
+  if(_as.acc&&_as.acc.hist==='archivo'&&_as.msgs.length)asDescargar();   /* Súper Pro / Semi Dios: al cerrar se descarga */
+  $('asist-modal').classList.remove('on');
+}
+async function asNueva(){
+  if(_as.msgs.length&&!confirm('¿Empezar una charla nueva? Se borra la actual.'))return;
+  _as.msgs=[];asPintar();
+  if(_as.acc&&_as.acc.hist==='supabase'&&miPerfil){try{await sb.from('asistente_historial').delete().eq('user_id',miPerfil.id).eq('tipo',_as.tipo)}catch(e){}}
+}
+function asAplicar(){
+  const ult=[..._as.msgs].reverse().find(m=>m.role==='assistant');
+  if(!ult||!_as.campo){alert('Todavía no hay una respuesta para usar.');return}
+  const c=$(_as.campo);if(c){c.value=ult.content;alert('✅ Listo: el texto ya está en el campo.')}
+}
+document.addEventListener('change',function(e){
+  const t=e.target;if(!t||t.id!=='asArchivo'||!t.files||!t.files[0])return;
+  const f=t.files[0];t.value='';
+  if(f.size>400000){alert('El archivo es muy grande para ser un historial.');return}
+  const fr=new FileReader();
+  fr.onload=()=>{
+    try{
+      const d=JSON.parse(String(fr.result||''));
+      const arr=asLimpio(Array.isArray(d)?d:d&&d.mensajes);
+      if(!arr.length)throw new Error('vacío');
+      if(d&&d.tipo&&d.tipo!==_as.tipo&&!confirm('Este historial es de otro asistente ('+d.tipo+'). ¿Cargarlo igual?'))return;
+      _as.msgs=arr;asPintar();
+    }catch(err){alert('Ese archivo no es un historial válido de SalaMangaS.')}
+  };
+  fr.readAsText(f);
+});
+(function(){
+  const poner=()=>{if(location.pathname.indexOf('sala-ceo')>-1||document.getElementById('ayudaFlotante'))return;document.body.insertAdjacentHTML('beforeend','<button id="ayudaFlotante" onclick="abrirAsistente(\'app\')">❓ Ayuda</button>')};
+  if(document.readyState!=='loading')poner();else document.addEventListener('DOMContentLoaded',poner);
+})();
+/* ==== FIN ASISTENTES ==== */
+
 function agregarFilaLapiz(){
  if(paginas.length>=20){alert('Máximo 20 páginas por capítulo.');return}
  const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=e=>{const f=e.target.files[0];if(!f)return;paginas.push({file:f});renderLapizSlots()};inp.click()
@@ -4276,7 +4465,7 @@ iniciarApp=function(){
 /* ===== 05/10/2026: IA (contador, estados, recarga) + botón "Mi perfil" arriba ===== */
 (function(){
   'use strict';
-  const GEN_IA_PLAN={gratis:0,pro:20,superpro:50,semidios:150,dios:300};
+  const GEN_IA_PLAN={gratis:0,pro:20,superpro:50,semidios:100,dios:200};
   const RECARGA_PACKS=[{n:50,usd:3,ars:'3.000'}]; /* único pack de la Recarga IA actual; los demás packs son las Sakuras IA (10/30/50/150) de la tienda */
   let _recargaPack=50;
   const packListo=n=>n===50;
@@ -4490,7 +4679,7 @@ iniciarApp=function(){
     CEO_R.sistema=async function(b){
       await _sis3(b);
       const m=(typeof CONFIG==='object'&&CONFIG&&CONFIG.ia_modelo==='flux-schnell')?'flux-schnell':'phoenix';
-      b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:14px"><b>🧠 Modelo de IA (toda la app)</b>'+
+      b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:14px"><b>🧠 Modelo de Lápiz (Leonardo)</b>'+
         '<p style="font-size:12px;color:var(--text2);margin:6px 0 10px">Lo usan todos los usuarios; ellos no pueden elegir. Formato fijo vertical 2:3 (832×1248).</p>'+
         '<div style="display:flex;gap:8px"><button class="'+(m==='phoenix'?'btn-main':'btn')+'" style="flex:1;margin:0" onclick="ceoModeloIA(\'phoenix\')">Phoenix 1.0<br><small>buena calidad</small></button>'+
         '<button class="'+(m==='flux-schnell'?'btn-main':'btn')+'" style="flex:1;margin:0" onclick="ceoModeloIA(\'flux-schnell\')">FLUX Schnell<br><small>más rápido</small></button></div>'+
@@ -4498,6 +4687,20 @@ iniciarApp=function(){
     };
     window.ceoModeloIA=async function(v){await ceoAccion(async()=>{if(await setConfig('ia_modelo',v)){CONFIG.ia_modelo=v;ceoTab('sistema')}})};
   }catch(e){console.warn('Modelo IA:',e.message||e)}
+  /* ---- Modelo de SalaMangaS IA (DeepInfra): Qwen-Image o FLUX Kontext. Solo lo cambia el CEO (config.ia_modelo_escena) ---- */
+  try{
+    const _sis4=CEO_R.sistema;
+    CEO_R.sistema=async function(b){
+      await _sis4(b);
+      const m=(typeof CONFIG==='object'&&CONFIG&&CONFIG.ia_modelo_escena==='kontext')?'kontext':'qwen';
+      b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:14px"><b>🤖 Modelo de SalaMangaS IA</b>'+
+        '<p style="font-size:12px;color:var(--text2);margin:6px 0 10px">Crea 2 imágenes verticales desde texto. Lo usan todos los usuarios; ellos no eligen.</p>'+
+        '<div style="display:flex;gap:8px"><button class="'+(m==='qwen'?'btn-main':'btn')+'" style="flex:1;margin:0" onclick="ceoModeloEscena(\'qwen\')">Qwen-Image<br><small>barato · ~US$0,02</small></button>'+
+        '<button class="'+(m==='kontext'?'btn-main':'btn')+'" style="flex:1;margin:0" onclick="ceoModeloEscena(\'kontext\')">FLUX Kontext<br><small>menos filtros · ~US$0,04</small></button></div>'+
+        '<p style="font-size:11px;color:var(--text2);margin:8px 0 0">Activo ahora: <b>'+(m==='qwen'?'Qwen-Image':'FLUX Kontext')+'</b></p></div>');
+    };
+    window.ceoModeloEscena=async function(v){await ceoAccion(async()=>{if(await setConfig('ia_modelo_escena',v)){CONFIG.ia_modelo_escena=v;ceoTab('sistema')}})};
+  }catch(e){console.warn('Modelo escena:',e.message||e)}
   setTimeout(()=>{pintarPerfilTop();actualizarIAUI()},0);
 })();
 
