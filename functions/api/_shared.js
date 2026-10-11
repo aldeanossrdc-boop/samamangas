@@ -78,10 +78,10 @@ export const PRECIOS_SAKURAS_ARS = { '250': 1000, '700': 2000, '1500': 3000, '30
 export const PRECIOS_SAKURAS_USD = { '250': '1.00', '700': '2.00', '1500': '3.00', '3000': '5.00' };
 
 // Sakuras IA (segunda moneda: solo para generar con IA). Se acumulan y no vencen.
-export const CANT_SAKURAS_IA = { '5': 5, '15': 15, '30': 30, '80': 80 };
-// Precios con margen positivo (costo real ~US$0,31 por generación; dólar oficial ~$1.540). Revisar cada tanto si sube el dólar.
-export const PRECIOS_SAKURAS_IA_ARS = { '5': 5000, '15': 13500, '30': 24000, '80': 59500 };
-export const PRECIOS_SAKURAS_IA_USD = { '5': '3.00', '15': '8.00', '30': '14.00', '80': '35.00' };
+export const CANT_SAKURAS_IA = { '5': 5, '15': 15, '25': 25, '50': 50 };
+// Packs de Sakuras IA (precios finales): 5 gen o 2 pers. · 15 gen o 4 pers. · 25 gen o 7 pers. · 50 gen o 10 pers.
+export const PRECIOS_SAKURAS_IA_ARS = { '5': 1000, '15': 2000, '25': 3000, '50': 5000 };
+export const PRECIOS_SAKURAS_IA_USD = { '5': '1.00', '15': '2.00', '25': '3.00', '50': '5.00' };
 
 export const MANGA_EXTRA_ARS = 10000;
 export const MANGA_EXTRA_USD = '10.00';

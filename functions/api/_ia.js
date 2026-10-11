@@ -41,6 +41,9 @@ export async function iaActiva(env) { return (await leerConfig(env, 'ia_activa')
 // Modelo elegido por el CEO para TODA la app (config.ia_modelo): 'phoenix' (por defecto) o 'flux-schnell'
 export async function modeloIA(env) { return (await leerConfig(env, 'ia_modelo')) === 'flux-schnell' ? 'flux-schnell' : 'phoenix'; }
 
+// Modelo de SalaMangaS IA (DeepInfra) elegido por el CEO: 'qwen' (por defecto) o 'kontext'
+export async function modeloEscena(env) { return (await leerConfig(env, 'ia_modelo_escena')) === 'kontext' ? 'kontext' : 'qwen'; }
+
 // Llama una función de Supabase COMO el usuario (así auth.uid() es él, no se puede falsear)
 export async function rpcUsuario(env, token, fn, body) {
   const r = await fetch(SB_URL(env) + '/rest/v1/rpc/' + fn, {
