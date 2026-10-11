@@ -565,6 +565,27 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .sp-redes{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .sp-red{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:18px;border:1px solid rgba(255,209,102,.3);background:rgba(255,209,102,.06);color:var(--gold3);font-size:12px;font-weight:700;text-decoration:none}
 .ia-aviso2{margin-top:12px;padding:8px 10px;border-radius:10px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.3);font-size:12px;line-height:1.45;color:var(--text)}
+
+/* ===== TANDA C: pantallas de Lápiz / Renacer ===== */
+.step-nav{display:flex!important;justify-content:space-between;align-items:center;gap:10px}
+.step-nav>*{width:auto!important;flex:0 0 auto!important;min-width:104px;max-width:170px;padding:10px 18px!important;margin:0!important}
+.lz-titulo{background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.3);border-radius:18px;padding:12px 14px;margin-bottom:12px}
+.lz-titulo input{background:transparent!important;border:0!important;border-radius:0!important;margin:0!important;padding:8px 2px!important;width:100%;box-shadow:none!important}
+.lz-titulo #lapizTitulo{font-size:18px;font-weight:700;color:var(--gold3);border-bottom:1px solid rgba(255,209,102,.25)!important}
+.lz-titulo #lapizSubtitulo{font-size:14px}
+.lz-grid{display:grid;grid-template-columns:40% 1fr;gap:12px;align-items:stretch}
+.lz-cover{position:relative;align-self:start;aspect-ratio:2/3;border-radius:14px;border:2px dashed rgba(255,209,102,.4);background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;text-align:center;color:var(--text2);font-size:13px;cursor:pointer;overflow:hidden}
+.lz-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.lz-cover-acts{position:absolute;top:6px;right:6px;display:none;flex-direction:column;gap:5px}
+.lz-cover.acts .lz-cover-acts{display:flex}
+.lz-cover-acts button{padding:5px 9px;font-size:11px;border-radius:12px;border:1px solid rgba(255,209,102,.5);background:rgba(7,4,26,.9);color:var(--gold3);cursor:pointer;font-weight:700}
+.lz-sino{display:flex;flex-direction:column}
+.lz-sino textarea{flex:1;min-height:300px;margin:0;resize:none}
+.lz-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lz-pane-t{font-size:12px;font-weight:700;color:var(--gold3);margin-bottom:4px;text-align:center}
+.lz-box{min-height:0!important;aspect-ratio:2/3;cursor:pointer;text-align:center;padding:6px;font-size:12px}
+.lz-box img{width:100%;height:100%;max-height:none!important;object-fit:contain}
+.lz-row{display:flex;gap:8px;margin-top:12px}.lz-row>*{flex:1;margin:0!important}
 .chatfs[data-estilo="bnsimple"]{background-color:#fff!important;background-image:radial-gradient(rgba(0,0,0,.16) 1px,transparent 1.5px)!important;background-size:7px 7px!important}
 .chatfs[data-estilo="bnsimple"] .chatfs-header{background:#fff;border-bottom:2px solid #111}
 .chatfs[data-estilo="bnsimple"] .chatfs-header h2{color:#111}
@@ -773,8 +794,8 @@ Entrar con Google
 <h3 class="section">✨ Crear</h3>
 <div class="create-opts create-opts-4">
 <div class="create-opt" onclick="nuevoCrear('pagina')"><span class="ico">🖼️</span><span class="name">Imagen por imagen</span><span class="desc">Página por página</span></div>
-<div class="create-opt" onclick="nuevoCrear('ia')"><span class="ico">🤖</span><span class="name">SalaMangaS IA</span><span class="desc">Crear desde cero o referencias</span></div>
-<div class="create-opt" onclick="nuevoCrear('lapiz')"><span class="ico">✏️</span><span class="name">Subir dibujos a lápiz</span><span class="desc">Renacer con IA</span></div>
+<div class="create-opt" onclick="nuevoCrear('ia')"><span class="ico">🤖</span><span class="name">SalaMangaS IA</span><span class="desc">Próximamente 🔒</span></div>
+<div class="create-opt" onclick="lapizAbrir()"><span class="ico">✏️</span><span class="name">Subir dibujos a lápiz</span><span class="desc">Renacer con IA</span></div>
 <div class="create-opt" onclick="nuevoCrear('pdf')"><span class="ico">📄</span><span class="name">PDF</span><span class="desc">10 a 25 páginas</span></div>
 </div>
 </div>
@@ -793,13 +814,14 @@ Entrar con Google
 <div class="card">
 <div class="ia-status" data-ia-status>⏳ Conectando IA...</div>
 <div id="lapiz-legacy-ui-1">
-<label class="lbl">Título</label><input id="lapizTitulo" class="input" placeholder="Título del manga">
-<label class="lbl">Subtítulo</label><input id="lapizSubtitulo" class="input" placeholder="Subtítulo">
-<label class="lbl">Sinopsis</label><textarea id="lapizSinopsis" class="input" placeholder="Sinopsis"></textarea>
-<label class="lbl">Portada</label><input id="lapizPortada" class="input" type="file" accept="image/*">
+<div class="lz-titulo"><input id="lapizTitulo" class="input" placeholder="Título del manga (obligatorio)" maxlength="120"><input id="lapizSubtitulo" class="input" placeholder="Subtítulo (opcional)" maxlength="160"></div>
+<div class="lz-grid">
+<div><div id="lapizCoverTile" class="lz-cover" onclick="lapizCoverTap()"><span>＋ Portada<br><small>tocá para subirla</small></span></div><input id="lapizPortada" type="file" accept="image/*" style="display:none"></div>
+<div class="lz-sino"><textarea id="lapizSinopsis" class="input" placeholder="Sinopsis"></textarea></div>
+</div>
 <label class="lbl">Género</label><div id="lapizGeneros"></div>
-<label class="lbl">Estilo visual</label><div id="lapizEstilos"></div>
-<div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button><button class="btn-main" onclick="crearLapizPaso2()">Siguiente →</button></div>
+<div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button><button class="btn-main" onclick="crearLapizPaso2()">Seguir →</button></div>
+<div style="text-align:center;margin-top:10px"><button class="btn-ghost" style="font-size:12px;padding:6px 12px" onclick="lapizEmpezarDeCero()">🗑️ Empezar de cero</button></div>
 </div>
 <div class="ai-coming-actions" style="margin-top:16px"><button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button><button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button></div>
 </div>
@@ -809,16 +831,25 @@ Entrar con Google
 <div class="card">
 <div class="ia-status" data-ia-status>⏳ Conectando IA...</div>
 <div id="lapiz-legacy-ui-2">
-<div id="lapizVistaBox" class="reference-box"><div>Subí un dibujo para verlo acá</div></div>
-<label class="lbl">📝 ¿Qué querés que haga la IA?</label><textarea id="lapizPrompt" class="input" placeholder="Ej.: limpiar líneas, mantener personajes, agregar fondo..."></textarea>
-<button class="btn-main" id="btnRenacer" data-ia-btn="lapiz" data-label="✨ Renacer" onclick="renacerLapiz()">✨ Renacer</button>
+<div class="lz-pair">
+<div><div class="lz-pane-t">✏️ Tu dibujo</div><div id="lapizVistaBox" class="reference-box lz-box" onclick="lapizPedirDibujo()"><div>Tocá para subir tu dibujo</div></div></div>
+<div><div class="lz-pane-t">✨ Manga con IA</div><div id="lapizResultado" class="reference-box lz-box"><div>Acá aparece tu manga</div></div></div>
+</div>
+<input id="lapizDibujo" type="file" accept="image/*" style="display:none">
+<div id="lapizResAcc" class="lz-row" style="display:none"><button id="lapizBtnUsar" type="button" class="btn-main" onclick="lapizUsarResultado()">➕ Agregar a páginas</button><button type="button" class="btn" onclick="renacerLapiz()">🔄 Regenerar · 1 gen.</button></div>
+<div id="lapizMsg" style="font-size:12px;color:var(--gold3);text-align:center;margin-top:6px;min-height:16px"></div>
+<h3 class="section">🎨 Estilos visuales</h3><div id="lapizEstilos"></div>
+<label class="lbl">📝 Especificaciones</label><textarea id="lapizPrompt" class="input" placeholder="Ej.: limpiar las líneas, agregar fondo, más contraste..."></textarea>
+<div id="lapizAviso" class="ia-aviso2"></div>
+<button class="btn-main" id="btnRenacer" data-ia-btn="lapiz" data-label="🎨 Crear manga" onclick="renacerLapiz()">🎨 Crear manga</button>
 <button class="btn" data-ia-recarga="btnRenacer" style="display:none;width:100%;margin-top:8px" onclick="abrirRecargaIA()">🎨 Recarga IA</button>
-<button class="btn" style="width:100%;margin-top:8px" onclick="agregarFilaLapiz()">＋ Agregar a la fila</button>
 <h3 class="section">📄 Páginas <span style="font-size:11px;color:var(--text2)">(máximo 20)</span></h3>
 <div id="lapizSlots" class="pages-dots"></div>
-<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
+<div class="lz-row"><button class="btn-ghost" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-ghost" onclick="abrirVistaPreviaCreacion()">👁️ Vista previa</button></div>
+<button class="btn-main" style="width:100%;margin-top:12px" onclick="publicar()">Publicar</button>
+<div class="step-nav"><button class="btn" onclick="abrirCrearPantalla('lapiz')">← Atrás</button><button class="btn-main" onclick="lapizSiguiente()">Siguiente →</button></div>
 </div>
-<div class="step-nav"><button class="btn" onclick="abrirCrearPantalla('lapiz')">← Atrás</button><button class="btn" onclick="abrirVistaPreviaCreacion()">Vista previa</button><button class="btn-main" onclick="agregarFilaLapiz()">Siguiente →</button></div>
+
 <div class="ai-coming-actions" style="margin-top:16px"><button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button><button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button></div>
 </div>
 </div>
@@ -855,7 +886,16 @@ Entrar con Google
 <div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">🤖</span><span class="create-head-txt">SalaMangaS IA</span></div></div>
 <div class="card">
 <div class="ia-status" data-ia-status>⏳ Conectando IA...</div>
-<div id="ia-legacy-ui">
+<div class="ai-coming-soon">
+<div class="ai-coming-icon">🤖✨</div>
+<h2>✨ SalaMangaS IA — PRÓXIMAMENTE</h2>
+<p>Esta función estará disponible solo para suscriptores pagos.<br>Con la ayuda de los suscriptores y donaciones, la implementaremos lo antes posible. ¡Gracias por bancar el proyecto! 🌸</p>
+<div class="ai-coming-actions">
+<button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button>
+<button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button>
+</div>
+</div>
+<div id="ia-legacy-ui" style="display:none" aria-hidden="true">
 <p class="subtitle" style="margin-bottom:16px">Podés empezar de cero o subir imágenes de referencia.</p>
 <button class="btn-main" id="btnIAAbrir" data-ia-btn="ia" data-label="✨ Abrir SalaMangaS IA" style="margin-top:0" onclick="abrirIA('ia')">✨ Abrir SalaMangaS IA</button>
 <button class="btn" data-ia-recarga="btnIAAbrir" style="display:none;width:100%;margin-top:8px" onclick="abrirRecargaIA()">🎨 Recarga IA</button>
@@ -1076,7 +1116,6 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <ul class="ia-tips"><li>Contá <b>quién</b> es, <b>qué hace</b>, <b>dónde</b> está y cómo se ve (encuadre y ambiente).</li><li>Una sola escena por imagen: es más fácil que salga bien.</li><li>Si querés un personaje tuyo, elegilo abajo en 👥 Personajes y la IA usa su foto.</li><li>En modo Lápiz la IA respeta tu dibujo: contale qué querés cambiar o agregar.</li></ul></details>
 <label class="lbl">🎨 Colores (opcional)</label><input id="iaColores" class="input" placeholder="Ej.: blanco y negro con detalles dorados">
 <label class="lbl">✨ Estilo visual</label><div id="iaEstilos"></div>
-<label class="lbl" style="display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-weight:500"><input type="checkbox" id="iaBorrador" style="margin-top:3px"> <span>⚡ Modo borrador: más rápido y barato, con menos detalle. Igual gasta 1 generación.</span></label>
 <label class="lbl">🖼️ Imágenes de referencia (opcional)</label>
 <input id="iaRefInput" class="input" type="file" accept="image/*" multiple>
 <label class="lbl">👥 Personajes (opcional)</label><div id="iaPjs"></div>
@@ -2632,7 +2671,7 @@ const SAKURA_PACKS=['250','700','2200'];
    INTERRUPTOR (prendido): requiere haber corrido sakuras_ia.sql e ia_generaciones.sql en Supabase
    y tener subidas las funciones de pagos. Si hay que apagar las compras de IA: false. */
 const SAKURAS_IA_SERVER_LISTO=true;
-const SAKURAS_IA_PACKS=[{n:5,ars:'1.000',usd:1},{n:15,ars:'2.000',usd:2},{n:30,ars:'3.000',usd:3},{n:80,ars:'5.000',usd:5}];
+const SAKURAS_IA_PACKS=[{n:5,ars:'5.000',usd:3},{n:15,ars:'13.500',usd:8},{n:30,ars:'24.000',usd:14},{n:80,ars:'59.500',usd:35}];
 function fmtSak(n){return (Number(n)||0).toLocaleString('es-AR')}
 function pintarSaldosModal(){
   const a=document.getElementById('sakurasSaldo'),b=document.getElementById('sakurasIASaldo');
@@ -2912,6 +2951,7 @@ function iaAgregarTexto(t,reemplazar){
 }
 async function abrirIA(modo,file){
   if(!miPerfil){alert('Iniciá sesión primero');return}
+  if(modo==='ia'){alert('SalaMangaS IA estará disponible próximamente. Por ahora solo está activo Dibujo a lápiz ✏️');return}
   iaModo=modo;iaImg=null;iaBlob=null;iaEstilo=null;iaEstiloKey='clasico';iaPjSel=[];iaLoteUrls=[];iaUltimoId=null;$('iaRes').innerHTML='';
   $('iaTitulo').innerText=modo==='lapiz'?'Dibujo a lápiz → Manga':'SalaMangas IA';
   $('iaDibujoBox').style.display=modo==='lapiz'?'block':'none';
@@ -2919,7 +2959,6 @@ async function abrirIA(modo,file){
   const estilos=[['clasico','Manga clásico B/N'],['dark','Dark Fantasy'],['chibi','Chibi'],['realista','Realista'],['noir','Noir'],['screentone','Screentone'],['anime','Anime (color)']];
   $('iaEstilos').innerHTML=estilos.map(x=>'<span class="chip" data-k="'+x[0]+'">'+x[1]+'</span>').join('');
   document.querySelectorAll('#iaEstilos .chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('#iaEstilos .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaEstilo=c.innerText;iaEstiloKey=c.dataset.k});
-  const bor=$('iaBorrador');if(bor)bor.checked=false;
   const ej=$('iaEjemplos');if(ej){ej.innerHTML=IA_EJEMPLOS.map((t,i)=>'<span class="chip" data-ej="'+i+'">'+esc(t)+'</span>').join('');ej.querySelectorAll('.chip').forEach(c=>c.onclick=()=>iaAgregarTexto(IA_EJEMPLOS[c.dataset.ej],true))}
   const sg=$('iaSugerencias');if(sg){sg.innerHTML=IA_SUGERENCIAS.map((t,i)=>'<span class="chip" data-sg="'+i+'">+ '+esc(t)+'</span>').join('');sg.querySelectorAll('.chip').forEach(c=>c.onclick=()=>iaAgregarTexto(IA_SUGERENCIAS[c.dataset.sg],false))}
   await cargarPersonajes();
@@ -2954,7 +2993,6 @@ async function iaGenerar(){
     if(pj.length)prompt+=' Personajes que deben respetarse exactamente: '+pj.map(p=>p.nombre+': '+p.descripcion).join(' | ')+'.';
     const fd=new FormData();
     fd.append('prompt',prompt);fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey||'clasico');
-    const bor=$('iaBorrador');fd.append('borrador',bor&&bor.checked?'1':'0');
     if(iaBlob)fd.append('dibujo',await iaRedimBlob(iaBlob,1280),'dibujo.jpg');
     const conFoto=pj.find(p=>p.foto_url);
     if(conFoto){try{fd.append('personaje',await iaRedimBlob(conFoto.foto_url,1000),'personaje.jpg')}catch(e){console.warn('Referencia de personaje:',e.message)}}
@@ -3241,10 +3279,152 @@ function ocultarCrearPantallas(){
  ['crear','crear-lapiz-1','crear-lapiz-2','crear-pagina','crear-pdf','crear-ia'].forEach(id=>{const e=$('screen-'+id);if(e)e.classList.remove('on')});
 }
 function volverCrear(){ocultarCrearPantallas();$('screen-crear').classList.add('on');window.scrollTo(0,0)}
-function crearLapizPaso2(){
- const f=$('lapizPortada')?.files?.[0];if(f){portadaArchivo=f;$('lapizVistaBox').innerHTML='<img src="'+URL.createObjectURL(f)+'">'}
- document.getElementById('screen-crear-lapiz-1').classList.remove('on');document.getElementById('screen-crear-lapiz-2').classList.add('on');
+/* ==== LAPIZ (Tanda C): subir dibujos a lápiz + Renacer en la misma pantalla ==== */
+let lapizDibujoFile=null,_lapizUltimoId=null,_lapizResUrl=null,_lapizAgregada=false,_lapizCoverUrl=null;
+function lapizIaKey(label){
+  const t=String(label||'').toLowerCase();
+  if(/anime/.test(t))return 'anime';if(/chibi/.test(t))return 'chibi';if(/noir/.test(t))return 'noir';
+  if(/dark|fantas/.test(t))return 'dark';if(/real/.test(t))return 'realista';if(/screentone/.test(t))return 'screentone';
+  return 'clasico';
 }
+function lapizCoverRender(){
+  const t=$('lapizCoverTile');if(!t)return;
+  if(_lapizCoverUrl){try{URL.revokeObjectURL(_lapizCoverUrl)}catch(e){}_lapizCoverUrl=null}
+  t.classList.remove('acts');
+  if(portadaArchivo){
+    _lapizCoverUrl=URL.createObjectURL(portadaArchivo);
+    t.innerHTML='<img src="'+_lapizCoverUrl+'" alt="Portada"><div class="lz-cover-acts"><button type="button" onclick="event.stopPropagation();lapizCoverEditar()">✏️ Editar</button><button type="button" onclick="event.stopPropagation();lapizCoverVer()">👁️ Vista previa</button></div>';
+  }else t.innerHTML='<span>＋ Portada<br><small>tocá para subirla</small></span>';
+}
+function lapizCoverTap(){
+  const t=$('lapizCoverTile');if(!t)return;
+  if(!portadaArchivo){$('lapizPortada').click();return}
+  t.classList.toggle('acts');
+}
+function lapizCoverEditar(){const t=$('lapizCoverTile');if(t)t.classList.remove('acts');$('lapizPortada').click()}
+function lapizCoverVer(){
+  if(!portadaArchivo)return;
+  const t=$('lapizCoverTile');if(t)t.classList.remove('acts');
+  const w=$('previewCreacionBody');w.innerHTML='';
+  const img=document.createElement('img');img.src=URL.createObjectURL(portadaArchivo);img.alt='Portada';w.appendChild(img);
+  $('preview-creacion').classList.add('on');
+}
+function lapizPedirDibujo(){$('lapizDibujo').click()}
+/* Entrar a "Subir dibujos a lápiz": si hay trabajo en curso se RETOMA (no se borra nada) */
+function lapizAbrir(){
+  const hay=window._modoCrear==='lapiz'&&(portadaArchivo||paginas.length||lapizDibujoFile||(($('lapizTitulo')||{}).value||'').trim());
+  if(hay)abrirCrearPantalla('lapiz-1');else nuevoCrear('lapiz');
+}
+function lapizEmpezarDeCero(){
+  if(!confirm('¿Empezar de cero? Se borra todo lo que cargaste (título, portada, dibujo y páginas).'))return;
+  limpiarCrearUI(true);abrirCrearPantalla('lapiz-1');
+}
+function crearLapizPaso2(){
+  if(!(($('lapizTitulo')||{}).value||'').trim()){alert('Poné un título para tu manga (es obligatorio).');$('lapizTitulo').focus();return}
+  const f=$('lapizPortada')?.files?.[0];if(f)portadaArchivo=f;
+  $('screen-crear-lapiz-1').classList.remove('on');$('screen-crear-lapiz-2').classList.add('on');
+  renderLapizSlots();lapizActualizarAviso();window.scrollTo(0,0);
+}
+function lapizReset(){
+  lapizDibujoFile=null;_lapizUltimoId=null;_lapizResUrl=null;_lapizAgregada=false;
+  const o=$('lapizVistaBox');if(o)o.innerHTML='<div>Tocá para subir tu dibujo</div>';
+  const r=$('lapizResultado');if(r)r.innerHTML='<div>Acá aparece tu manga</div>';
+  const a=$('lapizResAcc');if(a)a.style.display='none';
+  const m=$('lapizMsg');if(m)m.textContent='';
+  const d=$('lapizDibujo');if(d)d.value='';
+  lapizCoverRender();
+}
+function lapizActualizarAviso(){
+  const e=$('lapizAviso');if(!e)return;
+  let t='💡 Cada vez que tocás <b>Crear manga</b> se gasta <b>1 generación</b> y la IA crea <b>1 imagen</b> vertical.';
+  const r=(typeof window.iaResumenSaldo==='function')?window.iaResumenSaldo():null;
+  if(r){
+    if(r.ceo)t+=' <b>(CEO: no gastás nada)</b>';
+    else{const tot=r.plan+r.extra;t+=' Te quedan <b>'+tot+'</b> ('+r.plan+' del plan + '+r.extra+' Sakuras IA); después de crear te quedarán <b>'+Math.max(0,tot-1)+'</b>.'}
+  }
+  t+=' Si la IA falla, la generación se te devuelve sola.';
+  e.innerHTML=t;
+}
+function lapizSetDibujo(f){
+  if(!f)return;lapizDibujoFile=f;_lapizResUrl=null;_lapizAgregada=false;
+  const o=$('lapizVistaBox');if(o)o.innerHTML='<img src="'+URL.createObjectURL(f)+'" alt="Dibujo original">';
+  const r=$('lapizResultado');if(r)r.innerHTML='<div>Acá aparece tu manga</div>';
+  const a=$('lapizResAcc');if(a)a.style.display='none';
+  const m=$('lapizMsg');if(m)m.textContent='';
+}
+async function renacerLapiz(){
+  if(!requireUser())return;
+  if(!lapizDibujoFile){alert('Subí primero tu dibujo a lápiz (tocá el cuadro de la izquierda).');return}
+  if(typeof window.iaChequeoLapiz==='function'&&window.iaChequeoLapiz()===false)return;
+  const btn=$('btnRenacer'),txt0=btn?btn.innerText:'';
+  if(btn){btn.disabled=true;btn.innerText='🎨 Creando...'}
+  const res=$('lapizResultado'),acc=$('lapizResAcc'),msg=$('lapizMsg');
+  acc.style.display='none';msg.textContent='';
+  res.innerHTML='<div>🎨 La IA está dibujando...<br><small>puede tardar 20 a 60 segundos</small></div>';
+  try{
+    const chip=document.querySelector('#lapizEstilos .chip.on');
+    const label=chip?chip.textContent:'Manga clásico B/N';
+    const spec=($('lapizPrompt').value||'').trim();
+    const prompt='Crear una página de manga para SalaMangaS. Transformar el dibujo a lápiz de referencia en una página manga limpia y terminada, respetando la composición y los personajes. Formato vertical. Estilo: '+label+'. Detalles: '+(spec||'limpiar las líneas, mantener personajes y composición')+'.';
+    const fd=new FormData();
+    fd.append('prompt',prompt);fd.append('modo','lapiz');fd.append('estilo',lapizIaKey(label));
+    fd.append('dibujo',await iaRedimBlob(lapizDibujoFile,1280),'dibujo.jpg');
+    const tk=await iaToken();
+    const r=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:fd});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok){
+      if(j.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}
+      throw new Error(j.error||'Error del servidor');
+    }
+    _lapizUltimoId=j.id;
+    await lapizMostrar(await iaEsperar(j.id,tk));
+  }catch(e){lapizError(e)}
+  if(btn){btn.disabled=false;btn.innerText=txt0}
+  try{await refrescarPerfil()}catch(e){}
+  lapizActualizarAviso();
+}
+async function lapizMostrar(urls){
+  const u=(urls||[])[0];if(!u)throw new Error('La IA no devolvió ninguna imagen');
+  _lapizResUrl='/api/ia-imagen?u='+encodeURIComponent(u);_lapizAgregada=false;
+  $('lapizResultado').innerHTML='<img src="'+esc(_lapizResUrl)+'" alt="Manga generado por la IA">';
+  $('lapizResAcc').style.display='flex';$('lapizMsg').textContent='';
+  const b=$('lapizBtnUsar');if(b)b.disabled=false;
+}
+function lapizError(e){
+  const res=$('lapizResultado');
+  if(e&&e.pendiente){res.innerHTML='<div>'+esc(e.message)+'<br><small>Tu generación sigue en proceso y no se vuelve a descontar.</small><br><button type="button" class="btn-main" style="margin-top:8px;padding:8px 14px" onclick="lapizReanudar()">⏳ Seguir esperando</button></div>';return}
+  res.innerHTML='<div style="color:#ff6b81">⚠️ '+esc((e&&e.message)||String(e))+'</div>';
+}
+async function lapizReanudar(){
+  if(!_lapizUltimoId)return;
+  $('lapizResultado').innerHTML='<div>Buscando tu resultado...</div>';
+  try{await lapizMostrar(await iaEsperar(_lapizUltimoId,await iaToken()))}catch(e){lapizError(e)}
+}
+async function lapizUsarResultado(){
+  if(!_lapizResUrl||_lapizAgregada)return;
+  if(paginas.length>=20){alert('Máximo 20 páginas por capítulo.');return}
+  try{
+    const r=await fetch(_lapizResUrl);if(!r.ok)throw new Error('No se pudo descargar la imagen');
+    const b=await r.blob();
+    paginas.push({file:new File([b],'salamangas-pagina-'+Date.now()+'.png',{type:b.type||'image/png'})});
+    _lapizAgregada=true;renderLapizSlots();
+    $('lapizBtnUsar').disabled=true;$('lapizMsg').textContent='✅ Agregada a tus páginas ('+paginas.length+'/20).';
+  }catch(e){alert(e.message||e)}
+}
+function lapizSiguiente(){
+  if(_lapizResUrl&&!_lapizAgregada&&!confirm('Todavía no agregaste el manga generado a tus páginas. ¿Seguir igual?'))return;
+  lapizDibujoFile=null;_lapizResUrl=null;_lapizAgregada=false;_lapizUltimoId=null;
+  $('lapizVistaBox').innerHTML='<div>Tocá para subir tu dibujo</div>';
+  $('lapizResultado').innerHTML='<div>Acá aparece tu manga</div>';
+  $('lapizResAcc').style.display='none';$('lapizDibujo').value='';
+  $('lapizMsg').textContent='Listo: subí el siguiente dibujo. Tus páginas siguen guardadas.';
+}
+document.addEventListener('change',function(e){
+  const t=e.target;if(!t||!t.id)return;
+  if(t.id==='lapizPortada'&&t.files&&t.files[0]){portadaArchivo=t.files[0];lapizCoverRender()}
+  else if(t.id==='lapizDibujo'&&t.files&&t.files[0]){lapizSetDibujo(t.files[0])}
+});
+/* ==== FIN LAPIZ ==== */
 function agregarFilaLapiz(){
  if(paginas.length>=20){alert('Máximo 20 páginas por capítulo.');return}
  const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=e=>{const f=e.target.files[0];if(!f)return;paginas.push({file:f});renderLapizSlots()};inp.click()
@@ -3252,11 +3432,6 @@ function agregarFilaLapiz(){
 function renderLapizSlots(){
  const w=$('lapizSlots');if(!w)return;w.innerHTML='';paginas.forEach((p,i)=>{const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+URL.createObjectURL(p.file)+')';d.title='Página '+(i+1);d.onclick=()=>{if(confirm('¿Quitar esta página?')){paginas.splice(i,1);renderLapizSlots()}};w.appendChild(d)});
  if(paginas.length<20){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=agregarFilaLapiz;w.appendChild(d)}
-}
-async function renacerLapiz(){
- const input=$('lapizPortada');const f=input?.files?.[0];
- if(!f){alert('Subí primero un dibujo.');return}
- iaBlob=f;iaModo='lapiz';$('iaDibujo').src=URL.createObjectURL(f);$('iaDibujoBox').style.display='block';$('iaTxt').value=$('lapizPrompt').value;abrirIA('lapiz',f)
 }
 function abrirVistaPreviaCreacion(){
  const w=$('previewCreacionBody');w.innerHTML='';
@@ -3295,7 +3470,8 @@ function abrirCrearPantalla(tipo){
  window._modoCrear=tipo.indexOf('lapiz')===0?'lapiz':tipo;
  renderCrearAux();
  if(tipo==='pdf')renderPDFSlots();
- if(tipo==='lapiz-2')renderLapizSlots();
+ if(tipo==='lapiz-1')lapizCoverRender();
+ if(tipo==='lapiz-2'){renderLapizSlots();lapizActualizarAviso()}
  if(tipo==='pagina')renderPaginaSlots();
  if(tipo==='ia')renderIASlots();
  window.scrollTo(0,0);
@@ -3351,6 +3527,7 @@ function limpiarCrearUI(sinVolver){
  });
  const pv=$('pdfPreview');if(pv){pv.classList.remove('on');pv.innerHTML=''}
  const vb=$('lapizVistaBox');if(vb)vb.innerHTML='<div>Subí un dibujo para verlo acá</div>';
+ if(typeof lapizReset==='function')lapizReset();
  renderLapizSlots();renderPaginaSlots();renderIASlots();
  if(!sinVolver)volverCrear();
 }
@@ -4132,6 +4309,11 @@ iniciarApp=function(){
     return {ok:true};
   }
   window.iaResumenSaldo=()=>({ceo:esCeoSync(),plan:esCeoSync()?0:iaPlanRest(),extra:esCeoSync()?0:iaExtra()});
+  window.iaChequeoLapiz=function(){
+    const est=iaEstadoBoton('lapiz');
+    if(!est.ok){if(est.recarga)abrirRecargaIA();else if(est.planes)abrirSuscripciones();else alert(est.texto);return false}
+    return true;
+  };
   function actualizarBotonesIA(){
     document.querySelectorAll('[data-ia-btn]').forEach(b=>{
       const modo=b.dataset.iaBtn==='auto'?(typeof iaModo!=='undefined'&&iaModo?iaModo:'ia'):b.dataset.iaBtn;
@@ -4301,6 +4483,21 @@ iniciarApp=function(){
     cargarStatsCEO=async function(){const r=await _cs0.apply(this,arguments);leoBanner();leoConsultar(true);return r};
     setInterval(()=>{const p=$('screen-ceo');if(p&&p.classList.contains('on'))leoConsultar(true)},900000);
   }catch(e){console.warn('Leonardo:',e.message||e)}
+
+  /* ---- Modelo de IA para TODA la app (solo lo cambia el CEO; se guarda en config.ia_modelo) ---- */
+  try{
+    const _sis3=CEO_R.sistema;
+    CEO_R.sistema=async function(b){
+      await _sis3(b);
+      const m=(typeof CONFIG==='object'&&CONFIG&&CONFIG.ia_modelo==='flux-schnell')?'flux-schnell':'phoenix';
+      b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:14px"><b>🧠 Modelo de IA (toda la app)</b>'+
+        '<p style="font-size:12px;color:var(--text2);margin:6px 0 10px">Lo usan todos los usuarios; ellos no pueden elegir. Formato fijo vertical 2:3 (832×1248).</p>'+
+        '<div style="display:flex;gap:8px"><button class="'+(m==='phoenix'?'btn-main':'btn')+'" style="flex:1;margin:0" onclick="ceoModeloIA(\'phoenix\')">Phoenix 1.0<br><small>buena calidad</small></button>'+
+        '<button class="'+(m==='flux-schnell'?'btn-main':'btn')+'" style="flex:1;margin:0" onclick="ceoModeloIA(\'flux-schnell\')">FLUX Schnell<br><small>más rápido</small></button></div>'+
+        '<p style="font-size:11px;color:var(--text2);margin:8px 0 0">Activo ahora: <b>'+(m==='phoenix'?'Phoenix 1.0':'FLUX Schnell')+'</b></p></div>');
+    };
+    window.ceoModeloIA=async function(v){await ceoAccion(async()=>{if(await setConfig('ia_modelo',v)){CONFIG.ia_modelo=v;ceoTab('sistema')}})};
+  }catch(e){console.warn('Modelo IA:',e.message||e)}
   setTimeout(()=>{pintarPerfilTop();actualizarIAUI()},0);
 })();
 
