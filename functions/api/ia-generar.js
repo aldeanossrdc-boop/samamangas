@@ -1,9 +1,10 @@
 // functions/api/ia-generar.js — POST /api/ia-generar
 // 1) verifica quién es, 2) descuenta 1 generación (en la base, no en el celu),
-// 3) pide las imágenes a Leonardo (Lápiz = 1, SalaMangaS IA = 2), 4) si algo falla, DEVUELVE la generación.
+// 3) pide 1 imagen vertical 2:3 (832x1248) a Leonardo con el modelo que eligió el CEO, 4) si algo falla, DEVUELVE la generación.
+// SalaMangaS IA (generar desde cero) está PAUSADA: por ahora solo funciona Dibujo a lápiz.
 // El CEO siempre puede generar (aunque la IA esté apagada para los usuarios) y no gasta generaciones.
 import { out } from './_shared.js';
-import { IAError, usuarioIA, iaActiva, rpcUsuario, subirReferencia, crearGeneracion, cantidadPorModo } from './_ia.js';
+import { IAError, usuarioIA, iaActiva, modeloIA, rpcUsuario, subirReferencia, crearGeneracion, cantidadPorModo } from './_ia.js';
 
 const MAX_ARCHIVO = 4 * 1024 * 1024; // 4 MB por imagen de referencia
 const esArchivo = f => f && typeof f === 'object' && typeof f.size === 'number' && typeof f.arrayBuffer === 'function';
@@ -20,8 +21,8 @@ export async function onRequestPost({ request, env }) {
     const prompt = String(fd.get('prompt') || '').trim().slice(0, 1800);
     if (prompt.length < 3) return out(400, { error: 'Escribí una instrucción para la IA' });
     const modo = fd.get('modo') === 'lapiz' ? 'lapiz' : 'ia';
+    if (modo === 'ia') return out(403, { error: 'SalaMangaS IA estará disponible próximamente. Por ahora solo está activo Dibujo a lápiz.', codigo: 'ia_pausada' });
     const estilo = String(fd.get('estilo') || 'clasico');
-    const borrador = fd.get('borrador') === '1';
     let dibujo = fd.get('dibujo'), personaje = fd.get('personaje');
     dibujo = esArchivo(dibujo) ? dibujo : null;
     personaje = esArchivo(personaje) ? personaje : null;
@@ -39,7 +40,8 @@ export async function onRequestPost({ request, env }) {
     const dibujoId = dibujo ? await subirReferencia(env, dibujo) : null;
     const personajeId = personaje ? await subirReferencia(env, personaje) : null;
     const cantidad = cantidadPorModo(modo);
-    const { id, motor } = await crearGeneracion(env, { prompt, estilo, borrador, dibujoId, personajeId, cantidad });
+    const modelo = await modeloIA(env);
+    const { id, motor } = await crearGeneracion(env, { prompt, estilo, modelo, dibujoId, personajeId, cantidad });
     return out(200, { ok: true, id, motor, cantidad });
   } catch (e) {
     let devuelta = false;

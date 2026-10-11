@@ -1,4 +1,3 @@
-//v2
 // functions/api/_shared.js — helpers comunes (Cloudflare Pages Functions)
 // Archivo con "_" al inicio: Cloudflare NO lo expone como ruta pública,
 // pero sí lo pueden importar los demás archivos de /functions/api con
@@ -80,8 +79,9 @@ export const PRECIOS_SAKURAS_USD = { '250': '1.00', '700': '2.00', '1500': '3.00
 
 // Sakuras IA (segunda moneda: solo para generar con IA). Se acumulan y no vencen.
 export const CANT_SAKURAS_IA = { '5': 5, '15': 15, '30': 30, '80': 80 };
-export const PRECIOS_SAKURAS_IA_ARS = { '5': 1000, '15': 2000, '30': 3000, '80': 5000 };
-export const PRECIOS_SAKURAS_IA_USD = { '5': '1.00', '15': '2.00', '30': '3.00', '80': '5.00' };
+// Precios con margen positivo (costo real ~US$0,31 por generación; dólar oficial ~$1.540). Revisar cada tanto si sube el dólar.
+export const PRECIOS_SAKURAS_IA_ARS = { '5': 5000, '15': 13500, '30': 24000, '80': 59500 };
+export const PRECIOS_SAKURAS_IA_USD = { '5': '3.00', '15': '8.00', '30': '14.00', '80': '35.00' };
 
 export const MANGA_EXTRA_ARS = 10000;
 export const MANGA_EXTRA_USD = '10.00';

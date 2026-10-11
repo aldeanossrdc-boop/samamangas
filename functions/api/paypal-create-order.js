@@ -13,10 +13,10 @@ const CANT_SAKURAS = {
 };
 // Sakuras IA (segunda moneda, solo para generar con IA)
 const CANT_SAKURAS_IA = {
-  "5":  { usd: 1, sakuras_ia: 5  },
-  "15": { usd: 2, sakuras_ia: 15 },
-  "30": { usd: 3, sakuras_ia: 30 },
-  "80": { usd: 5, sakuras_ia: 80 }
+  "5":  { usd: 3,  sakuras_ia: 5  },
+  "15": { usd: 8,  sakuras_ia: 15 },
+  "30": { usd: 14, sakuras_ia: 30 },
+  "80": { usd: 35, sakuras_ia: 80 }
 };
 const MANGA_EXTRA_USD = 10;
 

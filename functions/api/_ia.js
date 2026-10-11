@@ -24,16 +24,22 @@ export async function usuarioIA(request, env) {
   return { user, token, esCeo };
 }
 
-// ¿El CEO prendió la IA en el panel? (config.ia_activa = '1')
-export async function iaActiva(env) {
+// Lee un valor de la tabla config (la misma que usa el panel CEO)
+export async function leerConfig(env, clave) {
   try {
-    const r = await fetch(SB_URL(env) + '/rest/v1/config?clave=eq.ia_activa', {
+    const r = await fetch(SB_URL(env) + '/rest/v1/config?clave=eq.' + encodeURIComponent(clave), {
       headers: { apikey: SB_ANON(env), Authorization: 'Bearer ' + SB_ANON(env) }
     });
     const j = await r.json();
-    return Array.isArray(j) && !!j[0] && String(j[0].valor) === '1';
-  } catch (e) { return false; }
+    return Array.isArray(j) && j[0] ? String(j[0].valor) : null;
+  } catch (e) { return null; }
 }
+
+// ¿El CEO prendió la IA en el panel? (config.ia_activa = '1')
+export async function iaActiva(env) { return (await leerConfig(env, 'ia_activa')) === '1'; }
+
+// Modelo elegido por el CEO para TODA la app (config.ia_modelo): 'phoenix' (por defecto) o 'flux-schnell'
+export async function modeloIA(env) { return (await leerConfig(env, 'ia_modelo')) === 'flux-schnell' ? 'flux-schnell' : 'phoenix'; }
 
 // Llama una función de Supabase COMO el usuario (así auth.uid() es él, no se puede falsear)
 export async function rpcUsuario(env, token, fn, body) {
@@ -78,7 +84,7 @@ const ESTILO_PHOENIX = {
   realista: 'a5632c7c-ddbb-4e2f-ba34-8456ab3ac436', // Cinematic
   noir: '621e1c9a-6319-4bee-a12d-ae40659162fa'      // Moody
 };
-const ANCHO = 832, ALTO = 1216; // vertical, tipo página de manga
+const ANCHO = 832, ALTO = 1248; // formato VERTICAL 2:3 FIJO para toda la app (nadie lo puede cambiar)
 // Imágenes por generación: Lápiz = 1 (ya hay un dibujo hecho) · SalaMangaS IA = 2 (el usuario elige)
 export const cantidadPorModo = modo => (modo === 'lapiz' ? 1 : 2);
 
@@ -96,14 +102,13 @@ function extraerId(j) {
 }
 
 // Crea la generación. Devuelve { id, motor }
-//  • Borrador            -> FLUX Schnell (rápido y barato)
-//  • Estilo "Anime"      -> Leonardo Anime XL
-//  • Todo lo demás       -> Phoenix 1.0 (principal)
-export async function crearGeneracion(env, { prompt, estilo, borrador, dibujoId, personajeId, cantidad }) {
+//  • modelo 'flux-schnell' (lo elige el CEO en el panel) -> FLUX Schnell para toda la app
+//  • modelo 'phoenix' (por defecto)                      -> Phoenix 1.0; solo el estilo "Anime" usa Anime XL
+export async function crearGeneracion(env, { prompt, estilo, modelo, dibujoId, personajeId, cantidad }) {
   let url, body, motor;
-  if (borrador) {
+  if (modelo === 'flux-schnell') {
     motor = 'flux-schnell'; url = LEO_V2 + '/generations';
-    const p = { width: 768, height: 1024, prompt, quantity: cantidad, style_ids: [estilo === 'anime' ? 'b2a54a51-230b-4d4f-ad4e-8409bf58645f' : ILUSTRACION] };
+    const p = { width: ANCHO, height: ALTO, prompt, quantity: cantidad, style_ids: [estilo === 'anime' ? 'b2a54a51-230b-4d4f-ad4e-8409bf58645f' : ILUSTRACION] };
     if (dibujoId) p.guidances = { content: [{ image: { id: dibujoId, type: 'UPLOADED' }, strength: 'HIGH' }] };
     body = { model: 'flux-schnell', parameters: p, public: false };
   } else if (estilo === 'anime') {
