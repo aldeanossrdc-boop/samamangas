@@ -1,54 +1,101 @@
-/* SalaMangaS · service worker · actualización automática
-   Idea: las PÁGINAS (html) siempre se piden primero a internet, así nadie queda
-   con la versión vieja. Solo se usa la copia guardada si no hay conexión.
-   Cada vez que este archivo cambia (aunque sea el número de VERSION), el celu
-   lo detecta, instala el nuevo, borra los cachés viejos y toma el control. */
-const VERSION = '2026-10-07-1'; /* cambiá este número en cada deploy importante */
-const CACHE = 'salamangas-' + VERSION;
 
-self.addEventListener('install', () => { self.skipWaiting(); });
+/* service-worker.js — SalaMangaS
+   Versión 3: caché limitada y actualizaciones prudentes
+*/
 
-self.addEventListener('activate', e => {
-  e.waitUntil((async () => {
-    const ks = await caches.keys();
-    await Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)));
-    await self.clients.claim();
-  })());
+const CACHE_NAME = 'salamangas-v3';
+const PREFIJO_CACHE = 'salamangas-';
+
+// Solo archivos estáticos que está permitido guardar.
+const ARCHIVOS_CACHEABLES = [
+  '/manifest.json',
+  '/logo.png',
+  '/logo.jpg'
+];
+
+// INSTALACIÓN
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(async (cache) => {
+      // Cada archivo se intenta guardar por separado.
+      // Si uno no existe, no impide guardar los demás.
+      for (const ruta of ARCHIVOS_CACHEABLES) {
+        try {
+          const respuesta = await fetch(ruta);
+
+          if (respuesta.ok && respuesta.type === 'basic') {
+            await cache.put(ruta, respuesta);
+          }
+        } catch (error) {
+          // El archivo podrá descargarse cuando haya conexión.
+        }
+      }
+    })
+  );
+
+  // No forzamos la activación inmediata.
 });
 
-self.addEventListener('fetch', e => {
-  const req = e.request;
-  if (req.method !== 'GET') return;
-  const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;            /* Supabase, Cloudinary, pagos, fuentes: directo */
-  if (url.pathname.startsWith('/api/')) return;               /* pagos / IA / saldo: nunca se guardan */
-  if (url.pathname === '/service-worker.js') return;
-  if (req.headers.has('range')) return;
-  const esPagina = req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html');
-  e.respondWith(esPagina ? redPrimero(req) : cacheYActualiza(req, e));
+// ACTIVACIÓN
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((nombres) =>
+      Promise.all(
+        nombres.map((nombre) => {
+          // Borrar únicamente cachés antiguas de SalaMangaS.
+          if (
+            nombre.startsWith(PREFIJO_CACHE) &&
+            nombre !== CACHE_NAME
+          ) {
+            return caches.delete(nombre);
+          }
+        })
+      )
+    )
+  );
+
+  // No forzamos el control inmediato de pestañas abiertas.
 });
 
-async function redPrimero(req) {
-  try {
-    const res = await fetch(req);
-    if (res && res.ok && res.type === 'basic') {
-      const c = await caches.open(CACHE);
-      c.put(req, res.clone()).catch(() => {});
-    }
-    return res;
-  } catch (err) {
-    const c = await caches.open(CACHE);
-    return (await c.match(req)) || (await c.match('/')) || (await c.match('/index.html')) || Response.error();
-  }
-}
+// PETICIONES
+self.addEventListener('fetch', (event) => {
+  const solicitud = event.request;
+  const url = new URL(solicitud.url);
 
-async function cacheYActualiza(req, e) {
-  const c = await caches.open(CACHE);
-  const guardado = await c.match(req);
-  const red = fetch(req).then(res => {
-    if (res && res.ok && res.type === 'basic') c.put(req, res.clone()).catch(() => {});
-    return res;
-  }).catch(() => null);
-  if (guardado) { e.waitUntil(red); return guardado; }
-  return (await red) || Response.error();
-}
+  // No interceptar formularios ni otras peticiones que no sean GET.
+  if (solicitud.method !== 'GET') return;
+
+  // No interceptar peticiones a otros dominios.
+  if (url.origin !== self.location.origin) return;
+
+  // Las páginas HTML siempre se solicitan normalmente al servidor.
+  if (solicitud.mode === 'navigate') return;
+
+  // Solo gestionar los archivos estáticos expresamente autorizados.
+  if (!ARCHIVOS_CACHEABLES.includes(url.pathname)) return;
+
+  event.respondWith(
+    fetch(solicitud)
+      .then(async (respuesta) => {
+        // No guardar respuestas de error ni respuestas opacas.
+        if (respuesta.ok && respuesta.type === 'basic') {
+          const cache = await caches.open(CACHE_NAME);
+          await cache.put(solicitud, respuesta.clone());
+        }
+
+        return respuesta;
+      })
+      .catch(async () => {
+        // Usar la copia guardada únicamente si falla la conexión.
+        const copia = await caches.match(solicitud);
+        if (copia) return copia;
+
+        // Si no hay copia, informar que no se pudo cargar el archivo.
+        return new Response('Archivo no disponible sin conexión', {
+          status: 503,
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+        });
+      })
+  );
+});
+   
