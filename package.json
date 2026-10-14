@@ -1,13 +1,9 @@
 {
-  "name": "samamangas",
+  "name": "salamangas",
+  "private": true,
   "version": "1.0.0",
-  "description": "Sitio web Samamangas con Cloudflare Pages",
-  "main": "index.html",
-  "scripts": {
-    "build": "echo \"No build step required\""
-  },
+  "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
-  },
-  "devDependencies": {}
+  }
 }
