@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#07041a">
-  <link rel="apple-touch-icon" href="/logo.jpg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/icon-192.png">
   <meta name="apple-mobile-web-app-title" content="SalaMangaS">
 <title>SalaMangaS</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -478,6 +479,29 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .social-profile-badge{display:flex;justify-content:center;margin-top:6px}
 .social-plan{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:4px 12px;border-radius:14px;background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.35);font-size:12px;font-weight:700;color:var(--gold)}
 .social-plan .ins-img{margin:0}.social-plan.ceo{box-shadow:0 0 12px rgba(255,209,102,.5)}
+/* ===== TEMAS NUEVOS DE CHAT: MUJER Y HOMBRE ===== */
+.chatfs[data-estilo="mujer"]{background-color:#ffe4f0!important;background-image:radial-gradient(#ff8fbd 1.5px,transparent 2px),radial-gradient(#fff 1px,transparent 1.5px)!important;background-size:20px 20px,34px 34px!important;background-position:0 0,9px 9px!important}
+.chatfs[data-estilo="mujer"] .chatfs-header{background:#fff0f7;border-bottom:2px solid #ff9fc9}
+.chatfs[data-estilo="mujer"] .chatfs-header h2,.chatfs[data-estilo="mujer"] .msg-name{color:#c72e78!important}
+.chatfs[data-estilo="mujer"] .chat-sub{background:#fff5fa;color:#a52565;border-color:#ffc0dc}
+.chatfs[data-estilo="mujer"] .chatfs-tabs{background:#fff0f7}
+.chatfs[data-estilo="mujer"] .chat-room-tab,.chatfs[data-estilo="mujer"] .chatfs-tab{background:#fff7fb;border-color:#ffadd0;color:#9b285f}
+.chatfs[data-estilo="mujer"] .chat-room-tab.on,.chatfs[data-estilo="mujer"] .chatfs-tab.on{background:#e94f9a;border-color:#e94f9a;color:#fff}
+.chatfs[data-estilo="mujer"] .msg-bubble.other{background:#fff7fb!important;border-color:#e94f9a!important;color:#5a1638}
+.chatfs[data-estilo="mujer"] .msg-bubble.mine{background:#e94f9a!important;border-color:#5a1638!important;color:#fff}
+.chatfs[data-estilo="mujer"] .chatfs-inputbar{background:#fff0f7;border-top:2px solid #ff9fc9}
+.chatfs[data-estilo="mujer"] .chatfs-inputbar input[type=text]{background:#fff9fc;color:#5a1638;border-color:#ffadd0}
+.chatfs[data-estilo="hombre"]{background-color:#e6f1ff!important;background-image:radial-gradient(#79aef5 1.5px,transparent 2px),radial-gradient(#fff 1px,transparent 1.5px)!important;background-size:22px 22px,36px 36px!important;background-position:0 0,10px 10px!important}
+.chatfs[data-estilo="hombre"] .chatfs-header{background:#edf5ff;border-bottom:2px solid #8dbaff}
+.chatfs[data-estilo="hombre"] .chatfs-header h2,.chatfs[data-estilo="hombre"] .msg-name{color:#245eaa!important}
+.chatfs[data-estilo="hombre"] .chat-sub{background:#f5f9ff;color:#245eaa;border-color:#b4d1ff}
+.chatfs[data-estilo="hombre"] .chatfs-tabs{background:#edf5ff}
+.chatfs[data-estilo="hombre"] .chat-room-tab,.chatfs[data-estilo="hombre"] .chatfs-tab{background:#fff;border-color:#9fc4ff;color:#214c83}
+.chatfs[data-estilo="hombre"] .chat-room-tab.on,.chatfs[data-estilo="hombre"] .chatfs-tab.on{background:#347bd1;border-color:#347bd1;color:#fff}
+.chatfs[data-estilo="hombre"] .msg-bubble.other{background:#f7fbff!important;border-color:#347bd1!important;color:#17375f}
+.chatfs[data-estilo="hombre"] .msg-bubble.mine{background:#347bd1!important;border-color:#17375f!important;color:#fff}
+.chatfs[data-estilo="hombre"] .chatfs-inputbar{background:#edf5ff;border-top:2px solid #8dbaff}
+.chatfs[data-estilo="hombre"] .chatfs-inputbar input[type=text]{background:#f8fbff;color:#17375f;border-color:#9fc4ff}
 /* ===== ESTILOS DEL CHAT ===== */
 .chatfs[data-estilo="comic"]{background-color:#fff3b0!important;background-image:radial-gradient(#ff5a5a 2.2px,transparent 2.6px)!important;background-size:14px 14px!important}
 .chatfs[data-estilo="comic"] .chatfs-header{background:#ffd400;border-bottom:3px solid #171021}.chatfs[data-estilo="comic"] .chatfs-header h2{color:#d90429}.chatfs[data-estilo="comic"] .chat-sub{background:#fff;color:#d90429;border-color:#171021}
@@ -724,6 +748,16 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .chatfs[data-estilo="dorado"] .msg-ono{font-family:"Cinzel",serif;color:#ffd166;font-weight:900;-webkit-text-stroke:2px #2a0a5a;paint-order:stroke fill;text-shadow:0 0 12px rgba(255,209,102,.9),2px 2px 0 #4a148c;background:none;border:0;padding:0}
 .chatfs[data-estilo="dorado"] .msg-ono::before,.chatfs[data-estilo="dorado"] .msg-ono::after{content:none}
 
+
+/* Ajustes visuales del pedido: opciones compactas, selección de estilo y marca visible */
+.style-choice,.color-choice{font-size:12px!important;padding:7px 10px!important;min-height:32px}
+.color-modes{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0 12px}
+.ia-vinetas{padding:10px;margin:10px 0;border:1px solid rgba(212,175,55,.28);border-radius:12px;background:rgba(0,0,0,.12)}
+.ia-vinetas .input{margin-bottom:8px}
+.ia-cell{position:relative}
+.ia-cell:after{content:'SalaMangaS IA';position:absolute;right:7px;top:7px;font-size:9px;letter-spacing:.3px;padding:3px 5px;border-radius:5px;color:#fff;background:rgba(20,10,35,.62);pointer-events:none}
+.create-opt .ico{font-size:23px!important}
+
 </style>
 <script>
 /* ===== Actualización automática (service worker) ===== */
@@ -732,15 +766,17 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
   var habiaControlador=!!navigator.serviceWorker.controller,pendiente=false,visibleDesde=Date.now();
   function recargar(){try{location.reload()}catch(e){}}
   navigator.serviceWorker.addEventListener('controllerchange',function(){
-    if(!habiaControlador){habiaControlador=true;return} /* primera instalación: no recargar */
-    if(document.visibilityState==='visible'&&Date.now()-visibleDesde<10000)recargar(); /* recién abrió la app */
-    else pendiente=true; /* recarga cuando vuelva a abrirla */
+    /* No recargar automáticamente: un cambio de controlador no debe cortar
+       una sesión OAuth ni interrumpir una generación. La versión nueva entra
+       en uso al hacer una recarga voluntaria. */
+    habiaControlador=!!navigator.serviceWorker.controller;
+    pendiente=true;
   });
   window.addEventListener('load',function(){
     navigator.serviceWorker.register('/service-worker.js',{updateViaCache:'none'}).then(function(reg){
       function buscar(){try{reg.update()}catch(e){}}
       document.addEventListener('visibilitychange',function(){
-        if(document.visibilityState==='visible'){visibleDesde=Date.now();if(pendiente){pendiente=false;recargar();return}buscar()}
+        if(document.visibilityState==='visible'){visibleDesde=Date.now();buscar()}
       });
       setInterval(buscar,30*60*1000);
     }).catch(function(){});
@@ -851,7 +887,7 @@ Entrar con Google
 <div class="card">
 <h3 class="section">✨ Crear</h3>
 <div class="create-opts create-opts-4">
-<div class="create-opt" onclick="nuevoCrear('pagina')"><span class="ico">🖼️</span><span class="name">Imagen por imagen</span><span class="desc">Página por página</span></div>
+<div class="create-opt" onclick="nuevoCrear('pagina')"><span class="ico">🖼️</span><span class="name">Página por página</span><span class="desc">Subí tus páginas una por una</span></div>
 <div class="create-opt" onclick="nuevoCrear('ia')"><span class="ico">🤖</span><span class="name">SalaMangaS IA</span><span class="desc">Crear desde cero o referencias</span></div>
 <div class="create-opt" onclick="lapizAbrir()"><span class="ico">✏️</span><span class="name">Subir dibujos a lápiz</span><span class="desc">Renacer con IA</span></div>
 <div class="create-opt" onclick="nuevoCrear('pdf')"><span class="ico">📄</span><span class="name">PDF</span><span class="desc">10 a 25 páginas</span></div>
@@ -911,7 +947,7 @@ Entrar con Google
 <input id="lapizDibujo" type="file" accept="image/*" style="display:none">
 <div id="lapizResAcc" class="lz-row" style="display:none"><button id="lapizBtnUsar" type="button" class="btn-main" onclick="lapizUsarResultado()">➕ Agregar a páginas</button><button type="button" class="btn" onclick="renacerLapiz()">🔄 Regenerar · 1 gen.</button></div>
 <div id="lapizMsg" style="font-size:12px;color:var(--gold3);text-align:center;margin-top:6px;min-height:16px"></div>
-<h3 class="section">🎨 Estilos visuales</h3><div id="lapizEstilos"></div>
+<h3 class="section">🎨 Estilo visual</h3><p class="subtitle" style="margin:0 0 5px">1. Elegí un estilo · 2. Elegí B/N o Color</p><div id="lapizEstilos"></div>
 <label class="lbl">📝 Especificaciones</label><textarea id="lapizPrompt" class="input" placeholder="Ej.: limpiar las líneas, agregar fondo, más contraste..."></textarea>
 <div id="lapizAviso" class="ia-aviso2"></div>
 <button class="btn-main" id="btnRenacer" data-ia-btn="lapiz" data-label="🎨 Crear manga" onclick="renacerLapiz()">🎨 Crear manga</button>
@@ -926,14 +962,13 @@ Entrar con Google
 </div>
 </div>
 <div id="screen-crear-pagina" class="screen">
-<div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">🖼️</span><span class="create-head-txt">Imagen por imagen</span></div></div>
+<div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">🖼️</span><span class="create-head-txt">Página por página</span></div></div>
 <div class="card">
 <label class="lbl">Título</label><input id="paginaTitulo" class="input" placeholder="Título del manga">
 <label class="lbl">Subtítulos</label><input id="paginaSubtitulo" class="input" placeholder="Subtítulo">
 <label class="lbl">Portada</label><input id="paginaPortada" class="input" type="file" accept="image/*">
 <label class="lbl">Sinopsis</label><textarea id="paginaSinopsis" class="input" placeholder="Sinopsis"></textarea><button type="button" class="btn-ghost" style="font-size:11px;padding:5px 9px;margin-top:6px" onclick="abrirAsistente('sinopsis',{campo:'paginaSinopsis'})">🤖 Ayudame a escribirla</button>
 <label class="lbl">Géneros</label><div id="paginaGeneros"></div>
-<label class="lbl">Estilo visual</label><div id="paginaEstilos"></div>
 <h3 class="section">📄 Páginas (máximo 20)</h3><div id="paginaSlots" class="pages-dots"></div>
 <button class="btn" style="width:100%;margin-top:8px" onclick="agregarPaginaSlot()">＋ Agregar página</button>
 <div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
@@ -1005,7 +1040,7 @@ Entrar con Google
 <div id="fotoModal" class="modal-overlay"><div class="modal-box">
 <button class="modal-close" onclick="cerrarFotoPerfil()">✕</button>
 <img id="fotoModalImg" alt="Foto" style="width:100%;border-radius:14px;margin-top:22px;max-height:50vh;object-fit:contain;background:#000">
-<div style="display:flex;gap:12px;align-items:center;margin:10px 0"><button id="fotoLikeBtn" class="btn" onclick="toggleLikeFoto()">🤍 0</button><span id="fotoComN" style="font-size:13px;color:var(--text2)">💬 0</span></div>
+<div style="display:flex;gap:12px;align-items:center;margin:10px 0"><button id="fotoLikeBtn" class="btn" onclick="toggleLikeFoto()">🤍 0</button><button class="btn-ghost" onclick="reportarFotoPerfilActual()">🚩 ¡Ojo acá!</button><span id="fotoComN" style="font-size:13px;color:var(--text2)">💬 0</span></div>
 <div id="fotoComList" style="max-height:26vh;overflow-y:auto"></div>
 <div style="display:flex;gap:8px;margin-top:8px"><input id="fotoComIn" class="input" maxlength="300" placeholder="Escribí un comentario..." style="margin:0" onkeydown="if(event.key==='Enter')enviarComentarioFoto()"><button class="btn-main" style="width:auto;padding:0 16px;margin:0" onclick="enviarComentarioFoto()">➤</button></div>
 </div></div>
@@ -1131,7 +1166,7 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 </div>
 <div id="bib" class="ov"><div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('bib')">←</div><h2>📚 Mi Biblioteca</h2></div><div class="ov-body"><div id="bib-grid" class="manga-grid"></div></div></div>
 <div id="cre" class="ov"><div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('cre')">←</div><h2>Creador</h2></div><div class="ov-body" id="creBody"></div></div>
-<div id="notif-modal" class="modal-overlay"><div class="modal-box"><button class="modal-close" onclick="cerrarOv('notif-modal')">✕</button><h2 style="font-family:'Cinzel',serif;color:var(--gold)">🔔 Avisos</h2><div id="notifList" style="margin-top:12px"></div></div></div>
+<div id="notif-modal" class="modal-overlay"><div class="modal-box"><button class="modal-close" onclick="cerrarOv('notif-modal')">✕</button><h2 style="font-family:'Cinzel',serif;color:var(--gold)">🔔 Avisos</h2><button class="btn-ghost" style="width:100%;margin-top:8px" onclick="activarAvisosDispositivo()">📲 Activar notificaciones en este dispositivo</button><div id="notifList" style="margin-top:12px"></div></div></div>
 <div id="cuenta-modal" class="modal-overlay"><div class="modal-box"><button class="modal-close" onclick="cerrarOv('cuenta-modal')">✕</button>
 <h2 style="font-family:'Cinzel',serif;color:var(--gold)">👤 Mi cuenta</h2>
 <p style="margin-top:12px;font-size:13px;color:var(--text2)">Usuario: <b id="ctaNombre" style="color:var(--gold3)"></b></p>
@@ -1154,15 +1189,17 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <textarea id="iaTxt" class="input" placeholder="Describí la escena, ambiente, ropa, expresión, encuadre y lo que querés modificar..."></textarea>
 <button type="button" class="btn-ghost" style="font-size:12px;padding:6px 11px;margin-top:6px" onclick="abrirAsistente('historia',{campo:'iaTxt'})">📖 Ayudame con la historia</button>
 <details id="iaAyuda" class="ia-ayuda"><summary>💡 Ayuda para escribir mejor</summary>
-<div class="ia-aviso">⚠️ <b>Antes de generar:</b> en <b>Dibujo a lápiz</b> la IA crea <b>1 imagen</b> y en <b>SalaMangaS IA</b> crea <b>2 imágenes</b> para que elijas. Cada vez que tocás Generar se gasta <b>1 generación</b> (de tu plan o 1 Sakura IA), y si tocás Regenerar se gasta otra. Si la IA falla, la generación se te devuelve sola. No pidas <b>texto o letras</b> dentro de la imagen (la IA suele deformarlas), ni <b>personajes con derechos de autor</b>, ni contenido sexual o violento extremo: la IA lo bloquea.</div>
+<div class="ia-aviso">⚠️ <b>Antes de generar:</b> en <b>Dibujo a lápiz</b> la IA crea <b>1 imagen</b> y en <b>SalaMangaS IA</b> crea <b>1 sola imagen</b>. Cada vez que tocás Generar se gasta <b>1 generación</b> (de tu plan o 1 Sakura IA), y si tocás Regenerar se gasta otra. Si la IA falla, la generación se te devuelve sola. No pidas <b>texto o letras</b> dentro de la imagen (la IA suele deformarlas), ni <b>personajes con derechos de autor</b>, ni contenido sexual o violento extremo: la IA lo bloquea.</div>
 <div class="ia-ayuda-t">Ejemplos (tocá uno para usarlo)</div><div id="iaEjemplos"></div>
 <div class="ia-ayuda-t">Sumá detalles (tocá para agregar)</div><div id="iaSugerencias"></div>
 <ul class="ia-tips"><li>Contá <b>quién</b> es, <b>qué hace</b>, <b>dónde</b> está y cómo se ve (encuadre y ambiente).</li><li>Una sola escena por imagen: es más fácil que salga bien.</li><li>Si querés un personaje tuyo, elegilo abajo en 👥 Personajes y la IA usa su foto.</li><li>En modo Lápiz la IA respeta tu dibujo: contale qué querés cambiar o agregar.</li></ul></details>
-<label class="lbl">🎨 Colores (opcional)</label><input id="iaColores" class="input" placeholder="Ej.: blanco y negro con detalles dorados">
-<label class="lbl">✨ Estilo visual</label><div id="iaEstilos"></div>
+<label class="lbl">✨ Estilo visual (primer toque)</label><div id="iaEstilos"></div>
+<label class="lbl">🎨 Color (segundo toque)</label><div id="iaColorModes" class="color-modes"><button type="button" class="chip" data-color="B/N">⚫ Blanco y negro</button><button type="button" class="chip" data-color="Color">🌈 Color</button></div>
+<label class="lbl">🎨 Detalles de color (opcional)</label><input id="iaColores" class="input" placeholder="Ej.: tonos pastel, neón, colores cálidos">
 <label class="lbl">🖼️ Imágenes de referencia (opcional)</label>
 <input id="iaRefInput" class="input" type="file" accept="image/*" multiple>
 <label class="lbl">👥 Personajes (opcional)</label><div id="iaPjs"></div>
+<div id="iaVinetasBox" class="ia-vinetas" style="display:none"><h3 class="section">🎬 Diseño de viñetas · Súper Pro en adelante</h3><p class="subtitle" style="margin:0 0 8px">Elegí una opción o escribí cualquier indicación.</p><label class="lbl">Encuadre</label><input id="iaEncuadre" class="input" list="iaEncuadreOpts" placeholder="Ej.: primer plano o un encuadre propio"><datalist id="iaEncuadreOpts"><option>Plano general</option><option>Plano medio</option><option>Primer plano</option><option>Detalle</option><option>Americano</option></datalist><label class="lbl">Ángulo</label><input id="iaAngulo" class="input" list="iaAnguloOpts" placeholder="Ej.: contrapicado o un ángulo propio"><datalist id="iaAnguloOpts"><option>Normal</option><option>Picado</option><option>Contrapicado</option><option>Cenital</option></datalist><label class="lbl">Emoción</label><input id="iaEmocion" class="input" list="iaEmocionOpts" placeholder="Ej.: pensativo o una emoción propia"><datalist id="iaEmocionOpts"><option>Feliz</option><option>Enojado</option><option>Triste</option><option>Sorprendido</option><option>Pensativo</option><option>Asustado</option><option>Determinado</option><option>Confundido</option></datalist></div>
 <div id="iaAviso2" class="ia-aviso2"></div>
 <button class="btn-main" id="iaBtn" style="margin-top:16px" onclick="iaGenerar()">✨ Generar</button>
 <div id="iaRes" style="margin-top:14px"></div>
@@ -1233,7 +1270,7 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <h2 id="asTitulo" style="font-family:'Cinzel',serif;color:var(--gold);font-size:17px"></h2>
 <div id="asInfo" class="warn-mini"></div>
 <div id="asMsgs" class="as-msgs"></div>
-<div class="as-row"><input id="asIn" class="input" maxlength="1000" placeholder="Escribí tu mensaje..."><button class="btn-main" onclick="asEnviar()">Enviar</button></div>
+<div class="as-row"><input id="asIn" class="input" maxlength="10000" placeholder="Escribí tu mensaje... (historias: máximo 500 palabras)"><button class="btn-main" onclick="asEnviar()">Enviar</button></div>
 <div class="as-tools"><button class="btn-ghost" onclick="asDescargar()">📥 Descargar historial</button><button class="btn-ghost" id="asBtnPegar" onclick="document.getElementById('asArchivo').click()">📤 Pegar historial</button><button class="btn-ghost" id="asBtnAplicar" onclick="asAplicar()" style="display:none">📋 Usar en el campo</button><button class="btn-ghost" onclick="asNueva()">🗑️ Nueva charla</button></div>
 <input id="asArchivo" type="file" accept=".json,application/json,text/plain" style="display:none">
 </div></div>
@@ -1281,6 +1318,8 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div class="chat-tema-opt" style="background:linear-gradient(135deg,#ffcf70,#ff8a3d)" onclick="setChatEstilo('shonen')">⭐ Shonen</div>
 <div class="chat-tema-opt" style="background:linear-gradient(135deg,#9aa0ad,#4b5060);color:#fff" onclick="setChatEstilo('seinen')">🖤 Seinen</div>
 <div class="chat-tema-opt" style="background:linear-gradient(135deg,#d8f1ff,#c9b8ff)" onclick="setChatEstilo('chibi')">🍡 Chibi</div>
+<div class="chat-tema-opt" style="background:linear-gradient(135deg,#ffe0ef,#ff9fc9);color:#65143b" onclick="setChatEstilo('mujer')">🌷 Mujer</div>
+<div class="chat-tema-opt" style="background:linear-gradient(135deg,#dcecff,#7fb5ff);color:#102c56" onclick="setChatEstilo('hombre')">💠 Hombre</div>
 <div class="chat-tema-sep">🛍️ TIENDA DE TEMAS</div>
 <div id="tema-opt-bnsimple" class="chat-tema-opt bloq" onclick="setChatEstilo('bnsimple')">🔒 Manga B/N Simple · 150 🪙</div>
 <div id="tema-opt-bntone" class="chat-tema-opt bloq" onclick="setChatEstilo('bntone')">🔒 Manga B/N Screentone · 300 🪙</div>
@@ -1375,7 +1414,7 @@ auth: {
 persistSession: true,
 autoRefreshToken: true,
 detectSessionInUrl: true,
-flowType: 'implicit'
+flowType: 'pkce'
 }
 });
 let miPerfil = null;
@@ -1554,7 +1593,7 @@ async function procesarSakurasDiarias(perfil){
 function cerrarSuscripciones(){document.getElementById('suscripciones-modal').classList.remove('on')}
 /* ===== TEMA DE CHAT ===== */
 function abrirChatTema(){document.getElementById('chatTemaMenu').classList.toggle('on')}
-const ESTILOS_CHAT=['rosa','comic','shojo','shonen','seinen','chibi','bnsimple','bntone','noir','dorado'];
+const ESTILOS_CHAT=['rosa','comic','shojo','shonen','seinen','chibi','mujer','hombre','bnsimple','bntone','noir','dorado'];
 /* Precios SOLO para mostrar. El precio real lo valida el servidor (función comprar_tema en Supabase). */
 const TEMAS_PAGO={bnsimple:{n:'Manga B/N Simple',p:150,i:'⚪'},bntone:{n:'Manga B/N Screentone',p:300,i:'⚫'},noir:{n:'Noir Dramático',p:500,i:'🕶️'},dorado:{n:'Dorado Premium',p:800,i:'👑'}};
 let TEMAS_COMPRADOS=new Set(),_tpActual=null,_tpBusy=false;
@@ -1664,7 +1703,7 @@ function elegirMonto(m,el){
   if(document.getElementById('ppPrice'))document.getElementById('ppPrice').innerText=label;
 }
 const GENEROS = ["Acción","Romance","Terror","Drama","Comedia","Isekai","Fantasía","Ciencia Ficción","Slice of Life","Misterio","Aventura","Sobrenatural","Suspense","Religioso"];
-const ESTILOS = ["Manga clásico B/N","Cómic occidental","Screentone","Pastel","Noir","Dark Fantasy","Chibi","Realista","Acuarela","Vintage"];
+const ESTILOS = ["Shonen", "Shojo", "Anime", "Cyberpunk", "Acuarela", "Cómic western", "Kawaii", "Retro 80s/90s", "Manga clásico", "Screentone", "Noir", "Vintage", "Pastel", "Dark Fantasy", "Chibi", "Realista"];
 function renderGeneros(){
 const w = document.getElementById('generos-wrap');
 w.innerHTML = '';
@@ -1731,12 +1770,12 @@ if(dot._pi===undefined){dot._pi = paginas.length;paginas.push({file:f});} else p
 inp.click();
 }
 async function subirACloudinary(file){
-const form = new FormData();
-form.append('file', file);
-form.append('upload_preset', CLOUD_PRESET);
-const r = await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/image/upload',{method:'POST',body:form});
-const data = await r.json();
-if(!data.secure_url) throw new Error((data.error&&data.error.message)||'No se pudo subir la imagen');
+if(!file||!(file instanceof Blob)||!file.size)throw new Error('El archivo de imagen está vacío o no es válido.');
+if(file.type&&!/^image\/(png|jpe?g|webp|gif|avif)$/i.test(file.type))throw new Error('Formato no compatible. Usá JPG, PNG, WEBP o GIF.');
+if(file.size>15*1024*1024)throw new Error('La imagen pesa más de 15 MB. Reducí su tamaño e intentá de nuevo.');
+const form=new FormData();form.append('file',file);form.append('upload_preset',CLOUD_PRESET);
+let r,data;try{r=await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/image/upload',{method:'POST',body:form});data=await r.json()}catch(e){throw new Error('No se pudo conectar con el servicio de imágenes. Revisá tu conexión e intentá de nuevo.')}
+if(!r.ok||!data.secure_url)throw new Error((data&&data.error&&data.error.message)||'Cloudinary no pudo subir la imagen.');
 return data.secure_url;
 }
 /* guardarBorrador() real: más abajo, en la sección TANDA C (guarda también páginas y portada) */
@@ -1746,7 +1785,7 @@ const titulo = document.getElementById('titulo').value.trim();
 if(!titulo){alert('Poné un título');return;}
 if(paginas.length<(window._modoCrear==='pdf'?10:15)){alert('Necesitás al menos 15 páginas. Tenés '+paginas.length);return;}
 if(paginas.length > 20){alert('Un capítulo no puede superar las 20 páginas.');return;}
-if(!estiloSel){alert('Elegí un estilo visual');return;}
+if(window._modoCrear==='lapiz'&&!estiloSel){alert('Elegí un estilo visual y su color.');return;}
 if(!(await esCeoReal())){
   const limite = limiteMangas(miPerfil);
   let cantidadActual = 0;
@@ -1924,7 +1963,7 @@ _sesionEnCurso=true;
 try{do{_sesionPendiente=false;await _cargarSesionInterno()}while(_sesionPendiente)}finally{_sesionEnCurso=false}
 }
 async function _cargarSesionInterno(){
-const {data:{user}} = await sb.auth.getUser();
+let user=null;try{const {data:{session:_s}}=await sb.auth.getSession();user=(_s&&_s.user)||null;if(!user){const _r=await sb.auth.getUser();user=(_r&&_r.data&&_r.data.user)||null}}catch(_e){console.warn('sesión:',_e&&_e.message)}
 limpiarURLAuth();
 if(!user){
 ceoResetVerif();
@@ -1973,7 +2012,7 @@ document.getElementById('chatbar').style.display='flex';postLogin();
 cambiarSala('mangakars');
 }
 async function cerrarSesion(){
-await sb.auth.signOut();
+window._cerrandoSesion=true;try{await sb.auth.signOut()}finally{window._cerrandoSesion=false}
 miPerfil = null;
 ceoResetVerif();
 document.getElementById('login-modal').classList.remove('hide');
@@ -1997,7 +2036,7 @@ function planVigentePerfil(perfil){
 }
 function puedeMonetizar(perfil){
 if(!perfil) return false;
-return planClave(perfil)==='dios' && planVigentePerfil(perfil);
+return ['semidios','dios'].includes(planClave(perfil)) && planVigentePerfil(perfil);
 }
 async function limpiarMensajesAntiguos(){
   try{
@@ -2191,7 +2230,7 @@ const k=String(m.id),uid=m.user_id;
 const pags=[m.portada_url,...(m.paginas_urls||[])].filter(Boolean);
 let idx=0;
 const mio=!!miPerfil&&miPerfil.id===uid,sig=SEGUIDOS.has(uid);
-d.innerHTML=`${pags.length?'<img class="mcover" loading="lazy" src="'+esc(pags[0])+'">':'<div class="noimg"></div>'}<span class="mpg"></span><img class="manga-logo-mark" src="logo.jpg" alt="SalaMangaS" onerror="this.style.display='none'"><div class="heart${FAVS.has(k)?' on':''}" data-fav="${esc(k)}">❤️</div><div class="t">${esc(m.titulo)}</div>${m.subtitulo?'<div class="st">'+esc(m.subtitulo)+'</div>':''}<div class="a">${esc(nomAutor(uid))}${insigniaHTML(AUTORES[uid])}</div><div class="mstats" data-stat="${esc(k)}">👍 ${m.likes||0} · 👁️ ${m.vistas||0}</div><div class="mbtns"><button type="button" class="mb-seg${sig?' on':''}"${mio?' disabled':''}>${mio?'Sos vos':(sig?'✓ Siguiendo':'＋ Seguir')}</button><button type="button" class="mb-sig"${pags.length<2?' disabled':''}>Siguiente ▶</button></div>`;
+d.innerHTML=`${pags.length?'<img class="mcover" loading="lazy" src="'+esc(pags[0])+'">':'<div class="noimg"></div>'}<span class="mpg"></span><img class="manga-logo-mark" src="logo.jpg" alt="SalaMangaS" onerror="this.style.display='none'"><div class="heart${FAVS.has(k)?' on':''}" data-fav="${esc(k)}">❤️</div><div class="t">${esc(m.titulo)}</div>${m.subtitulo?'<div class="st">'+esc(m.subtitulo)+'</div>':''}<div class="a">${esc(nomAutor(uid))}${insigniaHTML(AUTORES[uid])}</div><div class="mstats" data-stat="${esc(k)}">👍 ${m.likes||0} · 👁️ ${m.vistas||0}</div><div class="mbtns"><button type="button" class="mb-seg${sig?' on':''}"${mio?' disabled':''}>${mio?'Sos vos':(sig?'✓ Siguiendo':'＋ Seguir')}</button><button type="button" class="mb-sig"${pags.length<2?' disabled':''}>Siguiente ▶</button><button type="button" class="mb-sig" data-report data-report-type="manga" data-report-id="${esc(k)}" data-report-owner="${esc(uid)}" data-report-title="${esc(m.titulo)}" data-report-url="${esc(location.origin+'/?report_manga='+encodeURIComponent(k))}" title="Reportar publicación">🚩 ¡Ojo acá!</button></div>`;
 d.onclick=()=>abrirLector(m.id);
 d.querySelector('.heart').onclick=e=>{e.stopPropagation();toggleFav(m.id)};
 d.querySelector('.a').onclick=e=>{e.stopPropagation();usuarioTap(uid,(AUTORES[uid]&&AUTORES[uid].username)||'')};
@@ -2387,7 +2426,7 @@ const v=$('comVacio');if(v)v.remove();
 if($('c'+c.id))return;
 const d=document.createElement('div');d.id='c'+c.id;d.className='com';
 const mio=miPerfil&&c.user_id===miPerfil.id;
-d.innerHTML='<b>'+uNombre(c.user_id,c.username)+'</b>'+slotInsignia(c.user_id)+'<span class="cf">'+new Date(c.created_at).toLocaleDateString('es')+'</span>'+(mio?'<span class="cdel" onclick="borrarComentario(\''+c.id+'\')">🗑️</span>':'')+'<p>'+esc(c.contenido)+'</p>';
+d.innerHTML='<b>'+uNombre(c.user_id,c.username)+'</b>'+slotInsignia(c.user_id)+'<span class="cf">'+new Date(c.created_at).toLocaleDateString('es')+'</span>'+(mio?'<span class="cdel" onclick="borrarComentario(\''+c.id+'\')">🗑️</span>':'')+'<p>'+esc(c.contenido)+'</p>'+(miPerfil&&c.user_id!==miPerfil.id?'<button type="button" class="btn-ghost" style="font-size:11px;padding:4px 8px" data-report data-report-type="comentario_manga" data-report-id="'+esc(c.id)+'" data-report-owner="'+esc(c.user_id)+'" data-report-title="comentario en '+esc(rd.m.titulo)+'" data-report-url="'+esc(location.href)+'" data-report-detail="'+esc(String(c.contenido||'').slice(0,400))+'">🚩 ¡Ojo acá!</button>':'' );
 $('comList').appendChild(d);
 }
 async function cargarComentarios(){
@@ -2415,6 +2454,75 @@ if(!miPerfil||!confirm('¿Borrar tu comentario?'))return;
 await sb.from('comentarios').delete().eq('id',id).eq('user_id',miPerfil.id);
 const e=$('c'+id);if(e)e.remove();
 }
+/* Suscripción a push real. Requiere que el servidor implemente /api/push/public-key y /api/push/suscribir con VAPID. */
+function pushClaveBytes(base64){
+  const s=String(base64||'').replace(/-/g,'+').replace(/_/g,'/');
+  const pad='='.repeat((4-s.length%4)%4);const raw=atob(s+pad);const out=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out;
+}
+async function activarAvisosDispositivo(){
+  if(!('Notification' in window)||!('serviceWorker' in navigator)||!('PushManager' in window)){alert('Este navegador no admite notificaciones push.');return false}
+  if(!miPerfil){alert('Iniciá sesión para activar las notificaciones.');return false}
+  try{
+    const permiso=Notification.permission==='default'?await Notification.requestPermission():Notification.permission;
+    if(permiso!=='granted'){alert('No se habilitaron las notificaciones. Podés activarlas desde los ajustes del navegador.');return false}
+    const reg=await navigator.serviceWorker.ready;
+    const kr=await fetch('/api/push/public-key',{method:'GET',cache:'no-store',headers:{'Accept':'application/json'}});
+    if(!kr.ok)throw new Error('El servidor push todavía no está configurado (falta /api/push/public-key).');
+    const kj=await kr.json();const publicKey=kj.publicKey||kj.public_key;
+    if(!publicKey)throw new Error('El servidor no devolvió la clave pública VAPID.');
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:pushClaveBytes(publicKey)});
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session)throw new Error('La sesión venció. Volvé a iniciar sesión.');
+    const sr=await fetch('/api/push/suscribir',{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token},body:JSON.stringify({subscription:sub.toJSON()})});
+    const sj=await sr.json().catch(()=>({}));
+    if(!sr.ok)throw new Error(sj.error||'No se pudo guardar la suscripción push en el servidor.');
+    alert('✅ Notificaciones push activadas para este dispositivo.');return true;
+  }catch(e){alert('No se pudieron activar las notificaciones push: '+(e.message||e));return false}
+}
+/* ===== MODERACIÓN: botón ¡Ojo acá! ===== */
+async function reportarContenidoDesdeBoton(btn){
+  if(!miPerfil){alert('Iniciá sesión para reportar contenido.');return}
+  const tipo=btn.dataset.reportType||'publicacion',id=btn.dataset.reportId||'',owner=btn.dataset.reportOwner||null;
+  const titulo=btn.dataset.reportTitle||'contenido de SalaMangaS',url=btn.dataset.reportUrl||location.href,detalleBase=btn.dataset.reportDetail||'';
+  if(owner&&String(owner)===String(miPerfil.id)){alert('No podés denunciar tu propio contenido.');return}
+  const key='salamangas_ojo_aca_explicado_v1';
+  if(!localStorage.getItem(key)){
+    alert('🚩 ¡Ojo acá!\n\nUsá esta opción para avisar al equipo sobre contenido que infrinja las normas. Las denuncias se revisan. Los avisos falsos o malintencionados pueden generar advertencias, pérdida de Sakuras o suspensiones.');
+    localStorage.setItem(key,'1');
+  }
+  if(!confirm('¿Querés enviar una denuncia por «'+titulo+'»? El equipo de SalaMangaS la revisará.'))return;
+  const motivo=prompt('Contanos brevemente qué está mal (máximo 500 caracteres):','Contenido inapropiado');
+  if(motivo===null)return;
+  const detalle=(motivo.trim()+(detalleBase?' | Contenido señalado: '+detalleBase:'' )).slice(0,1000);
+  const autor=owner?((AUTORES[owner]||{}).username||'Usuario'):'Usuario';
+  const row={reportante_id:miPerfil.id,reportante_nombre:miPerfil.username||'Usuario',reportado_id:owner,reportado_nombre:autor,tipo,motivo:motivo.trim().slice(0,300)||'Contenido inapropiado',detalle,url,estado:'pendiente'};
+  try{
+    const {data,error}=await sb.from('reportes').insert(row).select('id').single();
+    if(error)throw error;
+    const {data:ceos,error:ceoErr}=await sb.from('profiles').select('id,username,email').in('email',['aldeanossrdc@gmail.com','srdcceo1992@gmail.com','salamangas.oficial.92@gmail.com']);
+    if(!ceoErr&&ceos&&ceos.length){
+      const texto=(miPerfil.username||'Un usuario')+' reportó «¡Ojo acá!» en '+titulo+' — '+url;
+      const notif=ceos.map(c=>({user_id:c.id,tipo:'ceo_reporte',texto,leida:false,manga_id:tipo==='manga'?String(id):null}));
+      const nr=await sb.from('notificaciones').insert(notif);if(nr.error)console.warn('Notificación a CEO no enviada:',nr.error.message);
+    }
+    alert('Denuncia enviada. Gracias por ayudar a cuidar la comunidad.');
+  }catch(e){
+    console.error('Reporte:',e);
+    alert('No se pudo enviar la denuncia: '+(e.message||e)+'\n\nEs necesario que Supabase tenga la tabla reportes con los campos de moderación y permisos de INSERT para usuarios autenticados.');
+  }
+}
+document.addEventListener('click',function(e){const b=e.target.closest&&e.target.closest('[data-report]');if(!b)return;e.preventDefault();e.stopPropagation();reportarContenidoDesdeBoton(b)},true);
+window.reportarFotoPerfilActual=async function(){
+  if(!miPerfil){alert('Iniciá sesión para reportar contenido.');return}
+  const url=window._fotoActual||$('fotoModalImg')?.src;if(!url)return;
+  if(!localStorage.getItem('salamangas_ojo_aca_explicado_v1')){alert('🚩 ¡Ojo acá! Usá esta opción para avisar sobre contenido que infrinja las normas. Los avisos falsos pueden generar sanciones.');localStorage.setItem('salamangas_ojo_aca_explicado_v1','1')}
+  if(!confirm('¿Querés reportar esta foto de perfil?'))return;
+  const motivo=prompt('Motivo de la denuncia (máximo 500 caracteres):','Contenido inapropiado');if(motivo===null)return;
+  try{const {error}=await sb.from('reportes').insert({reportante_id:miPerfil.id,reportante_nombre:miPerfil.username||'Usuario',reportado_id:window._spPerfilActualId||null,reportado_nombre:(AUTORES[window._spPerfilActualId]||{}).username||'Usuario',tipo:'foto_perfil',motivo:motivo.trim().slice(0,300),detalle:'Foto de perfil: '+url.slice(0,700),url,estado:'pendiente'});if(error)throw error;try{const {data:ceos}=await sb.from('profiles').select('id,email').in('email',['aldeanossrdc@gmail.com','srdcceo1992@gmail.com','salamangas.oficial.92@gmail.com']);if(ceos&&ceos.length)await sb.from('notificaciones').insert(ceos.map(c=>({user_id:c.id,tipo:'ceo_reporte',texto:(miPerfil.username||'Un usuario')+' reportó ¡Ojo acá! en una foto de perfil — '+url,leida:false,manga_id:null})));}catch(n){console.warn('Aviso CEO foto:',n.message)}alert('Denuncia enviada. Gracias.');}
+  catch(e){alert('No se pudo enviar: '+(e.message||e)+'. Revisá la tabla reportes y sus permisos en Supabase.')}
+};
 /* --- Notificaciones --- */
 async function notificar(uid,tipo,texto,mid){
 if(!miPerfil||uid===miPerfil.id)return;
@@ -2462,7 +2570,7 @@ $('notif-modal').classList.add('on');
 const l=$('notifList');l.innerHTML=vacio('Cargando...');
 const av=await avisosPublicos();
 let priv=[];
-if(miPerfil){try{const {data}=await sb.from('notificaciones').select('*').eq('user_id',miPerfil.id).order('created_at',{ascending:false}).limit(30);priv=(data||[]).filter(n=>!AVISO_CEO_RE.test(n.tipo||''))}catch(e){}}
+if(miPerfil){try{const {data}=await sb.from('notificaciones').select('*').eq('user_id',miPerfil.id).order('created_at',{ascending:false}).limit(30);priv=(data||[]).filter(n=>esCeoSync()||!AVISO_CEO_RE.test(n.tipo||''))}catch(e){}}
 l.innerHTML='';
 const sec=t=>{const h=document.createElement('h3');h.className='section';h.style.cssText='font-size:14px;margin:12px 0 6px';h.textContent=t;l.appendChild(h)};
 const item=(txt,mid)=>{const d=document.createElement('div');d.className='config-item';d.style.marginTop='8px';d.textContent=txt;if(mid)d.onclick=()=>{cerrarOv('notif-modal');abrirLector(mid)};l.appendChild(d);return d};
@@ -2475,7 +2583,7 @@ localStorage.setItem('avisos_visto',String(Date.now()));cargarNotifs();
 }
 async function leerNotif(n,el){
 if(!n.leida){n.leida=true;el.style.borderColor='';el.innerHTML=el.innerHTML.replace(/^● /,'');await sb.from('notificaciones').update({leida:true}).eq('id',n.id);cargarNotifs()}
-if(n.manga_id){cerrarOv('notif-modal');abrirLector(n.manga_id)}
+if(n.tipo==='ceo_reporte'){const m=String(n.texto||'').match(/https?:\/\/[^\s]+/);if(m){cerrarOv('notif-modal');window.open(m[0],'_blank','noopener');return}}if(n.manga_id){cerrarOv('notif-modal');abrirLector(n.manga_id)}
 }
 /* --- Compartir / referidos --- */
 function capturarRef(){const r=new URLSearchParams(location.search).get('ref');if(r)localStorage.setItem('refPendiente',r)}
@@ -2968,8 +3076,11 @@ async function pjIAGenerar(){
 }
 async function pjIAAceptar(){
   if(!_pjIA.img||_pjIA.busy)return;
-  const nombre=($('pjIANom').value||'').trim(),desc=($('pjIADesc').value||'').trim();
+  let nombre=($('pjIANom').value||'').trim();const desc=($('pjIADesc').value||'').trim();
   if(nombre.length<2||desc.length<5){alert('Poné el nombre y una descripción del personaje.');return}
+  if(!PERSONAJES.length)await cargarPersonajes();
+  const nombreOriginal=nombre;nombre=nombrePersonajeUnico(nombre);
+  if(nombre!==nombreOriginal)alert('Ese nombre ya existe en tus personajes. Se guardará como «'+nombre+'».');
   _pjIA.busy=true;let consumido=false;
   try{
     if(!pjEsCeo()){
@@ -2993,6 +3104,17 @@ async function pjIAAceptar(){
 }
 /* ==== FIN PERSONAJES IA ==== */
 let _pjEditId=null;
+/* Nombres de personajes: únicos por usuario, sin mezclar cuentas. */
+function nombrePersonajeUnico(nombre, excluirId=null){
+  const limpio=String(nombre||'').trim().replace(/\s+/g,' ').slice(0,80);
+  if(!limpio)return '';
+  const base=limpio.replace(/\s+\d+$/,'').trim()||limpio;
+  const existentes=PERSONAJES.filter(p=>excluirId===null||String(p.id)!==String(excluirId)).map(p=>String(p.nombre||'').trim().toLocaleLowerCase());
+  if(!existentes.includes(limpio.toLocaleLowerCase()))return limpio;
+  let n=2,candidato=base+' '+n;
+  while(existentes.includes(candidato.toLocaleLowerCase())){n++;candidato=base+' '+n}
+  return candidato;
+}
 function nuevoPersonaje(){
   _pjEditId=null;
   $('pjModalTitulo').innerText='Nuevo personaje';$('pjFotoNota').style.display='none';$('pjGuardar').innerText='Guardar personaje';
@@ -3008,8 +3130,11 @@ function editarPersonaje(id){
 }
 async function guardarPersonaje(){
   if(!requireUser())return;
-  const nombre=$('pjNom').value.trim(),desc=$('pjDesc').value.trim(),f=$('pjFoto').files[0];
+  let nombre=$('pjNom').value.trim();const desc=$('pjDesc').value.trim(),f=$('pjFoto').files[0];
   if(!nombre||!desc){alert('Completá nombre y descripción');return}
+  if(!PERSONAJES.length)await cargarPersonajes();
+  const nombreOriginal=nombre;nombre=nombrePersonajeUnico(nombre,_pjEditId);
+  if(nombre!==nombreOriginal)alert('Ese nombre ya existe en tus personajes. Se guardará como «'+nombre+'».');
   const btn=$('pjGuardar'),txt0=btn?btn.innerText:'Guardar personaje';
   if(btn){btn.disabled=true;btn.innerText='Guardando...'}
   try{
@@ -3079,7 +3204,7 @@ function iaActualizarAviso(){
   e.innerHTML=t;
 }
 async function iaToken(){const {data:{session}}=await sb.auth.getSession();return session?session.access_token:''}
-let iaEstiloKey='clasico',iaLoteUrls=[],iaUltimoId=null;
+let iaEstiloKey='',iaLoteUrls=[],iaUltimoId=null,iaColorModo='',iaLogoData=null;
 const IA_EJEMPLOS=[
   'Un samurái bajo la lluvia, plano medio, mirada seria, tinta negra con mucho contraste',
   'Chica con una espada sobre un tejado de noche, luna llena, el viento mueve su pelo',
@@ -3095,13 +3220,15 @@ function iaAgregarTexto(t,reemplazar){
 }
 async function abrirIA(modo,file){
   if(!miPerfil){alert('Iniciá sesión primero');return}
-  iaModo=modo;iaImg=null;iaBlob=null;iaEstilo=null;iaEstiloKey='clasico';iaPjSel=[];iaLoteUrls=[];iaUltimoId=null;$('iaRes').innerHTML='';
+  iaModo=modo;iaImg=null;iaBlob=null;iaEstilo=null;iaEstiloKey='';iaColorModo='';iaPjSel=[];iaLoteUrls=[];iaUltimoId=null;$('iaRes').innerHTML='';
   $('iaTitulo').innerText=modo==='lapiz'?'Dibujo a lápiz → Manga':'SalaMangas IA';
   $('iaDibujoBox').style.display=modo==='lapiz'?'block':'none';
   if(file){iaBlob=file;const u=URL.createObjectURL(file);$('iaDibujo').src=u}
-  const estilos=[['clasico','Manga clásico B/N'],['dark','Dark Fantasy'],['chibi','Chibi'],['realista','Realista'],['noir','Noir'],['screentone','Screentone'],['anime','Anime (color)']];
-  $('iaEstilos').innerHTML=estilos.map(x=>'<span class="chip" data-k="'+x[0]+'">'+x[1]+'</span>').join('');
-  document.querySelectorAll('#iaEstilos .chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('#iaEstilos .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaEstilo=c.innerText;iaEstiloKey=c.dataset.k});
+  const estilos=[['shonen','Shonen'],['shojo','Shojo'],['anime','Anime'],['cyberpunk','Cyberpunk'],['acuarela','Acuarela'],['comic-western','Cómic western'],['kawaii','Kawaii'],['retro','Retro 80s/90s'],['clasico','Manga clásico'],['screentone','Screentone'],['noir','Noir'],['vintage','Vintage'],['pastel','Pastel'],['dark','Dark Fantasy'],['chibi','Chibi'],['realista','Realista']];
+  $('iaEstilos').innerHTML=estilos.map(x=>'<button type="button" class="chip style-choice" data-k="'+x[0]+'">'+x[1]+'</button>').join('');
+  document.querySelectorAll('#iaEstilos .style-choice').forEach(c=>c.onclick=()=>{document.querySelectorAll('#iaEstilos .style-choice').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaEstilo=c.innerText;iaEstiloKey=c.dataset.k});
+  document.querySelectorAll('#iaColorModes .color-choice, #iaColorModes .chip').forEach(c=>{c.classList.remove('on');c.onclick=()=>{document.querySelectorAll('#iaColorModes .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaColorModo=c.dataset.color||c.textContent.trim()}});
+  const vb=$('iaVinetasBox');if(vb){const pk=planClave(miPerfil);vb.style.display=['superpro','semidios','dios'].includes(pk)&&planVigente()? 'block':'none'}
   const ej=$('iaEjemplos');if(ej){ej.innerHTML=IA_EJEMPLOS.map((t,i)=>'<span class="chip" data-ej="'+i+'">'+esc(t)+'</span>').join('');ej.querySelectorAll('.chip').forEach(c=>c.onclick=()=>iaAgregarTexto(IA_EJEMPLOS[c.dataset.ej],true))}
   const sg=$('iaSugerencias');if(sg){sg.innerHTML=IA_SUGERENCIAS.map((t,i)=>'<span class="chip" data-sg="'+i+'">+ '+esc(t)+'</span>').join('');sg.querySelectorAll('.chip').forEach(c=>c.onclick=()=>iaAgregarTexto(IA_SUGERENCIAS[c.dataset.sg],false))}
   await cargarPersonajes();
@@ -3126,16 +3253,21 @@ async function iaRedimBlob(src,max){
 async function iaGenerar(){
   if(!requireUser())return;
   const btn=$('iaBtn');btn.disabled=true;btn.innerText='✨ Generando...';
-  $('iaRes').innerHTML=vacio('🎨 La IA está dibujando '+(iaModo==='lapiz'?'tu imagen':'tus 2 imágenes')+'... puede tardar entre 20 y 60 segundos. No cierres esta pantalla.');
+  $('iaRes').innerHTML=vacio('🎨 La IA está dibujando '+(iaModo==='lapiz'?'tu imagen':'tu imagen')+'... puede tardar entre 20 y 60 segundos. No cierres esta pantalla.');
   try{
     if(iaModo==='lapiz'&&!iaBlob)throw new Error('Falta el dibujo a lápiz');
     if(iaPjSel.length>IA_MAX_PJ)throw new Error('Elegí como máximo '+IA_MAX_PJ+' personajes');
     const pj=PERSONAJES.filter(p=>iaPjSel.includes(String(p.id)));
-    const coloresDef=iaEstiloKey==='anime'?'colores vivos de anime':'blanco y negro con detalles dorados y púrpura';
-    let prompt='Crear una ilustración manga para SalaMangaS. '+(iaModo==='lapiz'?'Transformar el dibujo de referencia en una página/escena manga limpia, respetando composición y personajes. ':'Generar una escena manga original. ')+'Estilo: '+(iaEstilo||'Manga clásico B/N')+'. Colores: '+($('iaColores').value.trim()||coloresDef)+'. Detalles: '+($('iaTxt').value.trim()||'escena manga dinámica, expresiva y coherente')+'.';
+    if(!iaEstiloKey)throw new Error('Elegí un estilo visual.');
+    if(!iaColorModo)throw new Error('Elegí B/N o Color por separado.');
+    const coloresDef=iaColorModo==='Color'?'color completo, paleta coherente y acabado de ilustración manga':'blanco y negro, tinta manga, contraste legible y sin color';
+    let prompt='Crear UNA SOLA imagen para SalaMangaS. '+(iaModo==='lapiz'?'Transformar el dibujo de referencia en una página/escena manga limpia, respetando composición y personajes. ':'Generar una escena manga original. ')+'Estilo visual: '+iaEstilo+'. Modo de color: '+iaColorModo+'. Tratamiento de color: '+($('iaColores').value.trim()||coloresDef)+'. Instrucciones completas del usuario: '+($('iaTxt').value.trim()||'escena manga dinámica, expresiva y coherente')+'.';
+    const enc=$('iaEncuadre')?.value.trim(),ang=$('iaAngulo')?.value.trim(),emo=$('iaEmocion')?.value.trim();
+    if($('iaVinetasBox')&&$('iaVinetasBox').style.display!=='none'){if(enc)prompt+=' Encuadre solicitado: '+enc+'.';if(ang)prompt+=' Ángulo solicitado: '+ang+'.';if(emo)prompt+=' Emoción solicitada: '+emo+'.';}
     if(pj.length)prompt+=' Personajes que deben respetarse exactamente: '+pj.map(p=>p.nombre+': '+p.descripcion).join(' | ')+'.';
+    prompt+=' No generar collage, cuadrícula ni opciones múltiples. Entregar una sola imagen final.';
     const fd=new FormData();
-    fd.append('prompt',prompt);fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey||'clasico');
+    fd.append('prompt',prompt);fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey);fd.append('color_modo',iaColorModo);fd.append('num_images','1');fd.append('cantidad','1');
     if(iaBlob)fd.append('dibujo',await iaRedimBlob(iaBlob,1280),'dibujo.jpg');
     const conFoto=pj.find(p=>p.foto_url);
     if(conFoto){try{fd.append('personaje',await iaRedimBlob(conFoto.foto_url,1000),'personaje.jpg')}catch(e){console.warn('Referencia de personaje:',e.message)}}
@@ -3168,8 +3300,8 @@ async function iaReanudar(){
   try{iaMostrar(await iaEsperar(iaUltimoId,await iaToken()))}catch(e){iaError(e)}
 }
 function iaMostrar(urls){
-  iaLoteUrls=(urls||[]).map(u=>String(u).indexOf('data:')===0?u:'/api/ia-imagen?u='+encodeURIComponent(u));
-  $('iaRes').innerHTML='<div class="ia-result-card"><div class="ia-grid"'+(iaLoteUrls.length===1?' style="grid-template-columns:1fr;max-width:260px;margin:0 auto"':'')+'>'+iaLoteUrls.map((u,i)=>'<div class="ia-cell"><img src="'+esc(u)+'" alt="Opción '+(i+1)+'" loading="lazy"><div class="ia-cell-btns"><button class="btn-main" onclick="iaElegir('+i+',\'portada\')">📕 Portada</button><button class="btn" onclick="iaElegir('+i+',\'pagina\')">📄 Página</button></div></div>').join('')+'</div><p style="font-size:11px;color:var(--text2);margin:8px 0 6px;text-align:center">'+(iaLoteUrls.length===1?'Si no te convence, regenerá para ver otra versión.':'Elegí la que más te guste, o regenerá para ver '+iaLoteUrls.length+' opciones nuevas.')+'</p><button class="btn" style="width:100%" onclick="iaGenerar()">🔄 Regenerar (gasta 1 generación)</button></div>';
+  iaLoteUrls=(urls||[]).slice(0,1).map(u=>String(u).indexOf('data:')===0?u:'/api/ia-imagen?u='+encodeURIComponent(u));
+  $('iaRes').innerHTML='<div class="ia-result-card"><div class="ia-grid"'+(iaLoteUrls.length===1?' style="grid-template-columns:1fr;max-width:260px;margin:0 auto"':'')+'>'+iaLoteUrls.map((u,i)=>'<div class="ia-cell"><img src="'+esc(u)+'" alt="Imagen generada" loading="lazy"><div class="ia-cell-btns"><button class="btn-main" onclick="iaElegir('+i+',\'portada\')">📕 Portada</button><button class="btn" onclick="iaElegir('+i+',\'pagina\')">📄 Página</button></div></div>').join('')+'</div><p style="font-size:11px;color:var(--text2);margin:8px 0 6px;text-align:center">'+(iaLoteUrls.length===1?'Si no te convence, regenerá para ver otra versión.':'Elegí la que más te guste, o regenerá para ver '+iaLoteUrls.length+' opciones nuevas.')+'</p><button class="btn" style="width:100%" onclick="iaGenerar()">🔄 Regenerar (gasta 1 generación)</button></div>';
 }
 function iaError(e){
   if(e&&e.pendiente){$('iaRes').innerHTML='<p style="color:var(--gold3);font-size:13px;text-align:center">'+esc(e.message)+' Tu generación sigue en proceso y no se vuelve a descontar.</p><button class="btn-main" style="width:100%;margin-top:8px" onclick="iaReanudar()">⏳ Seguir esperando</button>';return}
@@ -3185,20 +3317,14 @@ async function iaElegir(i,tipo){
   }catch(e){alert(e.message||e)}
 }
 async function b64Redim(src,max){
-  const blob=src instanceof Blob?src:await (async()=>{
-    if(typeof src==='string'&&src.startsWith('data:')){const r=await fetch(src);return r.blob()}
-    const r=await fetch(typeof src==='string'?src:URL.createObjectURL(src));
-    if(!r.ok)throw new Error('No se pudo descargar la imagen de referencia');
-    return r.blob();
-  })();
+  let blob,propio=null;
+  if(src instanceof Blob) blob=src;
+  else if(typeof src==='string'&&src.startsWith('data:')){const r=await fetch(src);blob=await r.blob();}
+  else if(typeof src==='string'){const r=await fetch(src,{mode:'cors'});if(!r.ok)throw new Error('No se pudo descargar la imagen de referencia ('+r.status+').');blob=await r.blob();}
+  else if(src){propio=URL.createObjectURL(src);try{const r=await fetch(propio);blob=await r.blob()}finally{URL.revokeObjectURL(propio)}}
+  if(!blob||!blob.size)throw new Error('La imagen está vacía o no se pudo leer.');
   const u=URL.createObjectURL(blob);
-  try{
-    return await new Promise((ok,ko)=>{
-      const im=new Image();
-      im.onload=()=>{try{const s=Math.min(1,(max||1000)/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*s));c.height=Math.max(1,Math.round(im.height*s));c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok({mime:'image/jpeg',data:c.toDataURL('image/jpeg',.85).split(',')[1]})}catch(e){ko(e)}};
-      im.onerror=()=>ko(new Error('No se pudo leer la imagen'));im.src=u;
-    });
-  }finally{URL.revokeObjectURL(u)}
+  try{return await new Promise((ok,ko)=>{const im=new Image();im.onload=()=>{try{if(!im.naturalWidth||!im.naturalHeight)throw new Error('La imagen no tiene dimensiones válidas.');const limite=Math.max(256,Math.min(1600,Number(max)||1000));const sc=Math.min(1,limite/Math.max(im.naturalWidth,im.naturalHeight));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*sc));c.height=Math.max(1,Math.round(im.naturalHeight*sc));const ctx=c.getContext('2d');if(!ctx)throw new Error('El navegador no pudo preparar la imagen.');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(im,0,0,c.width,c.height);const data=c.toDataURL('image/jpeg',.88).split(',')[1];if(!data)throw new Error('No se pudo convertir la imagen.');ok({mime:'image/jpeg',data});}catch(e){ko(e)}};im.onerror=()=>ko(new Error('No se pudo leer la imagen. Probá con JPG o PNG.'));im.src=u;});}finally{URL.revokeObjectURL(u)}
 }
 function dataURLtoFile(dataurl,filename){const a=dataurl.split(',');const mime=a[0].match(/:(.*?);/)[1];const b=atob(a[1]);let n=b.length;const u8=new Uint8Array(n);while(n--)u8[n]=b.charCodeAt(n);return new File([u8],filename,{type:mime})}
 function usarIAPortada(){if(!iaImg)return;portadaArchivo=dataURLtoFile(iaImg,'salamangas-portada.png');$('portadaPreview').innerHTML='<img src="'+esc(iaImg)+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:12px">';cerrarOv('iaov');reabrirCrear()}
@@ -3248,16 +3374,16 @@ function iniciarApp(){
   if(localStorage.getItem('modoClaro')==='1')document.body.classList.add('light-mode');
   manejarRetornoPayPal();
   sb.auth.getSession().then(()=>cargarSesion()).catch(()=>{});
-  sb.auth.onAuthStateChange((event,session)=>{if(session&&session.user&&(event==='SIGNED_IN'||event==='INITIAL_SESSION')&&(!miPerfil||miPerfil.id!==session.user.id))cargarSesion()});
+  sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'&&miPerfil&&!window._cerrandoSesion){console.warn('Sesión terminada por Supabase');miPerfil=null;try{ceoResetVerif()}catch(e){}const _lm=document.getElementById('login-modal');if(_lm)_lm.classList.remove('hide');const _cb=document.getElementById('chatbar');if(_cb)_cb.style.display='none';return}if(session&&session.user&&(event==='SIGNED_IN'||event==='INITIAL_SESSION')&&(!miPerfil||miPerfil.id!==session.user.id)){setTimeout(()=>{if(sb.auth&&session.user) cargarSesion().catch(e=>console.warn('No se pudo restaurar el perfil:',e.message||e))},0)}});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciarApp);else iniciarApp();
 /* ===== SALAMANGAS DEFINITIVO 02/10/2026 ===== */
 const PLANES_SALAMANGAS={
- gratis:{nombre:'Mangakers Gratis',precioARS:0,precioUSD:0,mangas:1,capitulos:2,sakuras:100,chats:['mangakars'],monetiza:false},
- pro:{nombre:'Mangakers Pro',precioARS:3000,precioUSD:3,mangas:1,capitulos:3,sakuras:500,chats:['mangakars','pro'],monetiza:false,insignia:'Pro plata'},
- superpro:{nombre:'Súper Mangakers Pro',precioARS:5000,precioUSD:5,mangas:2,capitulos:4,sakuras:2000,chats:['mangakars','pro'],monetiza:false,insignia:'Pro oro'},
- semidios:{nombre:'Semi Dios Mangakers',precioARS:12000,precioUSD:12,mangas:3,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:false,porcentaje:0,insignia:'Dios'},
- dios:{nombre:'Mangakers Dios',precioARS:30000,precioUSD:30,mangas:4,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:true,porcentaje:100,insignia:'Dios'}
+ gratis:{nombre:'Mangakers Gratis',precioARS:0,precioUSD:0,mangas:1,personajes:0,lugares:5,capitulos:2,sakuras:200,chats:['mangakars'],monetiza:false},
+ pro:{nombre:'Mangakers Pro',precioARS:3000,precioUSD:3,mangas:1,personajes:5,lugares:5,capitulos:3,sakuras:500,chats:['mangakars','pro'],monetiza:false,insignia:'Pro plata'},
+ superpro:{nombre:'Súper Mangakers Pro',precioARS:5000,precioUSD:5,mangas:2,personajes:7,lugares:5,capitulos:4,sakuras:2000,chats:['mangakars','pro'],monetiza:false,insignia:'Pro oro'},
+ semidios:{nombre:'Semi Dios Mangakers',precioARS:12000,precioUSD:12,mangas:2,personajes:10,lugares:5,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:false,porcentaje:0,insignia:'Dios'},
+ dios:{nombre:'Mangakers Dios',precioARS:30000,precioUSD:30,mangas:2,personajes:15,lugares:5,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:true,porcentaje:100,insignia:'Dios'}
 };
 const SALAS={mangakars:'SalaMangakers',pro:'SalaMangakers Pro',dios:'Dios del Manga'};
 const GENEROS_DEFINITIVOS=["Acción","Romance","Terror","Drama","Comedia","Isekai","Fantasía","Ciencia Ficción","Slice of Life","Misterio","Aventura","Sobrenatural","Suspense","Religioso"];
@@ -3399,11 +3525,11 @@ function renderPlanesDefinitivos(){
   const p=PLANES_SALAMANGAS[k],d=document.createElement('div');d.className='card plan-def';
   const precio=p.precioARS?`$${p.precioARS.toLocaleString('es-AR')} ARS / $${p.precioUSD} USD`:'Gratis';
   let bullets='';
-  if(k==='gratis')bullets='<li>1 manga para crear</li><li>2 capítulos de 15 a 20 páginas o 2 PDF por mes</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMangakers</li><li>No monetiza</li>';
-  if(k==='pro')bullets='<li>1 manga para crear</li><li>3 capítulos de 15 a 20 páginas o 3 PDF por mes</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>Insignia Pro plata</li><li>No monetiza</li>';
-  if(k==='superpro')bullets='<li>2 mangas para crear</li><li>4 capítulos de 15 a 20 páginas o 4 PDF por mes</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Insignia Pro oro</li><li>No monetiza</li>';
-  if(k==='semidios')bullets='<li>3 mangas para crear, publicar y gratis TODOS los meses</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>No monetiza</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li><li>Botón con contador exacto del apoyo, se abona cada 30 días</li>';
-  if(k==='dios')bullets='<li>4 creaciones gratis TODOS los meses</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>Lectura ilimitada todo el mes</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>💰 Monetiza: 100% de las donaciones para el creador</li><li>Alias del creador para Mercado Pago Argentina / PayPal internacional</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li>';
+  if(k==='gratis')bullets='<li>1 manga</li><li>0 personajes propios en la cuota del plan</li><li>5 lugares por manga</li><li>2 capítulos de 15 a 20 páginas o 2 PDF por mes</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMangakers</li><li>No monetiza</li>';
+  if(k==='pro')bullets='<li>1 manga</li><li>Hasta 5 personajes</li><li>5 lugares por manga</li><li>3 capítulos de 15 a 20 páginas o 3 PDF por mes</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>Insignia Pro plata</li><li>No monetiza</li>';
+  if(k==='superpro')bullets='<li>2 mangas</li><li>Hasta 7 personajes</li><li>5 lugares por manga</li><li>4 capítulos de 15 a 20 páginas o 4 PDF por mes</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Insignia Pro oro</li><li>No monetiza</li>';
+  if(k==='semidios')bullets='<li>2 mangas</li><li>Hasta 10 personajes</li><li>5 lugares por manga</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>No monetiza</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li><li>Botón con contador exacto del apoyo, se abona cada 30 días</li>';
+  if(k==='dios')bullets='<li>2 mangas</li><li>Hasta 15 personajes</li><li>5 lugares por manga</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>Lectura ilimitada todo el mes</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>💰 Monetiza: 100% de las donaciones para el creador</li><li>Alias del creador para Mercado Pago Argentina / PayPal internacional</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li>';
   d.innerHTML=`<h3>${p.nombre}</h3><div class="plan-ins">${insigniaGrande(k,'xl')}<p>${INSIGNIAS[k].corto}</p></div><div class="plan-price">${precio}</div><ul>${bullets}</ul>`;
   if(k!=='gratis'){
     const row=document.createElement('div');row.style.cssText='display:flex;gap:8px;margin-top:10px';
@@ -3414,7 +3540,7 @@ function renderPlanesDefinitivos(){
   w.appendChild(d);
  });
   const cc=document.createElement('div');cc.className='card plan-def ins-card-ceo';cc.innerHTML='<h3>CEO</h3><div class="plan-ins">'+insigniaGrande('ceo','xl')+'<p>'+INSIGNIAS.ceo.corto+'</p></div>';w.appendChild(cc);
- const note=document.createElement('div');note.className='warn-mini';note.innerText='Semi Dios y Mangakar Dios: las creaciones gratis se renuevan cada mes. Máximo 20 páginas por capítulo.';w.appendChild(note);
+ const note=document.createElement('div');note.className='warn-mini';note.innerText='Cada manga tiene sus propios personajes y lugares. Cuotas visibles del plan: Gratis 0 personajes + 5 lugares; Pro 5 + 5; Súper Pro 7 + 5; Semi Dios 10 + 5; Dios 15 + 5. Máximo 20 páginas por capítulo.';w.appendChild(note);
 }
 function abrirSuscripciones(){renderPlanesDefinitivos();$('suscripciones-modal').classList.add('on')}
 /* Crear: navegación */
@@ -3425,10 +3551,9 @@ function volverCrear(){ocultarCrearPantallas();$('screen-crear').classList.add('
 /* ==== LAPIZ (Tanda C): subir dibujos a lápiz + Renacer en la misma pantalla ==== */
 let lapizDibujoFile=null,_lapizUltimoId=null,_lapizResUrl=null,_lapizAgregada=false,_lapizCoverUrl=null;
 function lapizIaKey(label){
-  const t=String(label||'').toLowerCase();
-  if(/anime/.test(t))return 'anime';if(/chibi/.test(t))return 'chibi';if(/noir/.test(t))return 'noir';
-  if(/dark|fantas/.test(t))return 'dark';if(/real/.test(t))return 'realista';if(/screentone/.test(t))return 'screentone';
-  return 'clasico';
+  const t=String(label||'').toLowerCase().trim();
+  const mapa={'shonen':'shonen','shojo':'shojo','anime':'anime','cyberpunk':'cyberpunk','acuarela':'acuarela','cómic western':'comic-western','comic western':'comic-western','kawaii':'kawaii','retro 80s/90s':'retro','manga clásico':'clasico','manga clasico':'clasico','screentone':'screentone','noir':'noir','vintage':'vintage','pastel':'pastel','dark fantasy':'dark','chibi':'chibi','realista':'realista'};
+  return mapa[t]||'clasico';
 }
 function lapizCoverRender(){
   const t=$('lapizCoverTile');if(!t)return;
@@ -3505,12 +3630,15 @@ async function renacerLapiz(){
   acc.style.display='none';msg.textContent='';
   res.innerHTML='<div>🎨 La IA está dibujando...<br><small>puede tardar 20 a 60 segundos</small></div>';
   try{
-    const chip=document.querySelector('#lapizEstilos .chip.on');
-    const label=chip?chip.textContent:'Manga clásico B/N';
+    const chip=document.querySelector('#lapizEstilos .style-choice.on');
+    const colorChip=document.querySelector('#lapizEstilos .color-choice.on');
+    if(!chip)throw new Error('Elegí un estilo visual.');
+    if(!colorChip)throw new Error('Elegí B/N o Color por separado.');
+    const label=chip.textContent.trim(),colorModo=colorChip.dataset.color||colorChip.textContent.trim();
     const spec=($('lapizPrompt').value||'').trim();
-    const prompt='Crear una página de manga para SalaMangaS. Transformar el dibujo a lápiz de referencia en una página manga limpia y terminada, respetando la composición y los personajes. Formato vertical. Estilo: '+label+'. Detalles: '+(spec||'limpiar las líneas, mantener personajes y composición')+'.';
+    const prompt='Crear UNA SOLA página de manga para SalaMangaS. Transformar el dibujo a lápiz de referencia en una página manga limpia y terminada, respetando la composición y los personajes. Formato vertical. Estilo visual: '+label+'. Modo de color: '+colorModo+'. '+(colorModo==='Color'?'Usar color completo y una paleta coherente.':'Usar exclusivamente blanco y negro, tinta manga y buen contraste.')+' Especificaciones completas del usuario: '+(spec||'limpiar las líneas, mantener personajes y composición')+'. No generar collage ni opciones múltiples.';
     const fd=new FormData();
-    fd.append('prompt',prompt);fd.append('modo','lapiz');fd.append('estilo',lapizIaKey(label));
+    fd.append('prompt',prompt);fd.append('modo','lapiz');fd.append('estilo',lapizIaKey(label));fd.append('color_modo',colorModo);fd.append('num_images','1');fd.append('cantidad','1');
     fd.append('dibujo',await iaRedimBlob(lapizDibujoFile,1280),'dibujo.jpg');
     const tk=await iaToken();
     const r=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:fd});
@@ -3640,16 +3768,23 @@ function reabrirCrear(){
 }
 function renderCrearAux(){
  const pintarColapsable=(id,items,esEstilo)=>{
-  const w=$(id);if(!w||w.children.length)return;
+  const w=$(id);if(!w||w.dataset.rendered==='1')return;
+  w.dataset.rendered='1';
   items.forEach((txt,i)=>{
-   const c=document.createElement('span');c.className='chip'+(i>=4?' chip-mas-oculto':'');c.textContent=txt;
-   c.onclick=esEstilo?()=>{w.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')}:()=>c.classList.toggle('on');
+   const c=document.createElement('span');c.className='chip'+(esEstilo?' style-choice':'')+(i>=4?' chip-mas-oculto':'');c.textContent=txt;
+   c.onclick=esEstilo?()=>{w.querySelectorAll('.style-choice').forEach(x=>x.classList.remove('on'));c.classList.add('on')}:()=>c.classList.toggle('on');
    w.appendChild(c);
   });
   if(items.length>4){
    const mas=document.createElement('span');mas.className='chip chip-mas';mas.textContent='+ más';
    mas.onclick=()=>{w.querySelectorAll('.chip-mas-oculto').forEach(x=>x.classList.remove('chip-mas-oculto'));mas.remove()};
    w.appendChild(mas);
+  }
+  if(esEstilo){
+    const row=document.createElement('div');row.className='color-modes';row.style.cssText='display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 12px';
+    row.innerHTML='<span style="width:100%;font-size:11px;color:var(--text2)">Elegí color por separado:</span><button type="button" class="chip color-choice" data-color="B/N">⚫ B/N</button><button type="button" class="chip color-choice" data-color="Color">🌈 Color</button>';
+    row.querySelectorAll('.color-choice').forEach(b=>b.onclick=()=>{row.querySelectorAll('.color-choice').forEach(x=>x.classList.remove('on'));b.classList.add('on')});
+    w.appendChild(row);
   }
  };
  ['lapizGeneros','paginaGeneros','pdfGeneros','iaCrearGeneros'].forEach(id=>pintarColapsable(id,GENEROS_DEFINITIVOS,false));
@@ -3670,8 +3805,9 @@ function sincronizarCrear(){
  const val=id=>{const e=$(id);return e?e.value:''};
  $('titulo').value=val(pf+'Titulo');$('sinopsis').value=val(pf+'Sinopsis');
  generosSel=[...document.querySelectorAll('#'+pf+'Generos .chip.on')].map(x=>x.textContent);
- const es=document.querySelector('#'+pf+'Estilos .chip.on');
- estiloSel=es?es.textContent:(m==='pdf'?ESTILOS[0]:null);
+ const es=document.querySelector('#'+pf+'Estilos .style-choice.on');
+ const color=document.querySelector('#'+pf+'Estilos .color-choice.on');
+ estiloSel=es?(es.textContent+' — '+(color?color.dataset.color:'')):null;
  const inp=$(pf+'Portada'),f=inp&&inp.files&&inp.files[0];
  if(f)portadaArchivo=f;
  else if(!portadaArchivo&&paginas[0])portadaArchivo=paginas[0].file;
@@ -3763,12 +3899,12 @@ publicar=async function(){
 function abrirDonarCreador(){
  if(!requireUser()||!rd||!rd.m)return;
  const autor=AUTORES[rd.m.user_id];
- if(autor&&!puedeMonetizar(autor)){alert('Este creador todavía no puede recibir donaciones (solo Mangakar Dios).');return}
+ if(autor&&!puedeMonetizar(autor)){alert('Este creador todavía no puede recibir donaciones (necesita un plan Semi Dios o Dios vigente).');return}
  _montoDonarDef=1000;
  const w=$('donarMontos');if(w)w.innerHTML='';
  [1000,2000,3000,5000,7000,10000].forEach(n=>{const c=document.createElement('span');c.className='chip'+(n===1000?' on':'');c.textContent='$'+n.toLocaleString('es-AR')+' ARS / $'+(n/1000)+' USD';c.onclick=()=>{_montoDonarDef=n;w.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')};w.appendChild(c)});
  const k=planClave(autor||{});
- $('donarCreadorMsg').innerText=k==='dios'?'El creador recibe 100%. Se mostrará su alias para el pago cuando esté configurado.':'';
+ $('donarCreadorMsg').innerText=k==='dios'?'Plan Dios: la regla es 100% para el creador; la cuenta de cobro/alias debe estar configurada en el servidor.':(k==='semidios'?'Plan Semi Dios: el sistema debe registrar la donación para que el CEO liquide el 50% a los 30 días.':'');
  $('donar-creador-modal').classList.add('on')
 }
 /* Logo y protección de imágenes */
@@ -3964,7 +4100,7 @@ function muroCardHTML(p,est){
     (puedeBorrar?'<button class="mu-del" data-mu="del" title="Borrar">🗑️</button>':'')+'</div>'+
     (p.foto_url?'<img class="mu-foto" loading="lazy" src="'+esc(p.foto_url)+'" alt="Foto de '+esc(nombre)+'">':'')+
     (p.texto?'<div class="mu-texto">'+esc(p.texto)+'</div>':'')+
-    '<div class="mu-acts"><button class="mu-act'+(liked?' on':'')+'" data-mu="like">'+(liked?'❤️':'🤍')+' <span>'+nl+'</span></button><button class="mu-act" data-mu="com">💬 <span>'+nc+'</span></button><button class="mu-act" data-mu="share">📤</button></div>'+
+    '<div class="mu-acts"><button class="mu-act'+(liked?' on':'')+'" data-mu="like">'+(liked?'❤️':'🤍')+' <span>'+nl+'</span></button><button class="mu-act" data-report data-report-type="publicacion" data-report-id="'+esc(id)+'" data-report-owner="'+esc(p.user_id)+'" data-report-title="publicación de '+esc(nombre)+'" data-report-url="'+esc(location.origin+'/?report_post='+encodeURIComponent(id))+'" title="Reportar publicación">🚩 ¡Ojo acá!</button><button class="mu-act" data-mu="com">💬 <span>'+nc+'</span></button><button class="mu-act" data-mu="share">📤</button></div>'+
     '<div class="mu-coms" style="display:none"></div></article>';
 }
 async function muroEstado(posts){
@@ -4064,7 +4200,7 @@ async function muroLike(card,btn){
 function muroComHTML(c){
   const a=AUTORES[c.user_id]||{},nombre=a.username||'Usuario';
   const puede=!!miPerfil&&(c.user_id===miPerfil.id||((typeof esCeoSync==='function')&&esCeoSync()));
-  return '<div class="mu-c" data-cid="'+esc(String(c.id))+'"><b>'+uNombre(c.user_id,nombre)+'</b> '+esc(c.texto)+'<small>'+muroHace(c.created_at)+'</small>'+(puede?' <button data-mu="cdel" title="Borrar">🗑️</button>':'')+'</div>';
+  return '<div class="mu-c" data-cid="'+esc(String(c.id))+'"><b>'+uNombre(c.user_id,nombre)+'</b> '+esc(c.texto)+'<small>'+muroHace(c.created_at)+'</small>'+(miPerfil&&c.user_id!==miPerfil.id?' <button class="btn-ghost" style="font-size:10px;padding:3px 6px" data-report data-report-type="comentario_muro" data-report-id="'+esc(String(c.id))+'" data-report-owner="'+esc(c.user_id)+'" data-report-title="comentario de '+esc(nombre)+'" data-report-url="'+esc(location.href)+'" data-report-detail="'+esc(String(c.texto||'').slice(0,400))+'">🚩 ¡Ojo acá!</button>':'')+(puede?' <button data-mu="cdel" title="Borrar">🗑️</button>':'')+'</div>';
 }
 async function muroComentarios(card){
   const box=card.querySelector('.mu-coms');
@@ -4186,27 +4322,81 @@ function muroPerfilHTML(m){
 /* ==== ASISTENTES IA ==== */
 const AS_TITULOS={sinopsis:'🤖 Asistente de sinopsis',app:'❓ Ayuda de SalaMangaS',historia:'📖 Asistente de historias'};
 const AS_HOLA={sinopsis:'¡Hola! Contame de qué trata tu manga (género, protagonista, conflicto) y armamos la sinopsis juntos.',app:'¡Hola! Preguntame lo que quieras sobre cómo usar SalaMangaS.',historia:'¡Hola! Contame tu idea y te ayudo con la trama, los personajes y los diálogos.'};
-let _as={tipo:null,msgs:[],campo:null,acc:null,busy:false};
-/* Súper Pro y Semi Dios: historial por archivo · Dios: se guarda solo · CEO: todo · Gratis/Pro: sin asistente */
-function asAcceso(){
-  if((typeof esCeoSync==='function')&&esCeoSync())return {ok:true,hist:'supabase'};
-  const k=(typeof planVigente==='function'&&planVigente()&&miPerfil)?planClave(miPerfil):'gratis';
-  if(k==='dios')return {ok:true,hist:'supabase'};
-  if(k==='superpro'||k==='semidios')return {ok:true,hist:'archivo'};
-  return {ok:false};
+let _as={tipo:null,msgs:[],campo:null,acc:null,busy:false,quotaKey:null};
+/* Los límites de interfaz se aplican por usuario. El servidor /api/asistente también debe validarlos para impedir abusos. */
+function asPlanActual(){
+  if((typeof esCeoSync==='function')&&esCeoSync())return 'ceo';
+  if(!miPerfil||typeof planVigente!=='function'||!planVigente())return 'gratis';
+  return typeof planClave==='function'?planClave(miPerfil):'gratis';
+}
+function asAcceso(tipo){
+  const k=asPlanActual();
+  if(k==='ceo')return {ok:true,hist:'supabase',plan:k};
+  const permitidos=tipo==='sinopsis'?['pro','superpro','semidios','dios']:
+    tipo==='app'?['superpro','semidios','dios']:
+    tipo==='historia'?['pro','superpro','semidios','dios']:[];
+  if(!permitidos.includes(k))return {ok:false,plan:k};
+  return {ok:true,hist:k==='dios'?'supabase':'archivo',plan:k};
+}
+function asFechaLocal(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function asUserKey(){return (miPerfil&&miPerfil.id)||'sin-usuario'}
+function asHash(txt){let h=2166136261;for(let i=0;i<txt.length;i++){h^=txt.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
+function asSinoQuotaKey(){
+  const campo=_as.campo?$( _as.campo):null;
+  const idCampo=_as.campo||'sin-campo';
+  const idTitulo=_as.campo? _as.campo.replace('Sinopsis','Titulo'):'';
+  const titulo=idTitulo&&$(idTitulo)?$(idTitulo).value.trim():'';
+  const contenido=campo&&campo.value?campo.value.trim():'';
+  return 'salamangas_as_sino_v1_'+asUserKey()+'_'+asHash(idCampo+'|'+titulo+'|'+contenido);
+}
+function asLeerCuotasDia(){
+  const key='salamangas_as_dia_v1_'+asUserKey(),hoy=asFechaLocal();
+  try{const d=JSON.parse(localStorage.getItem(key)||'null');if(d&&d.fecha===hoy)return {key:key,fecha:hoy,app:Number(d.app)||0,historia:Number(d.historia)||0}}
+  catch(e){}
+  return {key:key,fecha:hoy,app:0,historia:0};
+}
+function asCuotaEstado(tipo){
+  const k=asPlanActual();if(k==='ceo')return {ilimitado:true,usadas:0,max:Infinity,restantes:Infinity};
+  if(tipo==='sinopsis'){
+    const qk=_as.quotaKey||asSinoQuotaKey();let usadas=0;
+    try{usadas=Number(localStorage.getItem(qk))||0}catch(e){}
+    return {ilimitado:false,usadas:usadas,max:3,restantes:Math.max(0,3-usadas),unidad:'intentos para esta sinopsis'};
+  }
+  const d=asLeerCuotasDia(),max=tipo==='app'?10:(k==='pro'?5:15),usadas=tipo==='app'?d.app:d.historia;
+  return {ilimitado:false,usadas:usadas,max:max,restantes:Math.max(0,max-usadas),unidad:'consultas hoy'};
+}
+function asSumarCuota(tipo){
+  if(asPlanActual()==='ceo')return;
+  if(tipo==='sinopsis'){
+    const qk=_as.quotaKey||asSinoQuotaKey();try{localStorage.setItem(qk,String(asCuotaEstado(tipo).usadas+1))}catch(e){}return;
+  }
+  const d=asLeerCuotasDia();if(tipo==='app')d.app++;else if(tipo==='historia')d.historia++;
+  try{localStorage.setItem(d.key,JSON.stringify(d))}catch(e){}
+}
+function asActualizarInfo(){
+  const e=$('asInfo');if(!e||!_as.tipo)return;
+  const q=asCuotaEstado(_as.tipo),base=_as.acc&&_as.acc.hist==='supabase'?'Tu charla se guarda sola. También podés descargarla.':'Tu charla no se guarda en la app: al cerrar se descarga un archivo. Para seguir otro día, tocá “Pegar historial” y subilo.';
+  const cuota=q.ilimitado?'Uso sin límite para la cuenta CEO.':('Te quedan '+q.restantes+' de '+q.max+' '+q.unidad+'.');
+  e.textContent=base+' '+cuota+(_as.tipo==='historia'?' Cada consulta admite hasta 500 palabras.':'');
 }
 function asLimpio(arr){
   return (Array.isArray(arr)?arr:[]).filter(m=>m&&(m.role==='user'||m.role==='assistant')&&typeof m.content==='string'&&m.content.trim()).slice(-60).map(m=>({role:m.role,content:m.content.slice(0,4000)}));
 }
 async function abrirAsistente(tipo,opts){
   if(!miPerfil){alert('Iniciá sesión para usar el asistente');return}
-  const acc=asAcceso();
-  if(!acc.ok){alert('El asistente está disponible desde Súper Mangakers Pro. ¡Mejorá tu plan para usarlo! ✨');if(typeof abrirSuscripciones==='function')abrirSuscripciones();return}
-  _as={tipo:tipo,msgs:[],campo:(opts&&opts.campo)||null,acc:acc,busy:false};
+  const acc=asAcceso(tipo);
+  if(!acc.ok){
+    const msg=tipo==='sinopsis'?'El asistente de sinopsis está disponible desde el plan Pro.':tipo==='historia'?'El asistente de historias está disponible desde el plan Pro.':'La Ayuda de SalaMangaS está disponible desde Súper Pro.';
+    alert(msg+' ¡Mejorá tu plan para usarlo! ✨');if(typeof abrirSuscripciones==='function')abrirSuscripciones();return;
+  }
+  _as={tipo:tipo,msgs:[],campo:(opts&&opts.campo)||null,acc:acc,busy:false,quotaKey:null};
+  if(tipo==='sinopsis')_as.quotaKey=asSinoQuotaKey();
+  const q=asCuotaEstado(tipo);
+  if(!q.ilimitado&&q.restantes<=0){alert(tipo==='sinopsis'?'Ya usaste los 3 intentos para esta sinopsis. Modificá la sinopsis o el título para iniciar una diferente.':'Llegaste al límite de consultas de hoy. Podés volver mañana.');return;}
   $('asTitulo').textContent=AS_TITULOS[tipo]||'Asistente';
   $('asBtnAplicar').style.display=_as.campo?'inline-block':'none';
   $('asBtnPegar').style.display=acc.hist==='archivo'?'inline-block':'none';
-  $('asInfo').textContent=acc.hist==='supabase'?'Tu charla se guarda sola y la IA se acuerda cuando vuelvas. También podés descargarla.':'Tu charla no se guarda en la app: al cerrar se descarga un archivo. Para seguir otro día, tocá "Pegar historial" y subilo.';
+  asActualizarInfo();
   if(acc.hist==='supabase'){try{const r=await sb.from('asistente_historial').select('mensajes').eq('user_id',miPerfil.id).eq('tipo',tipo).maybeSingle();if(r.data&&r.data.mensajes)_as.msgs=asLimpio(r.data.mensajes)}catch(e){}}
   asPintar();$('asist-modal').classList.add('on');
 }
@@ -4226,15 +4416,21 @@ function asContexto(){
 async function asEnviar(){
   if(_as.busy||!_as.tipo)return;
   const inp=$('asIn'),t=(inp.value||'').trim();if(!t)return;
+  const q=asCuotaEstado(_as.tipo);
+  if(!q.ilimitado&&q.restantes<=0){asActualizarInfo();alert(_as.tipo==='sinopsis'?'Ya usaste los 3 intentos para esta sinopsis.':'Llegaste al límite de consultas de hoy. Podés volver mañana.');return;}
+  if(_as.tipo==='historia'){
+    const palabras=t.split(/\s+/).filter(Boolean).length;
+    if(palabras>500){alert('La consulta de historias tiene un máximo de 500 palabras. Tu mensaje tiene '+palabras+'.');return;}
+  }
   _as.busy=true;inp.value='';_as.msgs.push({role:'user',content:t});asPintar(true);
   try{
     const tk=await iaToken();
-    const r=await fetch('/api/asistente',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({tipo:_as.tipo,mensajes:_as.msgs.slice(-14),contexto:asContexto()})});
+    const r=await fetch('/api/asistente',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({tipo:_as.tipo,mensajes:_as.msgs.slice(-14),contexto:asContexto(),limites:{maxPalabras:_as.tipo==='historia'?500:null}})});
     const j=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(j.error||'Error del servidor');
-    _as.msgs.push({role:'assistant',content:j.respuesta});asPintar();
+    _as.msgs.push({role:'assistant',content:j.respuesta});asSumarCuota(_as.tipo);asPintar();asActualizarInfo();
     await asGuardar();
-  }catch(e){_as.msgs.pop();inp.value=t;asPintar(false,e.message||String(e))}
+  }catch(e){_as.msgs.pop();inp.value=t;asPintar(false,e.message||String(e));asActualizarInfo()}
   _as.busy=false;
 }
 async function asGuardar(){
@@ -4375,18 +4571,17 @@ iniciarApp=function(){
 
   /* ---- Planes definitivos ---- */
   try{
-    PLANES_SALAMANGAS.semidios.mangas=3;
+    PLANES_SALAMANGAS.semidios.mangas=2;
     PLANES_SALAMANGAS.semidios.porcentaje=0;
     PLANES_SALAMANGAS.semidios.monetiza=false;
     PLANES_SALAMANGAS.semidios.ilimitado=true;
     PLANES_SALAMANGAS.semidios.sakuras=4000;
-    PLANES_SALAMANGAS.dios.mangas=4;
+    PLANES_SALAMANGAS.dios.mangas=2;
     PLANES_SALAMANGAS.dios.ilimitado=true;
     PLANES_SALAMANGAS.dios.sakuras=4000;
   }catch(e){}
 
-  /* Cuotas mensuales de creaciones: Semi Dios 3, Dios 4; el resto conserva
-     las cuotas existentes. */
+  /* Cuotas mensuales de capítulos conservadas; los límites de mangas del plan son 2 para Semi Dios y Dios. */
   const _limiteCapBase=limiteCapitulosGratisMensual;
   limiteCapitulosGratisMensual=function(){
     const k=planClave(miPerfil);
@@ -4489,6 +4684,7 @@ iniciarApp=function(){
   }
   let _spFotos=null; /* fotos en edición (se descartan al cancelar) */
   async function renderSocialProfile(uid){
+    window._spPerfilActualId=uid;
     const p=AUTORES[uid]||miPerfil;
     if(!p)return;
     const d=socialData(p),b=$('creBody');
@@ -4766,9 +4962,9 @@ iniciarApp=function(){
     return _cobrarPaginaBase(mangaId,pagina,yaLeida);
   };
 
-  /* ---- Donaciones: solo Mangakar Dios monetiza (100%) ---- */
+  /* ---- Donaciones: Semi Dios y Dios pueden recibir apoyo; el reparto requiere backend ---- */
   puedeMonetizar=function(perfil){
-    return !!perfil&&planClave(perfil)==='dios'&&planVigentePerfil(perfil);
+    return !!perfil&&['semidios','dios'].includes(planClave(perfil))&&planVigentePerfil(perfil);
   };
 
   /* ---- Perfil actual: la cuenta social ya no se abre desde Config ---- */
@@ -4789,6 +4985,11 @@ iniciarApp=function(){
 
 })();
 
+
+/* ===== Recarga IA: el botón "🎨 Recarga IA" llamaba a una función que no existía (error JS). Las compras de IA van por la pestaña Sakuras IA. ===== */
+window.abrirRecargaIA=function(){
+  if(typeof abrirSakuras==='function')abrirSakuras('ia');
+};
 </script>
 </body>
 </html>

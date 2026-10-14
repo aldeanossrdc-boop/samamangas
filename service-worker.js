@@ -1,101 +1,62 @@
+/* SalaMangaS Service Worker — versión 2026.10.14.3
+ * Sin caché de HTML, autenticación, Supabase ni endpoints API para evitar sesiones viejas.
+ * Para publicar cambios, incrementá CACHE_VERSION. El navegador revisa el archivo al visitar la app.
+ */
+'use strict';
+const CACHE_VERSION = 'salamangas-2026.10.14.3';
 
-/* service-worker.js — SalaMangaS
-   Versión 3: caché limitada y actualizaciones prudentes
-*/
-
-const CACHE_NAME = 'salamangas-v3';
-const PREFIJO_CACHE = 'salamangas-';
-
-// Solo archivos estáticos que está permitido guardar.
-const ARCHIVOS_CACHEABLES = [
-  '/manifest.json',
-  '/logo.png',
-  '/logo.jpg'
-];
-
-// INSTALACIÓN
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      // Cada archivo se intenta guardar por separado.
-      // Si uno no existe, no impide guardar los demás.
-      for (const ruta of ARCHIVOS_CACHEABLES) {
-        try {
-          const respuesta = await fetch(ruta);
-
-          if (respuesta.ok && respuesta.type === 'basic') {
-            await cache.put(ruta, respuesta);
-          }
-        } catch (error) {
-          // El archivo podrá descargarse cuando haya conexión.
-        }
-      }
-    })
-  );
-
-  // No forzamos la activación inmediata.
+  // Activar la versión nueva sin obligar al usuario a desinstalar la PWA.
+  self.skipWaiting();
 });
 
-// ACTIVACIÓN
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((nombres) =>
-      Promise.all(
-        nombres.map((nombre) => {
-          // Borrar únicamente cachés antiguas de SalaMangaS.
-          if (
-            nombre.startsWith(PREFIJO_CACHE) &&
-            nombre !== CACHE_NAME
-          ) {
-            return caches.delete(nombre);
-          }
-        })
-      )
-    )
-  );
-
-  // No forzamos el control inmediato de pestañas abiertas.
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter((key) => key.startsWith('salamangas-') && key !== CACHE_VERSION)
+      .map((key) => caches.delete(key)));
+    await self.clients.claim();
+  })());
 });
 
-// PETICIONES
-self.addEventListener('fetch', (event) => {
-  const solicitud = event.request;
-  const url = new URL(solicitud.url);
+// No interceptamos fetch: HTML, OAuth, Supabase y APIs siempre van por la red.
+self.addEventListener('fetch', () => {});
 
-  // No interceptar formularios ni otras peticiones que no sean GET.
-  if (solicitud.method !== 'GET') return;
-
-  // No interceptar peticiones a otros dominios.
-  if (url.origin !== self.location.origin) return;
-
-  // Las páginas HTML siempre se solicitan normalmente al servidor.
-  if (solicitud.mode === 'navigate') return;
-
-  // Solo gestionar los archivos estáticos expresamente autorizados.
-  if (!ARCHIVOS_CACHEABLES.includes(url.pathname)) return;
-
-  event.respondWith(
-    fetch(solicitud)
-      .then(async (respuesta) => {
-        // No guardar respuestas de error ni respuestas opacas.
-        if (respuesta.ok && respuesta.type === 'basic') {
-          const cache = await caches.open(CACHE_NAME);
-          await cache.put(solicitud, respuesta.clone());
-        }
-
-        return respuesta;
-      })
-      .catch(async () => {
-        // Usar la copia guardada únicamente si falla la conexión.
-        const copia = await caches.match(solicitud);
-        if (copia) return copia;
-
-        // Si no hay copia, informar que no se pudo cargar el archivo.
-        return new Response('Archivo no disponible sin conexión', {
-          status: 503,
-          headers: { 'Content-Type': 'text/plain; charset=utf-8' }
-        });
-      })
-  );
+self.addEventListener('push', (event) => {
+  let payload = {};
+  try { payload = event.data ? event.data.json() : {}; }
+  catch (_) { payload = { body: event.data ? event.data.text() : '' }; }
+  const title = payload.title || 'SalaMangaS';
+  const options = {
+    body: payload.body || payload.text || 'Tenés una nueva notificación.',
+    icon: payload.icon || '/icon-192.png',
+    badge: payload.badge || '/icon-192.png',
+    tag: payload.tag || 'salamangas-notificacion',
+    renotify: Boolean(payload.renotify),
+    data: { url: payload.url || payload.href || '/', notificationId: payload.id || null },
+    // El servidor puede enviar actions si la plataforma los admite.
+    actions: Array.isArray(payload.actions) ? payload.actions.slice(0, 2) : []
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
 });
-   
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const raw = event.notification && event.notification.data && event.notification.data.url;
+  let target;
+  try { target = new URL(raw || '/', self.location.origin); }
+  catch (_) { target = new URL('/', self.location.origin); }
+  if (target.origin !== self.location.origin) target = new URL('/', self.location.origin);
+  event.waitUntil((async () => {
+    const clientsList = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of clientsList) {
+      if ('focus' in client) {
+        if ('navigate' in client && client.url !== target.href) await client.navigate(target.href);
+        return client.focus();
+      }
+    }
+    if (self.clients.openWindow) return self.clients.openWindow(target.href);
+  })());
+});
+
+self.addEventListener('notificationclose', () => {});
