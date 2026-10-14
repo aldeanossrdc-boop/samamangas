@@ -88,8 +88,9 @@ const ESTILO_PHOENIX = {
   noir: '621e1c9a-6319-4bee-a12d-ae40659162fa'      // Moody
 };
 const ANCHO = 832, ALTO = 1248; // formato VERTICAL 2:3 FIJO para toda la app (nadie lo puede cambiar)
-// Imágenes por generación: Lápiz = 1 (ya hay un dibujo hecho) · SalaMangaS IA = 2 (el usuario elige)
-export const cantidadPorModo = modo => (modo === 'lapiz' ? 1 : 2);
+// Imágenes por generación: 1 en ambos modos. La app muestra UNA sola imagen (pide "UNA SOLA imagen" y usa slice(0,1)),
+// así que generar 2 era pagar el doble en DeepInfra/Leonardo por una imagen que nadie veía.
+export const cantidadPorModo = () => 1;
 
 function extraerError(j, status) {
   const m = Array.isArray(j) ? (j[0] && (j[0].message || j[0].error)) : (j && (j.error || j.message || (j.errors && j.errors[0] && j.errors[0].message)));

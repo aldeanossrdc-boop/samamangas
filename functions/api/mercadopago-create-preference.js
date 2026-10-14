@@ -2,6 +2,7 @@
 import { out, verifyUser, siteUrl, NOMBRE_PLAN, PRECIOS_PLANES_ARS,
          CANT_SAKURAS, PRECIOS_SAKURAS_ARS, MANGA_EXTRA_ARS,
          CANT_SAKURAS_IA, PRECIOS_SAKURAS_IA_ARS } from './_shared.js';
+import { own } from './_pagos.js';
 
 export async function onRequestPost({ request, env }) {
   const token = env.MP_ACCESS_TOKEN;
@@ -15,7 +16,7 @@ export async function onRequestPost({ request, env }) {
     const { tipo, item, creador, manga_id } = await request.json().catch(() => ({}));
 
     if (tipo === 'sakuras') {
-      const precio = PRECIOS_SAKURAS_ARS[item];
+      const precio = own(PRECIOS_SAKURAS_ARS, item) ? PRECIOS_SAKURAS_ARS[item] : 0;
       if (!precio) return out(400, { error: 'Pack de sakuras inválido' });
       const j = await crearPreferencia(token, SITE_URL, 'SalaMangaS — ' + CANT_SAKURAS[item] + ' Sakuras', precio,
         JSON.stringify({ user_id: user.id, tipo, item }));
@@ -23,7 +24,7 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (tipo === 'sakuras_ia') {
-      const precio = PRECIOS_SAKURAS_IA_ARS[String(item)];
+      const precio = own(PRECIOS_SAKURAS_IA_ARS, item) ? PRECIOS_SAKURAS_IA_ARS[String(item)] : 0;
       if (!precio) return out(400, { error: 'Pack de Sakuras IA inválido' });
       const j = await crearPreferencia(token, SITE_URL, 'SalaMangaS — ' + CANT_SAKURAS_IA[String(item)] + ' Sakuras IA', precio,
         JSON.stringify({ user_id: user.id, tipo, item: String(item) }));
@@ -31,7 +32,7 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (tipo === 'plan') {
-      const precio = PRECIOS_PLANES_ARS[item];
+      const precio = own(PRECIOS_PLANES_ARS, item) ? PRECIOS_PLANES_ARS[item] : 0;
       if (!precio) return out(400, { error: 'Plan inválido' });
       const r = await fetch('https://api.mercadopago.com/preapproval', {
         method: 'POST',

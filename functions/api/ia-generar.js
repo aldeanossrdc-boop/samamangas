@@ -1,9 +1,9 @@
 // functions/api/ia-generar.js — POST /api/ia-generar
 // 1) verifica quién es, 2) filtra el contenido (solo usuarios comunes), 3) descuenta 1 generación (en la base),
-// 4) SalaMangaS IA -> DeepInfra (Qwen-Image o FLUX Kontext, lo elige el CEO), 2 imágenes verticales 832x1248.
+// 4) SalaMangaS IA -> DeepInfra (Qwen-Image o FLUX Kontext, lo elige el CEO), 1 imagen vertical 832x1248.
 //    Lápiz -> Leonardo primero (1 imagen); cuando Leonardo está en 0 pasa SOLO a Qwen-Image-Edit (DeepInfra).
 // 5) si algo falla, DEVUELVE la generación. El CEO siempre puede generar y no gasta nada.
-import { out } from './_shared.js';
+import { out, getServiceClient } from './_shared.js';
 import { IAError, usuarioIA, iaActiva, modeloIA, modeloEscena, rpcUsuario, subirReferencia, crearGeneracion, cantidadPorModo } from './_ia.js';
 import { diDisponible, diModelo, diImagenes, diEditar } from './_deepinfra.js';
 import { filtrar } from './_filtro.js';
@@ -45,7 +45,9 @@ export async function onRequestPost({ request, env }) {
 
     // ---- SalaMangaS IA: DeepInfra (el CEO elige Qwen-Image o FLUX Kontext) ----
     if (modo === 'ia') {
-      const escena = await modeloEscena(env);
+      let escena = await modeloEscena(env);
+      // FLUX Kontext es un modelo de EDICIÓN: exige imagen de entrada y falla en texto→imagen. Sin imagen, se usa Qwen-Image.
+      if (escena === 'kontext') { console.warn('ia_modelo_escena=kontext no sirve para texto→imagen: se usa qwen'); escena = 'qwen'; }
       const imagenes = await diImagenes(env, { modelo: diModelo(env, escena), prompt, w: ANCHO, h: ALTO, n: cantidadPorModo('ia') });
       return out(200, { ok: true, sync: true, imagenes, motor: 'deepinfra-' + escena, cantidad: imagenes.length });
     }
@@ -58,6 +60,13 @@ export async function onRequestPost({ request, env }) {
         const modelo = await modeloIA(env);
         const cantidad = cantidadPorModo(modo);
         const { id, motor } = await crearGeneracion(env, { prompt, estilo, modelo, dibujoId, personajeId, cantidad });
+        // Se anota quién pagó esta generación: si Leonardo falla después (ia-estado.js), se devuelve UNA sola vez.
+        if (consumida) {
+          try {
+            const { error } = await getServiceClient(env).from('ia_generaciones').insert({ id, user_id: ctx.user.id });
+            if (error) console.error('ia_generaciones insert:', error.message);
+          } catch (e2) { console.error('ia_generaciones:', e2.message); }
+        }
         return out(200, { ok: true, id, motor, cantidad });
       } catch (e) {
         const puedeRespaldo = e instanceof IAError && (e.codigo === 'sin_saldo_ia' || e.status >= 500) && diDisponible(env);

@@ -9,17 +9,17 @@ export const diDisponible = env => !!env.DEEPINFRA_API_KEY;
 export const diModelo = (env, cual) => ({
   personaje: env.DI_MODELO_PERSONAJE || 'black-forest-labs/FLUX-1-schnell',  // Crear personaje (~US$0,0005)
   qwen:      env.DI_MODELO_QWEN      || 'Qwen/Qwen-Image',                   // SalaMangaS IA (barato)
-  kontext:   env.DI_MODELO_KONTEXT   || 'black-forest-labs/FLUX.1-Kontext-dev', // SalaMangaS IA (menos filtros)
+  kontext:   env.DI_MODELO_KONTEXT   || 'black-forest-labs/FLUX.1-Kontext-dev', // OJO: Kontext es de EDICIÓN (necesita imagen de entrada); no sirve para texto→imagen
   edit:      env.DI_MODELO_EDIT      || 'Qwen/Qwen-Image-Edit',              // Lápiz cuando Leonardo está en 0
   chat:      env.DI_MODELO_CHAT      || 'deepseek-ai/DeepSeek-V4-Flash'      // Asistentes
 })[cual];
 
 function errorDI(status, txt) {
   const t = String(txt || '').toLowerCase();
-  if (status === 402 || /insufficient|balance|payment|credit|quota/.test(t)) return new IAError('La IA no está disponible en este momento. Avisale al equipo de SalaMangaS.', 503, 'sin_saldo_ia');
-  if (/nsfw|safety|moderat|policy|content|blocked|prohibit/.test(t)) return new IAError('La IA no aceptó este pedido (contenido no permitido). Probá describirlo de otra forma.', 400, 'contenido');
-  if (status === 429) return new IAError('Hay mucha gente usando la IA. Probá de nuevo en un minuto.', 429);
   if (status === 401 || status === 403) return new IAError('La IA no está bien configurada (revisar DEEPINFRA_API_KEY).', 503, 'config');
+  if (status === 402 || /insufficient|balance|payment|credit|quota/.test(t)) return new IAError('La IA no está disponible en este momento. Avisale al equipo de SalaMangaS.', 503, 'sin_saldo_ia');
+  if (/nsfw|safety|moderat|policy|blocked|prohibit|not allowed/.test(t)) return new IAError('La IA no aceptó este pedido (contenido no permitido). Probá describirlo de otra forma.', 400, 'contenido');
+  if (status === 429) return new IAError('Hay mucha gente usando la IA. Probá de nuevo en un minuto.', 429);
   return new IAError('La IA no pudo crear la imagen. Probá de nuevo.', 502);
 }
 

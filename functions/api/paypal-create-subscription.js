@@ -1,6 +1,7 @@
 // functions/api/paypal-create-subscription.js
 import { out, verifyUser, siteUrl, paypalBase, getPaypalToken,
          NOMBRE_PLAN, PRECIOS_PLANES_USD, precioUSD } from './_shared.js';
+import { own } from './_pagos.js';
 
 export async function onRequestPost({ request, env }) {
   try {
@@ -8,9 +9,10 @@ export async function onRequestPost({ request, env }) {
     if (!user) return out(401, { error: 'Sesión inválida. Volvé a iniciar sesión.' });
 
     const { item } = await request.json().catch(() => ({}));
-    if (!PRECIOS_PLANES_USD[item]) return out(400, { error: 'Plan inválido' });
+    if (!own(PRECIOS_PLANES_USD, item)) return out(400, { error: 'Plan inválido' });
 
-    const precio = await precioUSD(env, 'precio_usd_' + item, PRECIOS_PLANES_USD[item]);
+    const precioCfg = Number(await precioUSD(env, 'precio_usd_' + item, PRECIOS_PLANES_USD[item]));
+    const precio = (precioCfg > 0 ? precioCfg : Number(PRECIOS_PLANES_USD[item])).toFixed(2);   // PayPal pide texto con 2 decimales
     const token = await getPaypalToken(env);
     const authHdr = { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token };
     const base = paypalBase(env);
