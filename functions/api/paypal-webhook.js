@@ -3,7 +3,7 @@
 // si la captura ya estaba hecha (reintento) igual se acredita; se revisan los errores de la base y se responde 500
 // para que PayPal reintente si algo falla; si falta PAYPAL_WEBHOOK_ID ahora queda registrado en el log.
 import { out, getServiceClient, paypalBase, getPaypalToken, CANT_SAKURAS, CANT_SAKURAS_IA } from './_shared.js';
-import { own, chk, reclamar, liberar, otorgarPlan, detallePago } from './_pagos.js';
+import { own, chk, reclamar, liberar, otorgarPlan, detallePago, pctCreadorDonacion } from './_pagos.js';
 import { notificarPago } from './_notificar-pago.js';
 
 export async function onRequestPost({ request, env }) {
@@ -67,11 +67,7 @@ export async function onRequestPost({ request, env }) {
 
         } else if (ref.tipo === 'donacion') {
           const { data: donante } = await sb.from('profiles').select('username').eq('id', ref.user_id).maybeSingle();
-          const { data: creador } = await sb.from('profiles').select('username,tier').eq('id', ref.creador).maybeSingle();
-          // Reparto: Pro = 20% creador · Súper Pro = 50% · el resto 0% (ver nota: Mercado Pago usa otro reparto)
-          let pctCreador = 0;
-          if (creador && creador.tier === 'pro') pctCreador = 0.20;
-          else if (creador && creador.tier === 'superpro') pctCreador = 0.50;
+          const { creador, pct: pctCreador } = await pctCreadorDonacion(sb, ref.creador);   // Pro 50% · Súper Pro 100% · resto 0%
           const montoCreador = Math.round(Number(ref.monto_ars || 0) * pctCreador);
           chk(await sb.from('donaciones').insert({
             donante: (donante && donante.username) || 'Usuario',

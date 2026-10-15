@@ -52,3 +52,16 @@ export function detallePago(ref) {
   if (ref.tipo === 'manga_extra') return 'Manga extra';
   return 'Pago';
 }
+
+// Reparto de donaciones (decisión del CEO): Pro 50% al creador · Súper Pro 100% · Semi Dios 0% · Dios 0% · Gratis 0%.
+// El resto se lo queda el CEO. Cuenta solo si el plan del creador está vigente.
+export async function pctCreadorDonacion(sb, creadorId) {
+  const { data: c } = await sb.from('profiles').select('username,tier,tier_hasta,creador_gratis,vence_gratis').eq('id', creadorId).maybeSingle();
+  if (!c) return { creador: null, pct: 0 };
+  const ahora = new Date();
+  const vigente = c.tier && c.tier !== 'gratis'
+    && !(c.tier_hasta && new Date(c.tier_hasta) < ahora)
+    && !(c.creador_gratis && c.vence_gratis && new Date(c.vence_gratis) < ahora);
+  const tabla = { pro: 0.5, superpro: 1 };
+  return { creador: c, pct: vigente && own(tabla, c.tier) ? tabla[c.tier] : 0 };
+}

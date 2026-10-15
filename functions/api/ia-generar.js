@@ -79,7 +79,7 @@ export async function onRequestPost({ request, env }) {
     return out(200, { ok: true, sync: true, imagenes: [img], motor: 'deepinfra-edit', cantidad: 1 });
   } catch (e) {
     let devuelta = false;
-    if (consumida && ctx) { try { await rpcUsuario(env, ctx.token, 'devolver_generacion_ia', {}); devuelta = true; } catch (e2) { console.error('No se pudo devolver la generación:', e2.message); } }
+    if (consumida && ctx) { try { const { error: er } = await getServiceClient(env).rpc('devolver_generacion_ia_srv', { p_uid: ctx.user.id }); if (er) throw new Error(er.message); devuelta = true; } catch (e2) { console.error('No se pudo devolver la generación:', e2.message); } }
     const status = e instanceof IAError ? e.status : 500;
     return out(status, { error: (e instanceof IAError ? e.message : 'No se pudo generar. Probá de nuevo.') + (devuelta ? ' No se te descontó la generación.' : ''), codigo: e.codigo || '', devuelta });
   }

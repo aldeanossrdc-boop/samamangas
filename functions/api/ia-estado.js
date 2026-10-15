@@ -5,13 +5,13 @@
 // repetir para regalarse generaciones). Ahora se devuelve solo si ese usuario la pagó (tabla ia_generaciones)
 // y una única vez. Requiere correr sql/ia_generaciones.sql.
 import { out, getServiceClient } from './_shared.js';
-import { IAError, usuarioIA, rpcUsuario, consultarGeneracion } from './_ia.js';
+import { IAError, usuarioIA, consultarGeneracion } from './_ia.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 async function devolverUnaVez(env, ctx, id) {
   if (ctx.esCeo) return false;                                   // el CEO no gasta: no hay nada que devolver
-  const devolver = async () => { try { await rpcUsuario(env, ctx.token, 'devolver_generacion_ia', {}); return true; } catch (e) { console.error('devolver:', e.message); return false; } };
+  const devolver = async () => { try { const { error: er } = await getServiceClient(env).rpc('devolver_generacion_ia_srv', { p_uid: ctx.user.id }); if (er) throw new Error(er.message); return true; } catch (e) { console.error('devolver:', e.message); return false; } };
   let sb;
   try { sb = getServiceClient(env); } catch (e) { console.error('ia-estado sin service key:', e.message); return false; }
   try {

@@ -3,7 +3,7 @@
 // Cambios: cada pago se acredita UNA vez (pagos_procesados), el plan no se suma doble, se revisan los errores
 // de la base y, si algo falla, se responde 500 para que Mercado Pago reintente (antes el pago se perdía en silencio).
 import { out, getServiceClient, CANT_SAKURAS, CANT_SAKURAS_IA } from './_shared.js';
-import { own, chk, reclamar, liberar, otorgarPlan, detallePago } from './_pagos.js';
+import { own, chk, reclamar, liberar, otorgarPlan, detallePago, pctCreadorDonacion } from './_pagos.js';
 import { notificarPago } from './_notificar-pago.js';
 
 export async function onRequestPost({ request, env }) {
@@ -48,8 +48,7 @@ export async function onRequestPost({ request, env }) {
 
         } else if (ref.tipo === 'donacion') {
           const { data: donante } = await sb.from('profiles').select('username').eq('id', ref.user_id).maybeSingle();
-          const { data: creador } = await sb.from('profiles').select('username,tier').eq('id', ref.creador).maybeSingle();
-          const pctComision = creador && (creador.tier === 'pro' || creador.tier === 'superpro') ? 0.5 : 0.2;   // (ver nota: PayPal usa otro reparto)
+          const { creador, pct: pctComision } = await pctCreadorDonacion(sb, ref.creador);   // Pro 50% · Súper Pro 100% · resto 0%
           const montoCreador = Math.round(Number(pago.transaction_amount || 0) * pctComision);
           chk(await sb.from('donaciones').insert({
             donante: (donante && donante.username) || 'Usuario', creador: (creador && creador.username) || ref.creador,
