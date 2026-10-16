@@ -4,7 +4,7 @@
 //    Lápiz -> Leonardo primero (1 imagen); cuando Leonardo está en 0 pasa SOLO a Qwen-Image-Edit (DeepInfra).
 // 5) si algo falla, DEVUELVE la generación. El CEO siempre puede generar y no gasta nada.
 import { out, getServiceClient } from './_shared.js';
-import { IAError, usuarioIA, iaActiva, modeloIA, modeloEscena, rpcUsuario, subirReferencia, crearGeneracion, cantidadPorModo } from './_ia.js';
+import { IAError, usuarioIA, iaActiva, modeloIA, modeloEscena, rpcUsuario, subirReferencia, crearGeneracion, cantidadPorModo, directivaColor } from './_ia.js';
 import { diDisponible, diModelo, diImagenes, diEditar } from './_deepinfra.js';
 import { filtrar } from './_filtro.js';
 
@@ -21,8 +21,13 @@ export async function onRequestPost({ request, env }) {
     if (!ctx.esCeo && !(await iaActiva(env))) return out(503, { error: 'La IA está desactivada por ahora. Volvé a probar más tarde.', codigo: 'ia_desactivada' });
 
     const fd = await request.formData();
-    const prompt = String(fd.get('prompt') || '').trim().slice(0, 1800);
-    if (prompt.length < 3) return out(400, { error: 'Escribí una instrucción para la IA' });
+    const promptUsuario = String(fd.get('prompt') || '').trim().slice(0, 1650);
+    if (promptUsuario.length < 3) return out(400, { error: 'Escribí una instrucción para la IA' });
+    const colorModo = ['B/N', 'Color'].includes(String(fd.get('color_modo'))) ? String(fd.get('color_modo')) : '';
+    const fidelidad = ['fiel', 'equilibrado', 'libre'].includes(String(fd.get('fidelidad'))) ? String(fd.get('fidelidad')) : 'equilibrado';
+    // La orden de color va al principio y al final: los modelos la obedecen mucho más así.
+    const dirColor = directivaColor(colorModo);
+    const prompt = dirColor ? (dirColor + ' ' + promptUsuario + ' ' + dirColor) : promptUsuario;
     const modo = fd.get('modo') === 'lapiz' ? 'lapiz' : 'ia';
     const estilo = String(fd.get('estilo') || 'clasico');
     let dibujo = fd.get('dibujo'), personaje = fd.get('personaje');
@@ -33,7 +38,7 @@ export async function onRequestPost({ request, env }) {
     if (modo === 'ia' && !diDisponible(env)) return out(503, { error: 'SalaMangaS IA todavía no está disponible.', codigo: 'ia_pausada' });
 
     // Lista negra: SOLO usuarios comunes (el CEO verificado queda exento)
-    const bloqueo = await filtrar(env, ctx, prompt);
+    const bloqueo = await filtrar(env, ctx, promptUsuario);
     if (bloqueo) return out(400, { error: bloqueo, codigo: 'filtro' });
 
     // COBRAR (el CEO no gasta). Si no tiene generaciones, la base devuelve -1.
@@ -59,7 +64,7 @@ export async function onRequestPost({ request, env }) {
         const personajeId = personaje ? await subirReferencia(env, personaje) : null;
         const modelo = await modeloIA(env);
         const cantidad = cantidadPorModo(modo);
-        const { id, motor } = await crearGeneracion(env, { prompt, estilo, modelo, dibujoId, personajeId, cantidad });
+        const { id, motor } = await crearGeneracion(env, { prompt, estilo, modelo, dibujoId, personajeId, cantidad, colorModo, fidelidad });
         // Se anota quién pagó esta generación: si Leonardo falla después (ia-estado.js), se devuelve UNA sola vez.
         if (consumida) {
           try {

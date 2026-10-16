@@ -87,6 +87,17 @@ const ESTILO_PHOENIX = {
   realista: 'a5632c7c-ddbb-4e2f-ba34-8456ab3ac436', // Cinematic
   noir: '621e1c9a-6319-4bee-a12d-ae40659162fa'      // Moody
 };
+const PRO_BW = '22a9a7d2-2166-4d86-80ff-22e2643adbcf'; // Phoenix "Pro B&W photography"
+const NEG_BN    = NEG + ', color, colorful, colored, saturated, tinted';
+const NEG_COLOR = NEG + ', monochrome, grayscale, black and white, desaturated';
+const FUERZA = { fiel: 'HIGH', equilibrado: 'MID', libre: 'LOW' };
+
+// Instrucción de color (en inglés: los modelos la obedecen mucho mejor). Se pone al principio Y al final del pedido.
+export function directivaColor(colorModo) {
+  if (colorModo === 'Color') return 'FULL COLOR artwork, rich vibrant colors, everything fully colored, NOT black and white, NOT monochrome.';
+  if (colorModo === 'B/N')   return 'BLACK AND WHITE manga artwork, monochrome ink and screentones, grayscale only, absolutely no color.';
+  return '';
+}
 const ANCHO = 832, ALTO = 1248; // formato VERTICAL 2:3 FIJO para toda la app (nadie lo puede cambiar)
 // Imágenes por generación: 1 en ambos modos. La app muestra UNA sola imagen (pide "UNA SOLA imagen" y usa slice(0,1)),
 // así que generar 2 era pagar el doble en DeepInfra/Leonardo por una imagen que nadie veía.
@@ -108,22 +119,30 @@ function extraerId(j) {
 // Crea la generación. Devuelve { id, motor }
 //  • modelo 'flux-schnell' (lo elige el CEO en el panel) -> FLUX Schnell para toda la app
 //  • modelo 'phoenix' (por defecto)                      -> Phoenix 1.0; solo el estilo "Anime" usa Anime XL
-export async function crearGeneracion(env, { prompt, estilo, modelo, dibujoId, personajeId, cantidad }) {
+export async function crearGeneracion(env, { prompt, estilo, modelo, dibujoId, personajeId, cantidad, colorModo = '', fidelidad = 'equilibrado' }) {
   let url, body, motor;
+  const fuerza = FUERZA[fidelidad] || 'MID';
+  const neg = colorModo === 'B/N' ? NEG_BN : colorModo === 'Color' ? NEG_COLOR : NEG;
   if (modelo === 'flux-schnell') {
     motor = 'flux-schnell'; url = LEO_V2 + '/generations';
     const p = { width: ANCHO, height: ALTO, prompt, quantity: cantidad, style_ids: [estilo === 'anime' ? 'b2a54a51-230b-4d4f-ad4e-8409bf58645f' : ILUSTRACION] };
-    if (dibujoId) p.guidances = { content: [{ image: { id: dibujoId, type: 'UPLOADED' }, strength: 'HIGH' }] };
+    if (dibujoId) p.guidances = { content: [{ image: { id: dibujoId, type: 'UPLOADED' }, strength: fuerza }] };
     body = { model: 'flux-schnell', parameters: p, public: false };
   } else if (estilo === 'anime') {
     motor = 'anime-xl'; url = LEO_V1 + '/generations';
-    body = { prompt, modelId: ANIME_XL, num_images: cantidad, width: ANCHO, height: ALTO, negative_prompt: NEG, public: false };
+    body = { prompt, modelId: ANIME_XL, num_images: cantidad, width: ANCHO, height: ALTO, negative_prompt: neg, public: false };
     if (dibujoId) { body.init_image_id = dibujoId; body.init_strength = 0.5; }
   } else {
     motor = 'phoenix-1.0'; url = LEO_V2 + '/generations';
-    const p = { mode: 'FAST', contrast: 'MEDIUM', width: ANCHO, height: ALTO, prompt, quantity: cantidad, negative_prompt: NEG, style_ids: [ESTILO_PHOENIX[estilo] || ILUSTRACION] };
+    // En blanco y negro se evitan los estilos con "etapa de color" (Cinematic/Moody): tiñen la imagen.
+    let sid = ESTILO_PHOENIX[estilo] || ILUSTRACION;
+    if (colorModo === 'B/N') sid = estilo === 'realista' ? PRO_BW : ILUSTRACION;
+    // prompt_enhance OFF: Leonardo ya NO reescribe lo que escribe el usuario (antes lo "mejoraba" y se perdía la descripción).
+    const p = { mode: 'FAST', contrast: 'MEDIUM', width: ANCHO, height: ALTO, prompt, prompt_enhance: 'OFF', quantity: cantidad, negative_prompt: neg, style_ids: [sid] };
     const g = {};
-    if (dibujoId) g.image_to_image = [{ image: { id: dibujoId, type: 'UPLOADED' }, strength: 'HIGH' }];
+    // Antes: image_to_image en HIGH = copiaba el dibujo casi tal cual (colores y descripción ignorados).
+    // Ahora: "content" mantiene la forma/composición pero deja que el color y la descripción manden.
+    if (dibujoId) g.content = [{ image: { id: dibujoId, type: 'UPLOADED' }, strength: fuerza }];
     if (personajeId) g.character = [{ image: { id: personajeId, type: 'UPLOADED' }, strength: 'MID' }];
     if (Object.keys(g).length) p.guidances = g;
     body = { model: 'phoenix-v1.0', parameters: p, public: false };
