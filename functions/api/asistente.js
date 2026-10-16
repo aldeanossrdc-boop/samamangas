@@ -2,7 +2,7 @@
 // UNA sola IA (DeepSeek V4 vía DeepInfra) con 3 personalidades. Solo Súper Pro, Semi Dios y Dios (y el CEO).
 import { out } from './_shared.js';
 import { IAError, usuarioIA, rpcUsuario } from './_ia.js';
-import { diDisponible, diChat } from './_deepinfra.js';
+import { motorActivo, motorChat } from './_motor.js';
 import { filtrar } from './_filtro.js';
 
 const BASE = 'Hablás en español rioplatense (criollo), con calidez y claridad. Respuestas cortas y útiles (máximo ~150 palabras salvo que pidan más). No inventes datos. No generes contenido sexual, ni nada sexual con menores, ni violencia extrema.';
@@ -29,7 +29,7 @@ export async function onRequestPost({ request, env }) {
   try {
     const ctx = await usuarioIA(request, env);
     if (!ctx) return out(401, { error: 'Iniciá sesión para usar el asistente' });
-    if (!diDisponible(env)) return out(503, { error: 'El asistente todavía no está disponible.' });
+    if (!motorActivo(env)) return out(503, { error: 'El asistente todavía no está disponible.' });
     const b = await request.json().catch(() => ({}));
     const tipo = SYSTEMS[b.tipo] ? b.tipo : null;
     if (!tipo) return out(400, { error: 'Asistente inválido' });
@@ -46,7 +46,7 @@ export async function onRequestPost({ request, env }) {
     }
     const contexto = String(b.contexto || '').trim().slice(0, 800);
     const system = SYSTEMS[tipo] + (contexto ? '\n\nContexto actual del usuario: ' + contexto : '');
-    const respuesta = await diChat(env, { system, mensajes, max_tokens: tipo === 'app' ? 500 : 700 });
+    const respuesta = await motorChat(env, { system, mensajes, max_tokens: tipo === 'app' ? 500 : 700 });
     return out(200, { ok: true, respuesta });
   } catch (e) {
     return out(e instanceof IAError ? e.status : 500, { error: e instanceof IAError ? e.message : 'El asistente no pudo responder. Probá de nuevo.', codigo: e.codigo || '' });

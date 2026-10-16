@@ -1,12 +1,12 @@
 // functions/api/ia-generar.js  ·  POST /api/ia-generar  (multipart)
 // 1) verifica quién es · 2) IA encendida (solo usuarios comunes) · 3) filtra el contenido (solo usuarios comunes)
-// 4) descuenta 1 generación (en la base; el CEO no gasta) · 5) genera con DeepInfra:
+// 4) descuenta 1 generación (en la base; el CEO no gasta) · 5) genera con Fal.ai (o DeepInfra si no hay FAL_KEY):
 //      SalaMangaS IA -> texto→imagen (Qwen-Image; el CEO puede elegir FLUX Kontext, que sin imagen se cambia a Qwen)
 //      Lápiz         -> EDITA tu dibujo (Qwen-Image-Edit): mantiene el personaje y aplica lo que pedís (color, pelo, ropa, fondo)
 // 6) si algo falla, el SERVIDOR devuelve la generación. Leonardo ya NO se usa acá (solo para crear personajes).
 import { out, getServiceClient } from './_shared.js';
 import { IAError, usuarioIA, iaActiva, modeloEscena, rpcUsuario, cantidadPorModo, directivaColor } from './_ia.js';
-import { diDisponible, diModelo, diImagenes, diEditar } from './_deepinfra.js';
+import { motorActivo, motorImagenes, motorEditar } from './_motor.js';
 import { filtrar } from './_filtro.js';
 
 const MAX_ARCHIVO = 8 * 1024 * 1024; // 8 MB (la app ya achica la imagen antes de mandarla)
@@ -18,9 +18,9 @@ export async function onRequestPost({ request, env }) {
   try {
     ctx = await usuarioIA(request, env);
     if (!ctx) return out(401, { error: 'Iniciá sesión para usar la IA' });
-    if (!diDisponible(env)) {
-      console.error('Falta DEEPINFRA_API_KEY en las variables de Cloudflare (Production)');
-      return out(503, { error: ctx.esCeo ? 'Falta cargar DEEPINFRA_API_KEY en Cloudflare (Settings → Variables and Secrets → Production) y volver a publicar.' : 'SalaMangaS IA todavía no está disponible.', codigo: 'ia_pausada' });
+    if (!motorActivo(env)) {
+      console.error('Falta FAL_KEY (o DEEPINFRA_API_KEY) en las variables de Cloudflare (Production)');
+      return out(503, { error: ctx.esCeo ? 'Falta cargar FAL_KEY en Cloudflare (Settings → Variables and Secrets → Production) y volver a publicar.' : 'SalaMangaS IA todavía no está disponible.', codigo: 'ia_pausada' });
     }
     if (!ctx.esCeo && !(await iaActiva(env))) return out(503, { error: 'La IA está desactivada por ahora. Volvé a probar más tarde.', codigo: 'ia_desactivada' });
 
@@ -54,14 +54,14 @@ export async function onRequestPost({ request, env }) {
       let escena = await modeloEscena(env);
       // FLUX Kontext es un modelo de EDICIÓN: exige imagen de entrada y falla en texto→imagen. Sin imagen, se usa Qwen-Image.
       if (escena === 'kontext') { console.warn('ia_modelo_escena=kontext no sirve para texto→imagen: se usa qwen'); escena = 'qwen'; }
-      const imagenes = await diImagenes(env, { modelo: diModelo(env, escena), prompt, w: ANCHO, h: ALTO, n: cantidadPorModo('ia') });
-      return out(200, { ok: true, sync: true, imagenes, motor: 'deepinfra-' + escena, cantidad: imagenes.length });
+      const { imagenes, motor } = await motorImagenes(env, { escena, prompt, w: ANCHO, h: ALTO, n: cantidadPorModo('ia'), colorModo, seguro: !ctx.esCeo });
+      return out(200, { ok: true, sync: true, imagenes, motor, cantidad: imagenes.length });
     }
 
     // ---- Lápiz: EDITA el dibujo con Qwen-Image-Edit ----
     const promptEdicion = 'Redraw the attached reference image as a finished manga illustration. KEEP the same character: same face, expression, hairstyle shape, pose, camera angle and composition. Apply ONLY the changes and details requested below; everything else stays the same as the reference. Requested changes and details: ' + promptUsuario + (dirColor ? ' ' + dirColor : '');
-    const img = await diEditar(env, { prompt: promptEdicion, archivo: dibujo, w: ANCHO, h: ALTO });
-    return out(200, { ok: true, sync: true, imagenes: [img], motor: 'deepinfra-edit', cantidad: 1 });
+    const { imagen, motor } = await motorEditar(env, { prompt: promptEdicion, archivo: dibujo, w: ANCHO, h: ALTO, seguro: !ctx.esCeo });
+    return out(200, { ok: true, sync: true, imagenes: [imagen], motor, cantidad: 1 });
   } catch (e) {
     let devuelta = false;
     if (consumida && ctx) {
