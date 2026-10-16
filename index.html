@@ -754,6 +754,18 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .color-modes{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0 12px}
 .ia-vinetas{padding:10px;margin:10px 0;border:1px solid rgba(212,175,55,.28);border-radius:12px;background:rgba(0,0,0,.12)}
 .ia-vinetas .input{margin-bottom:8px}
+
+.tn-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
+.tn-sec{font-family:'Cinzel',serif;color:var(--gold);font-size:13px;margin:16px 0 8px;letter-spacing:.5px}
+.tn-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tn-card{background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.22);border-radius:12px;padding:8px;font-size:11px;line-height:1.35;display:flex;flex-direction:column;gap:5px}
+.tn-img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:9px;background:rgba(0,0,0,.3);display:block}
+.tn-nom{font-weight:700;font-size:12px;color:var(--text)}
+.tn-desc{color:var(--text2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tn-precios{display:flex;gap:5px;flex-wrap:wrap}
+.tn-btn{flex:1;min-width:0;border:0;border-radius:8px;padding:6px 4px;font-size:11px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#ffd45c,#ffb300);color:#241a00}
+.tn-btn.ia{background:linear-gradient(135deg,#7f6bff,#5b4bd6);color:#fff}
+.tn-btn.ok{background:rgba(255,255,255,.1);color:var(--text2);cursor:default}
 .ia-cell{position:relative}
 .ia-cell:after{content:'SalaMangaS IA';position:absolute;right:7px;top:7px;font-size:9px;letter-spacing:.3px;padding:3px 5px;border-radius:5px;color:#fff;background:rgba(20,10,35,.62);pointer-events:none}
 .create-opt .ico{font-size:23px!important}
@@ -844,7 +856,7 @@ Entrar con Google
 <b id="nav-inicio" class="on" onclick="go('inicio')" data-i18n="nav_inicio">🏠 Inicio</b>
 <b id="nav-chat" onclick="abrirChat()" data-i18n="nav_chat">💬 Chat</b>
 <b onclick="abrirConfig()" data-i18n="nav_config">⚙️ Config</b>
-<b id="nav-donar" onclick="abrirDonar()" data-i18n="nav_donar">💖 Donar</b>
+<b id="nav-tienda" onclick="abrirTienda()">🛍️ Tienda</b>
 <b id="nav-ceo" onclick="window.location.href='/sala-ceo.html'" data-i18n="nav_ceo" style="color:#ff4757;border-color:#ff4757;display:none">🔑 CEO</b>
 </div>
 <div id="screen-inicio" class="screen on">
@@ -1199,12 +1211,19 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <label class="lbl">🖼️ Imágenes de referencia (opcional)</label>
 <input id="iaRefInput" class="input" type="file" accept="image/*" multiple>
 <label class="lbl">👥 Personajes (opcional)</label><div id="iaPjs"></div>
-<div id="iaFidBox" style="display:none"><label class="lbl">🎯 Fidelidad al dibujo</label><div id="iaFid" class="color-modes"><button type="button" class="chip" data-fid="fiel">Fiel</button><button type="button" class="chip on" data-fid="equilibrado">Equilibrado</button><button type="button" class="chip" data-fid="libre">Libre</button></div><p class="subtitle" style="margin:4px 0 10px">Fiel: copia tu dibujo casi igual. Libre: la IA se anima a cambiar más. Si no te hace caso con los colores o la descripción, probá Libre.</p></div>
 <div id="iaLayoutBox"><label class="lbl">🧩 Distribución de viñetas (opcional)</label><div id="iaLayouts" class="color-modes"><button type="button" class="chip" data-lay="pagina">Página completa</button><button type="button" class="chip" data-lay="h2">2 viñetas</button><button type="button" class="chip" data-lay="h3">3 viñetas</button><button type="button" class="chip" data-lay="g4">4 cuadros (2×2)</button><button type="button" class="chip" data-lay="g6">6 cuadros (2×3)</button><button type="button" class="chip" data-lay="l12">1 grande + 2 abajo</button><button type="button" class="chip" data-lay="l21">2 arriba + 1 grande</button><button type="button" class="chip" data-lay="dina">Dinámica (5)</button></div><p class="subtitle" style="margin:4px 0 10px">Tocá una para elegirla y de nuevo para sacarla. Si tu dibujo a lápiz ya tiene viñetas, dejalo sin elegir.</p></div>
 <div id="iaVinetasBox" class="ia-vinetas" style="display:none"><h3 class="section">🎬 Diseño de viñetas · Súper Pro en adelante</h3><p class="subtitle" style="margin:0 0 8px">Elegí una opción o escribí cualquier indicación.</p><label class="lbl">Encuadre</label><input id="iaEncuadre" class="input" list="iaEncuadreOpts" placeholder="Ej.: primer plano o un encuadre propio"><datalist id="iaEncuadreOpts"><option>Plano general</option><option>Plano medio</option><option>Primer plano</option><option>Detalle</option><option>Americano</option></datalist><label class="lbl">Ángulo</label><input id="iaAngulo" class="input" list="iaAnguloOpts" placeholder="Ej.: contrapicado o un ángulo propio"><datalist id="iaAnguloOpts"><option>Normal</option><option>Picado</option><option>Contrapicado</option><option>Cenital</option></datalist><label class="lbl">Emoción</label><input id="iaEmocion" class="input" list="iaEmocionOpts" placeholder="Ej.: pensativo o una emoción propia"><datalist id="iaEmocionOpts"><option>Feliz</option><option>Enojado</option><option>Triste</option><option>Sorprendido</option><option>Pensativo</option><option>Asustado</option><option>Determinado</option><option>Confundido</option></datalist></div>
 <div id="iaAviso2" class="ia-aviso2"></div>
 <button class="btn-main" id="iaBtn" style="margin-top:16px" onclick="iaGenerar()">✨ Generar</button>
 <div id="iaRes" style="margin-top:14px"></div>
+</div>
+</div>
+<div id="tienda" class="ov">
+<div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('tienda')"></div><h2>🛍️ Tienda</h2></div>
+<div class="ov-body">
+<p style="font-size:11px;color:var(--text2);margin:0 0 4px">Personajes, lugares y outfits oficiales. Pagá con Sakuras o con Sakuras IA.</p>
+<div id="tnTabs" class="tn-tabs"></div>
+<div id="tnCont"></div>
 </div>
 </div>
 <div id="pj" class="ov">
@@ -1280,8 +1299,25 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <button class="modal-close" onclick="cerrarOv('pj-ia-modal')">✕</button>
 <h2 style="font-family:'Cinzel',serif;color:var(--gold);font-size:18px">✨ Crear personaje con IA</h2>
 <div id="pjIAEstado" class="warn-mini"></div>
+<p class="warn-mini" style="margin:0 0 8px">La IA crea una <b>hoja de personaje</b>: el mismo personaje en distintas posturas (frente, perfil, espalda, retrato y detalle), sin textos. Cuanto más completes, más fiel sale.</p>
 <input id="pjIANom" class="input" maxlength="60" placeholder="Nombre del personaje">
-<textarea id="pjIADesc" class="input" maxlength="600" placeholder="Descripción: cómo se ve, ropa, personalidad..." style="min-height:90px;margin-top:8px"></textarea>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+<select id="pjfGenero" class="input"><option value="">Género</option><option>Mujer</option><option>Hombre</option><option>Otro</option></select>
+<input id="pjfEdad" class="input" type="number" min="1" max="120" placeholder="Edad">
+<input id="pjfAltura" class="input" maxlength="20" placeholder="Altura (ej.: 165 cm)">
+<input id="pjfContextura" class="input" maxlength="40" list="pjfContexturaOpts" placeholder="Contextura">
+</div>
+<datalist id="pjfContexturaOpts"><option>Delgada</option><option>Delgado</option><option>Atlética</option><option>Atlético</option><option>Curvilínea</option><option>Robusta</option><option>Robusto</option><option>Musculoso</option><option>Baja y menuda</option><option>Alto y fuerte</option></datalist>
+<input id="pjfOcupacion" class="input" maxlength="80" placeholder="Ocupación o estudios (ej.: estudiante de Ciencias Exactas)" style="margin-top:8px">
+<input id="pjfPelo" class="input" maxlength="80" placeholder="Cabello (color, largo, peinado)" style="margin-top:8px">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+<input id="pjfOjos" class="input" maxlength="40" placeholder="Ojos (color y forma)">
+<input id="pjfPiel" class="input" maxlength="40" placeholder="Piel (tono)">
+</div>
+<input id="pjfRopa" class="input" maxlength="120" placeholder="Ropa habitual (ej.: remera blanca con escote en V y jeans)" style="margin-top:8px">
+<input id="pjfAccesorios" class="input" maxlength="120" placeholder="Accesorios y rasgos únicos (ej.: moño rosa, collar de plata, cicatriz)" style="margin-top:8px">
+<input id="pjfPersonalidad" class="input" maxlength="100" placeholder="Personalidad (ej.: tímida, estudiosa, amable)" style="margin-top:8px">
+<textarea id="pjIADesc" class="input" maxlength="300" placeholder="Detalles extra (opcional)" style="min-height:60px;margin-top:8px"></textarea>
 <label class="lbl">Estilo</label><div id="pjIAEstilos"></div>
 <div id="pjIARes" class="reference-box pj-ia-res" style="margin-top:10px;aspect-ratio:2/3;max-height:340px;text-align:center"><div>Acá aparece tu personaje</div></div>
 <div id="pjIAAcc" class="lz-row" style="display:none"><button class="btn-main" onclick="pjIAAceptar()">✅ Aceptar y guardar</button><button class="btn" onclick="pjIAGenerar()">🔄 Regenerar</button></div>
@@ -3059,26 +3095,49 @@ async function crearPersonajeIA(){
   }
   $('pj-ia-modal').classList.add('on');await pjIAEstado();
 }
+/* Arma la descripción completa (en español) con todos los campos del formulario */
+function pjIAArmarDesc(){
+  const v=id=>($(id)?$(id).value:'').trim(),L=[];
+  if(v('pjfGenero'))L.push('Género: '+v('pjfGenero')+'.');
+  if(v('pjfEdad'))L.push('Edad: '+v('pjfEdad')+' años.');
+  if(v('pjfOcupacion'))L.push('Ocupación: '+v('pjfOcupacion')+'.');
+  if(v('pjfAltura'))L.push('Altura: '+v('pjfAltura')+'.');
+  if(v('pjfContextura'))L.push('Contextura: '+v('pjfContextura')+'.');
+  if(v('pjfPelo'))L.push('Cabello: '+v('pjfPelo')+'.');
+  if(v('pjfOjos'))L.push('Ojos: '+v('pjfOjos')+'.');
+  if(v('pjfPiel'))L.push('Piel: '+v('pjfPiel')+'.');
+  if(v('pjfRopa'))L.push('Ropa: '+v('pjfRopa')+'.');
+  if(v('pjfAccesorios'))L.push('Accesorios y rasgos: '+v('pjfAccesorios')+'.');
+  if(v('pjfPersonalidad'))L.push('Personalidad: '+v('pjfPersonalidad')+'.');
+  if(v('pjIADesc'))L.push(v('pjIADesc'));
+  return L.join(' ').slice(0,900);
+}
 async function pjIAGenerar(){
   if(_pjIA.busy||!requireUser())return;
-  const nombre=($('pjIANom').value||'').trim(),desc=($('pjIADesc').value||'').trim();
-  if(nombre.length<2||desc.length<5){alert('Poné el nombre y una descripción del personaje.');return}
+  const nombre=($('pjIANom').value||'').trim(),desc=pjIAArmarDesc();
+  if(nombre.length<2||desc.length<5){alert('Poné el nombre y completá al menos algunos datos del personaje (pelo, ropa, edad...).');return}
   if(!pjEsCeo()&&_pjIA.info&&_pjIA.info.puede===false){alert('Ya usaste los personajes de tu plan. Cada personaje extra cuesta 2 Sakuras IA.');abrirSakuras('ia');return}
-  _pjIA.busy=true;const b=$('pjIABtn');b.disabled=true;b.innerText='✨ Generando...';
-  $('pjIAAcc').style.display='none';$('pjIARes').innerHTML='<div>🎨 Creando tu personaje...</div>';
+  _pjIA.busy=true;const b=$('pjIABtn');b.disabled=true;b.innerText='⏳ Generando...';
+  $('pjIAAcc').style.display='none';$('pjIARes').innerHTML='<div>🎨 Creando la hoja de tu personaje...<br><small>puede tardar entre 30 y 60 segundos</small></div>';
   try{
     const tk=await iaToken();
-    const r=await fetch('/api/ia-personaje',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({nombre:nombre,descripcion:desc,estilo:_pjIA.estilo})});
+    const r=await fetch('/api/ia-personaje',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({nombre:nombre,descripcion:desc,estilo:_pjIA.estilo,genero:($('pjfGenero')||{}).value||''})});
     const j=await r.json().catch(()=>({}));
     if(!r.ok){if(j.codigo==='sin_credito')abrirSakuras('ia');throw new Error(j.error||'Error del servidor')}
-    _pjIA.img=j.imagen;
-    $('pjIARes').innerHTML='<img src="'+esc(j.imagen)+'" alt="Personaje generado">';$('pjIAAcc').style.display='flex';
+    if(!j.id)throw new Error('La IA no devolvió el número de trabajo. Probá de nuevo.');
+    const urls=await iaEsperar(j.id,tk);
+    const u=(urls||[])[0];if(!u)throw new Error('La IA no devolvió la imagen. Probá de nuevo.');
+    const rr=await fetch('/api/ia-imagen?u='+encodeURIComponent(u));if(!rr.ok)throw new Error('No se pudo descargar la imagen ('+rr.status+')');
+    const blob=await rr.blob();
+    const dataUrl=await new Promise((ok,ko)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=()=>ko(new Error('No se pudo leer la imagen'));fr.readAsDataURL(blob)});
+    _pjIA.img=dataUrl;
+    $('pjIARes').innerHTML='<img src="'+esc(dataUrl)+'" alt="Hoja del personaje" style="max-width:100%;max-height:100%;object-fit:contain">';$('pjIAAcc').style.display='flex';
   }catch(e){$('pjIARes').innerHTML='<div style="color:#ff6b81">⚠️ '+esc(e.message||String(e))+'</div>'}
   _pjIA.busy=false;b.disabled=false;b.innerText='✨ Generar personaje';
 }
 async function pjIAAceptar(){
   if(!_pjIA.img||_pjIA.busy)return;
-  let nombre=($('pjIANom').value||'').trim();const desc=($('pjIADesc').value||'').trim();
+  let nombre=($('pjIANom').value||'').trim();const desc=pjIAArmarDesc();
   if(nombre.length<2||desc.length<5){alert('Poné el nombre y una descripción del personaje.');return}
   if(!PERSONAJES.length)await cargarPersonajes();
   const nombreOriginal=nombre;nombre=nombrePersonajeUnico(nombre);
@@ -3094,7 +3153,7 @@ async function pjIAAceptar(){
     const foto_url=await subirACloudinary(new File([blob],'personaje.png',{type:blob.type||'image/png'}));
     const {error:e2}=await sb.from('personajes').insert({user_id:miPerfil.id,nombre:nombre,descripcion:desc,foto_url:foto_url});
     if(e2)throw e2;
-    cerrarOv('pj-ia-modal');$('pjIANom').value='';$('pjIADesc').value='';_pjIA.img=null;
+    cerrarOv('pj-ia-modal');['pjIANom','pjIADesc','pjfEdad','pjfAltura','pjfContextura','pjfOcupacion','pjfPelo','pjfOjos','pjfPiel','pjfRopa','pjfAccesorios','pjfPersonalidad'].forEach(id=>{if($(id))$(id).value=''});if($('pjfGenero'))$('pjfGenero').value='';_pjIA.img=null;
     await cargarPersonajes();pintarPersonajes();
     if(typeof refrescarPerfil==='function')await refrescarPerfil();
     alert('✅ ¡Personaje guardado en tu lista!');
@@ -3288,7 +3347,7 @@ async function iaGenerar(){
     if(!iaDistribucion||iaDistribucion==='pagina')prompt+=' Una sola imagen final, sin collage.';
     const fd=new FormData();
     fd.append('prompt',prompt);fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey||'clasico');fd.append('color_modo',iaColorModo||'auto');fd.append('fidelidad',iaFidelidad);fd.append('distribucion',iaDistribucion);fd.append('num_images','1');fd.append('cantidad','1');
-    if(iaBlob)fd.append('dibujo',await iaRedimBlob(iaBlob,1280,iaColorModo?'grayscale(1) contrast(1.35) brightness(1.06)':'contrast(1.2)'),'dibujo.jpg');
+    if(iaBlob)fd.append('dibujo',await iaRedimBlob(iaBlob,1280,'contrast(1.15)'),'dibujo.jpg');
     const conFoto=pj.find(p=>p.foto_url);
     if(conFoto){try{fd.append('personaje',await iaRedimBlob(conFoto.foto_url,1000),'personaje.jpg')}catch(e){console.warn('Referencia de personaje:',e.message)}}
     const tk=await iaToken();
@@ -3652,14 +3711,14 @@ async function renacerLapiz(){
   try{
     const chip=document.querySelector('#lapizEstilos .style-choice.on');
     const colorChip=document.querySelector('#lapizEstilos .color-choice.on');
-    if(!chip)throw new Error('Elegí un estilo visual.');
-    if(!colorChip)throw new Error('Elegí B/N o Color por separado.');
-    const label=chip.textContent.trim(),colorModo=colorChip.dataset.color||colorChip.textContent.trim();
+    /* Estilo y color son OPCIONALES. Lo que escribe el usuario va PRIMERO en el pedido. */
+    const label=chip?chip.textContent.trim():'Manga clásico';
+    const colorModo=colorChip?(colorChip.dataset.color||colorChip.textContent.trim()):'auto';
     const spec=($('lapizPrompt').value||'').trim();
-    const prompt='Crear UNA SOLA página de manga para SalaMangaS. Transformar el dibujo a lápiz de referencia en una página manga limpia y terminada, respetando la composición y los personajes. Formato vertical. Estilo visual: '+label+'. Modo de color: '+colorModo+'. '+(colorModo==='Color'?'Usar color completo y una paleta coherente.':'Usar exclusivamente blanco y negro, tinta manga y buen contraste.')+' Especificaciones completas del usuario: '+(spec||'limpiar las líneas, mantener personajes y composición')+'. No generar collage ni opciones múltiples.';
+    const prompt=(spec||'limpiar las líneas, mantener personajes y composición')+'. Estilo visual: '+label+'.';
     const fd=new FormData();
-    fd.append('prompt',prompt);fd.append('modo','lapiz');fd.append('estilo',lapizIaKey(label));fd.append('color_modo',colorModo);fd.append('num_images','1');fd.append('cantidad','1');
-    fd.append('dibujo',await iaRedimBlob(lapizDibujoFile,1280),'dibujo.jpg');
+    fd.append('prompt',prompt);fd.append('modo','lapiz');fd.append('estilo',chip?lapizIaKey(label):'clasico');fd.append('color_modo',colorModo);fd.append('fidelidad','equilibrado');fd.append('num_images','1');fd.append('cantidad','1');
+    fd.append('dibujo',await iaRedimBlob(lapizDibujoFile,1280,'contrast(1.15)'),'dibujo.jpg');
     const tk=await iaToken();
     const r=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:fd});
     const j=await r.json().catch(()=>({}));
@@ -5010,6 +5069,92 @@ iniciarApp=function(){
 window.abrirRecargaIA=function(){
   if(typeof abrirSakuras==='function')abrirSakuras('ia');
 };
+
+/* ===== TIENDA: personajes, lugares y outfits oficiales (los publica el CEO en recursos_tienda) ===== */
+let TIENDA={items:[],compras:new Set(),tab:'personaje',error:''};
+const TN_TABS=[['personaje','🧑 Personajes'],['lugar','📍 Lugares'],['outfit','👕 Outfits'],['compras','✅ Mis compras']];
+async function abrirTienda(){
+  if(!requireUser())return;
+  $('tienda').classList.add('on');
+  $('tnCont').innerHTML=vacio('Cargando la tienda...');
+  await tiendaCargar();tiendaPintar();
+}
+async function tiendaCargar(){
+  TIENDA.error='';
+  try{
+    const {data,error}=await sb.from('recursos_tienda').select('*').order('created_at',{ascending:false}).limit(500);
+    if(error)throw error;
+    TIENDA.items=data||[];
+    const c=await sb.from('recursos_comprados').select('recurso_id');
+    TIENDA.compras=new Set(((c&&c.data)||[]).map(x=>String(x.recurso_id)));
+  }catch(e){
+    TIENDA.items=[];TIENDA.error=/recursos_tienda|recursos_comprados|schema|PGRST/i.test(e.message||'')?'La tienda todavía no está activada: el CEO tiene que correr el archivo tienda_recursos.sql en Supabase.':'No se pudo cargar la tienda: '+(e.message||e);
+  }
+}
+function tnTab(t){TIENDA.tab=t;tiendaPintar()}
+function tnLinea(c){return c==='D'?'Línea Dama':c==='H'?'Línea Hombre':c==='N'?'Línea Niños':'Unisex / Otros'}
+function tnCard(r,enCompras){
+  const id=String(r.id).replace(/'/g,''),tuyo=TIENDA.compras.has(String(r.id));
+  const ps=Number(r.precio_sakuras||0),pi=Number(r.precio_sakuras_ia||0);
+  let acc;
+  if(enCompras)acc='<div class="tn-precios"><button class="tn-btn" onclick="tnCopiar(\''+id+'\')">📋 Copiar descripción</button></div>';
+  else if(tuyo)acc='<div class="tn-precios"><button class="tn-btn ok">✓ Ya es tuyo</button></div>';
+  else if(!ps&&!pi)acc='<div class="tn-precios"><button class="tn-btn" onclick="comprarRecurso(\''+id+'\',\'sakuras\')">Gratis · Obtener</button></div>';
+  else acc='<div class="tn-precios">'+(ps?'<button class="tn-btn" onclick="comprarRecurso(\''+id+'\',\'sakuras\')">🌸 '+ps+'</button>':'')+(pi?'<button class="tn-btn ia" onclick="comprarRecurso(\''+id+'\',\'ia\')">🤖 '+pi+' IA</button>':'')+'</div>';
+  return '<div class="tn-card">'+(r.imagen_url?'<img class="tn-img" loading="lazy" src="'+esc(r.imagen_url)+'" alt="">':'<div class="tn-img"></div>')+'<div class="tn-nom">'+esc(r.nombre||r.codigo||'')+'</div>'+(r.descripcion?'<div class="tn-desc">'+esc(r.descripcion)+'</div>':'')+acc+'</div>';
+}
+function tiendaPintar(){
+  $('tnTabs').innerHTML=TN_TABS.map(t=>'<span class="chip'+(TIENDA.tab===t[0]?' on':'')+'" style="font-size:12px;padding:6px 10px" onclick="tnTab(\''+t[0]+'\')">'+t[1]+'</span>').join('');
+  const c=$('tnCont');
+  if(TIENDA.error){c.innerHTML='<div class="warn-mini">'+esc(TIENDA.error)+'</div>';return}
+  if(TIENDA.tab==='compras'){
+    const mias=TIENDA.items.filter(r=>TIENDA.compras.has(String(r.id)));
+    c.innerHTML=mias.length?'<div class="tn-grid">'+mias.map(r=>tnCard(r,true)).join('')+'</div>':vacio('Todavía no compraste nada.');
+    return;
+  }
+  const lista=TIENDA.items.filter(r=>r.activo!==false&&r.tipo===TIENDA.tab);
+  if(!lista.length){c.innerHTML=vacio('Todavía no hay '+(TIENDA.tab==='personaje'?'personajes':TIENDA.tab==='lugar'?'lugares':'outfits')+' publicados.');return}
+  if(TIENDA.tab==='lugar'){c.innerHTML='<div class="tn-sec">Lugares</div><div class="tn-grid">'+lista.map(r=>tnCard(r)).join('')+'</div>';return}
+  const grupos=[['D','Línea Dama'],['H','Línea Hombre'],['N','Línea Niños'],['U','Unisex / Otros']];
+  const clave=r=>(r.categoria==='D'||r.categoria==='H'||r.categoria==='N')?r.categoria:'U';
+  c.innerHTML=grupos.map(g=>{const it=lista.filter(r=>clave(r)===g[0]);return it.length?'<div class="tn-sec">'+g[1]+'</div><div class="tn-grid">'+it.map(r=>tnCard(r)).join('')+'</div>':''}).join('');
+}
+async function comprarRecurso(id,moneda){
+  if(!requireUser())return;
+  const r=TIENDA.items.find(x=>String(x.id)===String(id));if(!r)return;
+  const ps=Number(r.precio_sakuras||0),pi=Number(r.precio_sakuras_ia||0);
+  const precio=(ps||pi)?(moneda==='ia'?pi:ps):0;
+  if(precio&&!confirm('¿Comprar "'+r.nombre+'" por '+precio+(moneda==='ia'?' Sakuras IA':' Sakuras')+'?'))return;
+  try{
+    const {data,error}=await sb.rpc('comprar_recurso',{p_id:String(r.id),p_moneda:moneda});
+    if(error)throw error;
+    const msg={no_login:'Iniciá sesión primero.',no_existe:'Este artículo ya no está disponible.',ya_comprado:'Ya lo tenés.',sin_sakuras:'No tenés Sakuras suficientes.',sin_sakuras_ia:'No tenés Sakuras IA suficientes.',moneda_invalida:'Ese artículo no se paga con esa moneda.'};
+    if(data!=='ok'){alert(msg[data]||('No se pudo comprar ('+data+')'));if(data==='ya_comprado'){TIENDA.compras.add(String(r.id));tiendaPintar()}return}
+    TIENDA.compras.add(String(r.id));
+    try{await refrescarPerfil()}catch(e){}
+    if(r.tipo==='personaje')await tiendaAgregarPersonaje(r);
+    else alert('✅ Comprado. Lo encontrás en Tienda → Mis compras.');
+    tiendaPintar();
+  }catch(e){
+    const m=e.message||String(e);
+    alert(/comprar_recurso|schema|PGRST202/i.test(m)?'La tienda todavía no está activada: el CEO tiene que correr tienda_recursos.sql en Supabase.':'No se pudo comprar: '+m);
+  }
+}
+async function tiendaAgregarPersonaje(r){
+  try{
+    if(!PERSONAJES.length)await cargarPersonajes();
+    const nombre=nombrePersonajeUnico(r.nombre||'Personaje');
+    const {error}=await sb.from('personajes').insert({user_id:miPerfil.id,nombre:nombre,descripcion:r.descripcion||r.nombre||'Personaje de la tienda',foto_url:r.imagen_url||null});
+    if(error)throw error;
+    await cargarPersonajes();
+    alert('✅ Comprado. "'+nombre+'" ya está en tus personajes.');
+  }catch(e){alert('Compraste el personaje, pero no pude agregarlo a tu lista: '+(e.message||e)+'. Quedó en Tienda → Mis compras.')}
+}
+function tnCopiar(id){
+  const r=TIENDA.items.find(x=>String(x.id)===String(id));if(!r)return;
+  const t=(r.nombre||'')+(r.descripcion?': '+r.descripcion:'');
+  try{navigator.clipboard.writeText(t).then(()=>alert('Descripción copiada. Pegala en las instrucciones de la IA.'),()=>prompt('Copiá este texto:',t))}catch(e){prompt('Copiá este texto:',t)}
+}
 </script>
 </body>
 </html>
