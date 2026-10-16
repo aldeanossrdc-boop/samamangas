@@ -1,14 +1,15 @@
-// functions/api/ia-generar.js — POST /api/ia-generar
-// 1) verifica quién es, 2) filtra el contenido (solo usuarios comunes), 3) descuenta 1 generación (en la base),
-// 4) SalaMangaS IA -> DeepInfra (Qwen-Image o FLUX Kontext, lo elige el CEO), 1 imagen vertical 832x1248.
-//    Lápiz -> Leonardo primero (1 imagen); cuando Leonardo está en 0 pasa SOLO a Qwen-Image-Edit (DeepInfra).
-// 5) si algo falla, DEVUELVE la generación. El CEO siempre puede generar y no gasta nada.
+// functions/api/ia-generar.js  ·  POST /api/ia-generar  (multipart)
+// 1) verifica quién es · 2) IA encendida (solo usuarios comunes) · 3) filtra el contenido (solo usuarios comunes)
+// 4) descuenta 1 generación (en la base; el CEO no gasta) · 5) genera con DeepInfra:
+//      SalaMangaS IA -> texto→imagen (Qwen-Image; el CEO puede elegir FLUX Kontext, que sin imagen se cambia a Qwen)
+//      Lápiz         -> EDITA tu dibujo (Qwen-Image-Edit): mantiene el personaje y aplica lo que pedís (color, pelo, ropa, fondo)
+// 6) si algo falla, el SERVIDOR devuelve la generación. Leonardo ya NO se usa acá (solo para crear personajes).
 import { out, getServiceClient } from './_shared.js';
-import { IAError, usuarioIA, iaActiva, modeloIA, modeloEscena, rpcUsuario, subirReferencia, crearGeneracion, cantidadPorModo, directivaColor } from './_ia.js';
+import { IAError, usuarioIA, iaActiva, modeloEscena, rpcUsuario, cantidadPorModo, directivaColor } from './_ia.js';
 import { diDisponible, diModelo, diImagenes, diEditar } from './_deepinfra.js';
 import { filtrar } from './_filtro.js';
 
-const MAX_ARCHIVO = 4 * 1024 * 1024; // 4 MB por imagen de referencia
+const MAX_ARCHIVO = 8 * 1024 * 1024; // 8 MB (la app ya achica la imagen antes de mandarla)
 const ANCHO = 832, ALTO = 1248;      // vertical 2:3 FIJO
 const esArchivo = f => f && typeof f === 'object' && typeof f.size === 'number' && typeof f.arrayBuffer === 'function';
 
@@ -17,27 +18,27 @@ export async function onRequestPost({ request, env }) {
   try {
     ctx = await usuarioIA(request, env);
     if (!ctx) return out(401, { error: 'Iniciá sesión para usar la IA' });
-    if (!env.LEONARDO_API_KEY && !diDisponible(env)) return out(500, { error: 'La IA todavía no está configurada (faltan LEONARDO_API_KEY o DEEPINFRA_API_KEY)' });
+    if (!diDisponible(env)) {
+      console.error('Falta DEEPINFRA_API_KEY en las variables de Cloudflare (Production)');
+      return out(503, { error: ctx.esCeo ? 'Falta cargar DEEPINFRA_API_KEY en Cloudflare (Settings → Variables and Secrets → Production) y volver a publicar.' : 'SalaMangaS IA todavía no está disponible.', codigo: 'ia_pausada' });
+    }
     if (!ctx.esCeo && !(await iaActiva(env))) return out(503, { error: 'La IA está desactivada por ahora. Volvé a probar más tarde.', codigo: 'ia_desactivada' });
 
     const fd = await request.formData();
     const promptUsuario = String(fd.get('prompt') || '').trim().slice(0, 1650);
     if (promptUsuario.length < 3) return out(400, { error: 'Escribí una instrucción para la IA' });
+    const modo = fd.get('modo') === 'lapiz' ? 'lapiz' : 'ia';
     const colorModo = ['B/N', 'Color'].includes(String(fd.get('color_modo'))) ? String(fd.get('color_modo')) : '';
-    const fidelidad = ['fiel', 'equilibrado', 'libre'].includes(String(fd.get('fidelidad'))) ? String(fd.get('fidelidad')) : 'equilibrado';
+    let dibujo = fd.get('dibujo');
+    dibujo = esArchivo(dibujo) ? dibujo : null;
+    if (dibujo && dibujo.size > MAX_ARCHIVO) return out(400, { error: 'La imagen es muy pesada (máximo 8 MB)' });
+    if (modo === 'lapiz' && !dibujo) return out(400, { error: 'Falta el dibujo a lápiz' });
+
     // La orden de color va al principio y al final: los modelos la obedecen mucho más así.
     const dirColor = directivaColor(colorModo);
     const prompt = dirColor ? (dirColor + ' ' + promptUsuario + ' ' + dirColor) : promptUsuario;
-    const modo = fd.get('modo') === 'lapiz' ? 'lapiz' : 'ia';
-    const estilo = String(fd.get('estilo') || 'clasico');
-    let dibujo = fd.get('dibujo'), personaje = fd.get('personaje');
-    dibujo = esArchivo(dibujo) ? dibujo : null;
-    personaje = esArchivo(personaje) ? personaje : null;
-    if ((dibujo && dibujo.size > MAX_ARCHIVO) || (personaje && personaje.size > MAX_ARCHIVO)) return out(400, { error: 'Una imagen de referencia es muy pesada (máximo 4 MB)' });
-    if (modo === 'lapiz' && !dibujo) return out(400, { error: 'Falta el dibujo a lápiz' });
-    if (modo === 'ia' && !diDisponible(env)) return out(503, { error: 'SalaMangaS IA todavía no está disponible.', codigo: 'ia_pausada' });
 
-    // Lista negra: SOLO usuarios comunes (el CEO verificado queda exento)
+    // Lista negra: SOLO usuarios comunes (el CEO verificado queda exento, salvo contenido sexual con menores)
     const bloqueo = await filtrar(env, ctx, promptUsuario);
     if (bloqueo) return out(400, { error: bloqueo, codigo: 'filtro' });
 
@@ -48,7 +49,7 @@ export async function onRequestPost({ request, env }) {
       consumida = true;
     }
 
-    // ---- SalaMangaS IA: DeepInfra (el CEO elige Qwen-Image o FLUX Kontext) ----
+    // ---- SalaMangaS IA: texto → imagen ----
     if (modo === 'ia') {
       let escena = await modeloEscena(env);
       // FLUX Kontext es un modelo de EDICIÓN: exige imagen de entrada y falla en texto→imagen. Sin imagen, se usa Qwen-Image.
@@ -57,34 +58,16 @@ export async function onRequestPost({ request, env }) {
       return out(200, { ok: true, sync: true, imagenes, motor: 'deepinfra-' + escena, cantidad: imagenes.length });
     }
 
-    // ---- Lápiz: Leonardo primero; si Leonardo está en 0 (o caído) pasa automático a Qwen-Image-Edit ----
-    if (env.LEONARDO_API_KEY) {
-      try {
-        const dibujoId = await subirReferencia(env, dibujo);
-        const personajeId = personaje ? await subirReferencia(env, personaje) : null;
-        const modelo = await modeloIA(env);
-        const cantidad = cantidadPorModo(modo);
-        const { id, motor } = await crearGeneracion(env, { prompt, estilo, modelo, dibujoId, personajeId, cantidad, colorModo, fidelidad });
-        // Se anota quién pagó esta generación: si Leonardo falla después (ia-estado.js), se devuelve UNA sola vez.
-        if (consumida) {
-          try {
-            const { error } = await getServiceClient(env).from('ia_generaciones').insert({ id, user_id: ctx.user.id });
-            if (error) console.error('ia_generaciones insert:', error.message);
-          } catch (e2) { console.error('ia_generaciones:', e2.message); }
-        }
-        return out(200, { ok: true, id, motor, cantidad });
-      } catch (e) {
-        const puedeRespaldo = e instanceof IAError && (e.codigo === 'sin_saldo_ia' || e.status >= 500) && diDisponible(env);
-        if (!puedeRespaldo) throw e;
-        console.warn('Leonardo sin saldo o caído (' + e.message + '): se usa Qwen-Image-Edit');
-      }
-    }
-    if (!diDisponible(env)) throw new IAError('La IA no está disponible en este momento. Avisale al equipo de SalaMangaS.', 503, 'sin_saldo_ia');
-    const img = await diEditar(env, { prompt, archivo: dibujo, w: ANCHO, h: ALTO });
+    // ---- Lápiz: EDITA el dibujo con Qwen-Image-Edit ----
+    const promptEdicion = 'Redraw the attached reference image as a finished manga illustration. KEEP the same character: same face, expression, hairstyle shape, pose, camera angle and composition. Apply ONLY the changes and details requested below; everything else stays the same as the reference. Requested changes and details: ' + promptUsuario + (dirColor ? ' ' + dirColor : '');
+    const img = await diEditar(env, { prompt: promptEdicion, archivo: dibujo, w: ANCHO, h: ALTO });
     return out(200, { ok: true, sync: true, imagenes: [img], motor: 'deepinfra-edit', cantidad: 1 });
   } catch (e) {
     let devuelta = false;
-    if (consumida && ctx) { try { const { error: er } = await getServiceClient(env).rpc('devolver_generacion_ia_srv', { p_uid: ctx.user.id }); if (er) throw new Error(er.message); devuelta = true; } catch (e2) { console.error('No se pudo devolver la generación:', e2.message); } }
+    if (consumida && ctx) {
+      try { const { error: er } = await getServiceClient(env).rpc('devolver_generacion_ia_srv', { p_uid: ctx.user.id }); if (er) throw new Error(er.message); devuelta = true; }
+      catch (e2) { console.error('No se pudo devolver la generación:', e2.message); }
+    }
     const status = e instanceof IAError ? e.status : 500;
     return out(status, { error: (e instanceof IAError ? e.message : 'No se pudo generar. Probá de nuevo.') + (devuelta ? ' No se te descontó la generación.' : ''), codigo: e.codigo || '', devuelta });
   }
