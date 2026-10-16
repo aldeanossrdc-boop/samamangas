@@ -1199,6 +1199,8 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <label class="lbl">🖼️ Imágenes de referencia (opcional)</label>
 <input id="iaRefInput" class="input" type="file" accept="image/*" multiple>
 <label class="lbl">👥 Personajes (opcional)</label><div id="iaPjs"></div>
+<div id="iaFidBox" style="display:none"><label class="lbl">🎯 Fidelidad al dibujo</label><div id="iaFid" class="color-modes"><button type="button" class="chip" data-fid="fiel">Fiel</button><button type="button" class="chip on" data-fid="equilibrado">Equilibrado</button><button type="button" class="chip" data-fid="libre">Libre</button></div><p class="subtitle" style="margin:4px 0 10px">Fiel: copia tu dibujo casi igual. Libre: la IA se anima a cambiar más. Si no te hace caso con los colores o la descripción, probá Libre.</p></div>
+<div id="iaLayoutBox"><label class="lbl">🧩 Distribución de viñetas (opcional)</label><div id="iaLayouts" class="color-modes"><button type="button" class="chip" data-lay="pagina">Página completa</button><button type="button" class="chip" data-lay="h2">2 viñetas</button><button type="button" class="chip" data-lay="h3">3 viñetas</button><button type="button" class="chip" data-lay="g4">4 cuadros (2×2)</button><button type="button" class="chip" data-lay="g6">6 cuadros (2×3)</button><button type="button" class="chip" data-lay="l12">1 grande + 2 abajo</button><button type="button" class="chip" data-lay="l21">2 arriba + 1 grande</button><button type="button" class="chip" data-lay="dina">Dinámica (5)</button></div><p class="subtitle" style="margin:4px 0 10px">Tocá una para elegirla y de nuevo para sacarla. Si tu dibujo a lápiz ya tiene viñetas, dejalo sin elegir.</p></div>
 <div id="iaVinetasBox" class="ia-vinetas" style="display:none"><h3 class="section">🎬 Diseño de viñetas · Súper Pro en adelante</h3><p class="subtitle" style="margin:0 0 8px">Elegí una opción o escribí cualquier indicación.</p><label class="lbl">Encuadre</label><input id="iaEncuadre" class="input" list="iaEncuadreOpts" placeholder="Ej.: primer plano o un encuadre propio"><datalist id="iaEncuadreOpts"><option>Plano general</option><option>Plano medio</option><option>Primer plano</option><option>Detalle</option><option>Americano</option></datalist><label class="lbl">Ángulo</label><input id="iaAngulo" class="input" list="iaAnguloOpts" placeholder="Ej.: contrapicado o un ángulo propio"><datalist id="iaAnguloOpts"><option>Normal</option><option>Picado</option><option>Contrapicado</option><option>Cenital</option></datalist><label class="lbl">Emoción</label><input id="iaEmocion" class="input" list="iaEmocionOpts" placeholder="Ej.: pensativo o una emoción propia"><datalist id="iaEmocionOpts"><option>Feliz</option><option>Enojado</option><option>Triste</option><option>Sorprendido</option><option>Pensativo</option><option>Asustado</option><option>Determinado</option><option>Confundido</option></datalist></div>
 <div id="iaAviso2" class="ia-aviso2"></div>
 <button class="btn-main" id="iaBtn" style="margin-top:16px" onclick="iaGenerar()">✨ Generar</button>
@@ -3189,7 +3191,7 @@ const IA_MAX_PJ=3; /* máximo de personajes por generación */
 function iaActualizarAviso(){
   const e=$('iaAviso2');if(!e)return;
   const n=iaPjSel.length;
-  const cant=iaModo==='lapiz'?'1 imagen':'2 imágenes';
+  const cant='1 imagen';
   let t='💡 Esta generación gasta <b>1 generación</b> y crea '+cant+'.';
   const r=(typeof window.iaResumenSaldo==='function')?window.iaResumenSaldo():null;
   if(r){
@@ -3205,6 +3207,18 @@ function iaActualizarAviso(){
 }
 async function iaToken(){const {data:{session}}=await sb.auth.getSession();return session?session.access_token:''}
 let iaEstiloKey='',iaLoteUrls=[],iaUltimoId=null,iaColorModo='',iaLogoData=null;
+let iaFidelidad='equilibrado',iaDistribucion='';
+/* Distribución de viñetas (cuadros de la página). El texto va en inglés porque los modelos lo siguen mejor. */
+const IA_LAYOUTS={
+  pagina:'single full-page illustration, ONE big panel only, no panel borders',
+  h2:'manga page layout with exactly 2 horizontal panels stacked vertically, clean black panel borders and white gutters between panels',
+  h3:'manga page layout with exactly 3 horizontal panels stacked vertically, clean black panel borders and white gutters between panels',
+  g4:'manga page divided into exactly 4 equal panels in a 2x2 grid, clean black panel borders and white gutters between panels',
+  g6:'manga page divided into exactly 6 panels in a 2 columns by 3 rows grid, clean black panel borders and white gutters between panels',
+  l12:'manga page layout with one large wide panel on top and two smaller panels side by side below, clean black panel borders and white gutters',
+  l21:'manga page layout with two smaller panels side by side on top and one large wide panel below, clean black panel borders and white gutters',
+  dina:'dynamic manga page layout with 5 panels of different sizes and slanted borders, clean black panel borders and white gutters'
+};
 const IA_EJEMPLOS=[
   'Un samurái bajo la lluvia, plano medio, mirada seria, tinta negra con mucho contraste',
   'Chica con una espada sobre un tejado de noche, luna llena, el viento mueve su pelo',
@@ -3220,7 +3234,7 @@ function iaAgregarTexto(t,reemplazar){
 }
 async function abrirIA(modo,file){
   if(!miPerfil){alert('Iniciá sesión primero');return}
-  iaModo=modo;iaImg=null;iaBlob=null;iaEstilo=null;iaEstiloKey='';iaColorModo='';iaPjSel=[];iaLoteUrls=[];iaUltimoId=null;$('iaRes').innerHTML='';
+  iaModo=modo;iaImg=null;iaBlob=null;iaEstilo=null;iaEstiloKey='';iaColorModo='';iaFidelidad='equilibrado';iaDistribucion='';iaPjSel=[];iaLoteUrls=[];iaUltimoId=null;$('iaRes').innerHTML='';
   $('iaTitulo').innerText=modo==='lapiz'?'Dibujo a lápiz → Manga':'SalaMangas IA';
   $('iaDibujoBox').style.display=modo==='lapiz'?'block':'none';
   if(file){iaBlob=file;const u=URL.createObjectURL(file);$('iaDibujo').src=u}
@@ -3229,6 +3243,9 @@ async function abrirIA(modo,file){
   document.querySelectorAll('#iaEstilos .style-choice').forEach(c=>c.onclick=()=>{document.querySelectorAll('#iaEstilos .style-choice').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaEstilo=c.innerText;iaEstiloKey=c.dataset.k});
   document.querySelectorAll('#iaColorModes .color-choice, #iaColorModes .chip').forEach(c=>{c.classList.remove('on');c.onclick=()=>{document.querySelectorAll('#iaColorModes .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaColorModo=c.dataset.color||c.textContent.trim()}});
   const vb=$('iaVinetasBox');if(vb){const pk=planClave(miPerfil);vb.style.display=['superpro','semidios','dios'].includes(pk)&&planVigente()? 'block':'none'}
+  const fbx=$('iaFidBox');if(fbx)fbx.style.display=modo==='lapiz'?'block':'none';
+  document.querySelectorAll('#iaFid .chip').forEach(c=>{c.classList.toggle('on',c.dataset.fid==='equilibrado');c.onclick=()=>{document.querySelectorAll('#iaFid .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaFidelidad=c.dataset.fid}});
+  document.querySelectorAll('#iaLayouts .chip').forEach(c=>{c.classList.remove('on');c.onclick=()=>{const k=c.dataset.lay;if(iaDistribucion===k){iaDistribucion='';c.classList.remove('on');return}document.querySelectorAll('#iaLayouts .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaDistribucion=k}});
   const ej=$('iaEjemplos');if(ej){ej.innerHTML=IA_EJEMPLOS.map((t,i)=>'<span class="chip" data-ej="'+i+'">'+esc(t)+'</span>').join('');ej.querySelectorAll('.chip').forEach(c=>c.onclick=()=>iaAgregarTexto(IA_EJEMPLOS[c.dataset.ej],true))}
   const sg=$('iaSugerencias');if(sg){sg.innerHTML=IA_SUGERENCIAS.map((t,i)=>'<span class="chip" data-sg="'+i+'">+ '+esc(t)+'</span>').join('');sg.querySelectorAll('.chip').forEach(c=>c.onclick=()=>iaAgregarTexto(IA_SUGERENCIAS[c.dataset.sg],false))}
   await cargarPersonajes();
@@ -3238,13 +3255,13 @@ async function abrirIA(modo,file){
   $('iaov').classList.add('on')
 }
 /* Achica la imagen (JPG) antes de mandarla: más rápido y liviano */
-async function iaRedimBlob(src,max){
+async function iaRedimBlob(src,max,realce){
   const blob=src instanceof Blob?src:await (async()=>{const r=await fetch(src);if(!r.ok)throw new Error('No se pudo descargar la imagen de referencia');return r.blob()})();
   const u=URL.createObjectURL(blob);
   try{
     return await new Promise((ok,ko)=>{
       const im=new Image();
-      im.onload=()=>{try{const s=Math.min(1,(max||1000)/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*s));c.height=Math.max(1,Math.round(im.height*s));const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);c.toBlob(b=>b?ok(b):ko(new Error('No se pudo preparar la imagen')),'image/jpeg',.88)}catch(e){ko(e)}};
+      im.onload=()=>{try{const s=Math.min(1,(max||1000)/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*s));c.height=Math.max(1,Math.round(im.height*s));const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);if(realce){try{x.filter=realce}catch(e){}}x.drawImage(im,0,0,c.width,c.height);c.toBlob(b=>b?ok(b):ko(new Error('No se pudo preparar la imagen')),'image/jpeg',.9)}catch(e){ko(e)}};
       im.onerror=()=>ko(new Error('No se pudo leer la imagen'));im.src=u;
     });
   }finally{URL.revokeObjectURL(u)}
@@ -3258,17 +3275,20 @@ async function iaGenerar(){
     if(iaModo==='lapiz'&&!iaBlob)throw new Error('Falta el dibujo a lápiz');
     if(iaPjSel.length>IA_MAX_PJ)throw new Error('Elegí como máximo '+IA_MAX_PJ+' personajes');
     const pj=PERSONAJES.filter(p=>iaPjSel.includes(String(p.id)));
-    if(!iaEstiloKey)throw new Error('Elegí un estilo visual.');
-    if(!iaColorModo)throw new Error('Elegí B/N o Color por separado.');
-    const coloresDef=iaColorModo==='Color'?'color completo, paleta coherente y acabado de ilustración manga':'blanco y negro, tinta manga, contraste legible y sin color';
-    let prompt='Crear UNA SOLA imagen para SalaMangaS. '+(iaModo==='lapiz'?'Transformar el dibujo de referencia en una página/escena manga limpia, respetando composición y personajes. ':'Generar una escena manga original. ')+'Estilo visual: '+iaEstilo+'. Modo de color: '+iaColorModo+'. Tratamiento de color: '+($('iaColores').value.trim()||coloresDef)+'. Instrucciones completas del usuario: '+($('iaTxt').value.trim()||'escena manga dinámica, expresiva y coherente')+'.';
+    /* Estilo y color son OPCIONALES: sin color elegido, la IA respeta el del dibujo */
+    const estiloTxt=iaEstilo||'manga clásico';
+    const colorTxt=$('iaColores').value.trim();
+    let prompt=($('iaTxt').value.trim()||'escena manga dinámica, expresiva y coherente')+'. Estilo visual: '+estiloTxt+'.';
+    if(colorTxt)prompt+=' Detalles de color: '+colorTxt+'.';
+    if(iaModo==='lapiz')prompt+=' Usar el dibujo de referencia como base: respetar la composición y los personajes, pero aplicar todo lo que pide el usuario (colores, cambios y detalles).';
     const enc=$('iaEncuadre')?.value.trim(),ang=$('iaAngulo')?.value.trim(),emo=$('iaEmocion')?.value.trim();
     if($('iaVinetasBox')&&$('iaVinetasBox').style.display!=='none'){if(enc)prompt+=' Encuadre solicitado: '+enc+'.';if(ang)prompt+=' Ángulo solicitado: '+ang+'.';if(emo)prompt+=' Emoción solicitada: '+emo+'.';}
+    if(iaDistribucion&&IA_LAYOUTS[iaDistribucion])prompt+=' Distribución de la página: '+IA_LAYOUTS[iaDistribucion]+'.';
     if(pj.length)prompt+=' Personajes que deben respetarse exactamente: '+pj.map(p=>p.nombre+': '+p.descripcion).join(' | ')+'.';
-    prompt+=' No generar collage, cuadrícula ni opciones múltiples. Entregar una sola imagen final.';
+    if(!iaDistribucion||iaDistribucion==='pagina')prompt+=' Una sola imagen final, sin collage.';
     const fd=new FormData();
-    fd.append('prompt',prompt);fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey);fd.append('color_modo',iaColorModo);fd.append('num_images','1');fd.append('cantidad','1');
-    if(iaBlob)fd.append('dibujo',await iaRedimBlob(iaBlob,1280),'dibujo.jpg');
+    fd.append('prompt',prompt);fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey||'clasico');fd.append('color_modo',iaColorModo||'auto');fd.append('fidelidad',iaFidelidad);fd.append('distribucion',iaDistribucion);fd.append('num_images','1');fd.append('cantidad','1');
+    if(iaBlob)fd.append('dibujo',await iaRedimBlob(iaBlob,1280,iaColorModo?'grayscale(1) contrast(1.35) brightness(1.06)':'contrast(1.2)'),'dibujo.jpg');
     const conFoto=pj.find(p=>p.foto_url);
     if(conFoto){try{fd.append('personaje',await iaRedimBlob(conFoto.foto_url,1000),'personaje.jpg')}catch(e){console.warn('Referencia de personaje:',e.message)}}
     const tk=await iaToken();
