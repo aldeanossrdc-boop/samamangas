@@ -766,6 +766,28 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .tn-btn{flex:1;min-width:0;border:0;border-radius:8px;padding:6px 4px;font-size:11px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#ffd45c,#ffb300);color:#241a00}
 .tn-btn.ia{background:linear-gradient(135deg,#7f6bff,#5b4bd6);color:#fff}
 .tn-btn.ok{background:rgba(255,255,255,.1);color:var(--text2);cursor:default}
+
+.ia-marco{position:relative;aspect-ratio:3/4;max-width:340px;margin:0 auto 12px;border:1px solid rgba(212,175,55,.35);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.35)}
+.ia-marco-img{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:12px;text-align:center;padding:14px}
+.ia-marco-img img{width:100%;height:100%;object-fit:cover;display:block}
+.ia-marco-txt{position:absolute;left:0;right:0;bottom:0;height:44%;background:rgba(7,4,26,.84);border:0;border-top:1px solid rgba(212,175,55,.3);color:var(--text);padding:10px;resize:none;font-size:13px;outline:none;font-family:inherit}
+.ia-marco.ver .ia-marco-txt{display:none}
+.ia-marco-ver{position:absolute;top:8px;right:8px;z-index:3;border:0;border-radius:999px;width:34px;height:34px;background:rgba(0,0,0,.6);color:#fff;font-size:16px;cursor:pointer}
+.ia-gtit{font-size:11px;color:var(--gold);letter-spacing:.5px;margin:10px 0 6px;text-transform:uppercase}
+.ia-chips{display:flex;gap:6px;flex-wrap:wrap}
+.ia-oculto{display:none!important}
+.ia-mas{border-style:dashed!important;font-weight:700}
+.sty-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px!important;font-size:12px}
+.sty-th{position:relative;width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2a1f5a,#5b3aa8);display:inline-flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden;flex:0 0 26px}
+.sty-th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lay-chip{display:inline-flex;flex-direction:column;align-items:center;gap:3px;padding:6px 8px!important;font-size:10px;line-height:1.2;max-width:92px;text-align:center}
+.ia-paneles{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.ia-refprev{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.ia-refsq{position:relative;width:62px;height:62px;border-radius:10px;overflow:hidden;border:1px solid rgba(212,175,55,.35)}
+.ia-refsq img{width:100%;height:100%;object-fit:cover;display:block}
+.ia-refsq b{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.rec-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px!important;font-size:12px}
+.rec-chip img{width:26px;height:26px;border-radius:7px;object-fit:cover}
 .ia-cell{position:relative}
 .ia-cell:after{content:'SalaMangaS IA';position:absolute;right:7px;top:7px;font-size:9px;letter-spacing:.3px;padding:3px 5px;border-radius:5px;color:#fff;background:rgba(20,10,35,.62);pointer-events:none}
 .create-opt .ico{font-size:23px!important}
@@ -1196,22 +1218,29 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div id="iaov" class="ov">
 <div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('iaov')">←</div><h2 id="iaTitulo">SalaMangaS IA</h2></div>
 <div class="ov-body">
-<div id="iaDibujoBox" style="display:none"><img id="iaDibujo" class="iaImg" style="width:100%;max-height:220px;object-fit:contain;border-radius:12px;background:rgba(0,0,0,.3)"></div>
-<label class="lbl">📝 Instrucción para la IA</label>
-<textarea id="iaTxt" class="input" placeholder="Describí la escena, ambiente, ropa, expresión, encuadre y lo que querés modificar..."></textarea>
-<button type="button" class="btn-ghost" style="font-size:12px;padding:6px 11px;margin-top:6px" onclick="abrirAsistente('historia',{campo:'iaTxt'})">📖 Ayudame con la historia</button>
+<div id="iaDibujoBox" style="display:none"><img id="iaDibujo" class="iaImg" style="width:100%;max-height:220px;object-fit:contain;border-radius:12px;background:rgba(0,0,0,.3);margin-bottom:10px"></div>
+<div id="iaMarco" class="ia-marco">
+<div id="iaMarcoImg" class="ia-marco-img"><span>Tu imagen va a aparecer acá</span></div>
+<button type="button" id="iaMarcoVer" class="ia-marco-ver" onclick="iaMarcoToggle()" style="display:none">👁️</button>
+<textarea id="iaTxt" class="ia-marco-txt" placeholder="Describí la escena: quién, qué hace, dónde está, la expresión y lo que querés modificar..."></textarea>
+</div>
+<button type="button" class="btn-ghost" style="font-size:12px;padding:6px 11px" onclick="abrirAsistente('historia',{campo:'iaTxt'})">📖 Ayudame con la historia</button>
 <details id="iaAyuda" class="ia-ayuda"><summary>💡 Ayuda para escribir mejor</summary>
 <div class="ia-aviso">⚠️ <b>Antes de generar:</b> en <b>Dibujo a lápiz</b> la IA crea <b>1 imagen</b> y en <b>SalaMangaS IA</b> crea <b>1 sola imagen</b>. Cada vez que tocás Generar se gasta <b>1 generación</b> (de tu plan o 1 Sakura IA), y si tocás Regenerar se gasta otra. Si la IA falla, la generación se te devuelve sola. No pidas <b>texto o letras</b> dentro de la imagen (la IA suele deformarlas), ni <b>personajes con derechos de autor</b>, ni contenido sexual o violento extremo: la IA lo bloquea.</div>
 <div class="ia-ayuda-t">Ejemplos (tocá uno para usarlo)</div><div id="iaEjemplos"></div>
 <div class="ia-ayuda-t">Sumá detalles (tocá para agregar)</div><div id="iaSugerencias"></div>
 <ul class="ia-tips"><li>Contá <b>quién</b> es, <b>qué hace</b>, <b>dónde</b> está y cómo se ve (encuadre y ambiente).</li><li>Una sola escena por imagen: es más fácil que salga bien.</li><li>Si querés un personaje tuyo, elegilo abajo en 👥 Personajes y la IA usa su foto.</li><li>En modo Lápiz la IA respeta tu dibujo: contale qué querés cambiar o agregar.</li></ul></details>
-<label class="lbl">✨ Estilo visual (primer toque)</label><div id="iaEstilos"></div>
-<label class="lbl">🎨 Color (segundo toque)</label><div id="iaColorModes" class="color-modes"><button type="button" class="chip" data-color="B/N">⚫ Blanco y negro</button><button type="button" class="chip" data-color="Color">🌈 Color</button></div>
-<label class="lbl">🎨 Detalles de color (opcional)</label><input id="iaColores" class="input" placeholder="Ej.: tonos pastel, neón, colores cálidos">
+<label class="lbl">✨ Estilo visual</label><div id="iaEstilos"></div>
+<label class="lbl">🎨 Color</label><div id="iaColorModes" class="color-modes"><button type="button" class="chip" data-color="B/N">⚫ Blanco y negro</button><button type="button" class="chip" data-color="Color">🌈 Color</button></div>
 <label class="lbl">🖼️ Imágenes de referencia (opcional)</label>
 <input id="iaRefInput" class="input" type="file" accept="image/*" multiple>
-<label class="lbl">👥 Personajes (opcional)</label><div id="iaPjs"></div>
-<div id="iaLayoutBox"><label class="lbl">🧩 Distribución de viñetas (opcional)</label><div id="iaLayouts" class="color-modes"><button type="button" class="chip" data-lay="pagina">Página completa</button><button type="button" class="chip" data-lay="h2">2 viñetas</button><button type="button" class="chip" data-lay="h3">3 viñetas</button><button type="button" class="chip" data-lay="g4">4 cuadros (2×2)</button><button type="button" class="chip" data-lay="g6">6 cuadros (2×3)</button><button type="button" class="chip" data-lay="l12">1 grande + 2 abajo</button><button type="button" class="chip" data-lay="l21">2 arriba + 1 grande</button><button type="button" class="chip" data-lay="dina">Dinámica (5)</button></div><p class="subtitle" style="margin:4px 0 10px">Tocá una para elegirla y de nuevo para sacarla. Si tu dibujo a lápiz ya tiene viñetas, dejalo sin elegir.</p></div>
+<div id="iaRefPrev" class="ia-refprev"></div>
+<label class="lbl">👥 Personajes (hasta 4)</label><div id="iaPjs" class="ia-chips"></div>
+<label class="lbl">📍 Lugar</label><div id="iaLugares" class="ia-chips"></div>
+<input id="iaLugarFile" type="file" accept="image/*" style="display:none">
+<label class="lbl">👕 Outfit (se consigue en la 🛍️ Tienda)</label><div id="iaOutfits" class="ia-chips"></div>
+<label class="lbl">🧩 Viñetas (opcional)</label><div id="iaLayouts" class="ia-chips"></div>
+<div id="iaPaneles" class="ia-paneles"></div>
 <div id="iaVinetasBox" class="ia-vinetas" style="display:none"><h3 class="section">🎬 Diseño de viñetas · Súper Pro en adelante</h3><p class="subtitle" style="margin:0 0 8px">Elegí una opción o escribí cualquier indicación.</p><label class="lbl">Encuadre</label><input id="iaEncuadre" class="input" list="iaEncuadreOpts" placeholder="Ej.: primer plano o un encuadre propio"><datalist id="iaEncuadreOpts"><option>Plano general</option><option>Plano medio</option><option>Primer plano</option><option>Detalle</option><option>Americano</option></datalist><label class="lbl">Ángulo</label><input id="iaAngulo" class="input" list="iaAnguloOpts" placeholder="Ej.: contrapicado o un ángulo propio"><datalist id="iaAnguloOpts"><option>Normal</option><option>Picado</option><option>Contrapicado</option><option>Cenital</option></datalist><label class="lbl">Emoción</label><input id="iaEmocion" class="input" list="iaEmocionOpts" placeholder="Ej.: pensativo o una emoción propia"><datalist id="iaEmocionOpts"><option>Feliz</option><option>Enojado</option><option>Triste</option><option>Sorprendido</option><option>Pensativo</option><option>Asustado</option><option>Determinado</option><option>Confundido</option></datalist></div>
 <div id="iaAviso2" class="ia-aviso2"></div>
 <button class="btn-main" id="iaBtn" style="margin-top:16px" onclick="iaGenerar()">✨ Generar</button>
@@ -3246,7 +3275,7 @@ async function borrarPersonaje(id){
    como referencia visual), así que la ficha de personaje no servía para
    nada en la práctica. Ahora la descripción se mete en el prompt y la
    foto de referencia viaja como imagen adicional. */
-const IA_MAX_PJ=3; /* máximo de personajes por generación */
+const IA_MAX_PJ=4; /* máximo de personajes por generación */
 function iaActualizarAviso(){
   const e=$('iaAviso2');if(!e)return;
   const n=iaPjSel.length;
@@ -3260,24 +3289,62 @@ function iaActualizarAviso(){
   if(n){
     t+=' Personajes: <b>'+n+'/'+IA_MAX_PJ+'</b>.';
     const conFoto=PERSONAJES.filter(p=>iaPjSel.includes(String(p.id))).find(p=>p.foto_url);
-    if(n>1)t+=' La IA usa la foto de <b>'+esc(conFoto?conFoto.nombre:'ninguno (sin foto)')+'</b> como referencia visual; a los demás los toma de su descripción. Cada personaje de más hace la imagen más difícil de lograr, por eso el máximo es '+IA_MAX_PJ+'.';
+    t+=' La IA usa las fotos de tus personajes como referencia (hasta '+IA_MAX_PJ+').';
   }
   e.innerHTML=t;
 }
 async function iaToken(){const {data:{session}}=await sb.auth.getSession();return session?session.access_token:''}
 let iaEstiloKey='',iaLoteUrls=[],iaUltimoId=null,iaColorModo='',iaLogoData=null;
-let iaFidelidad='equilibrado',iaDistribucion='';
-/* Distribución de viñetas (cuadros de la página). El texto va en inglés porque los modelos lo siguen mejor. */
-const IA_LAYOUTS={
-  pagina:'single full-page illustration, ONE big panel only, no panel borders',
-  h2:'manga page layout with exactly 2 horizontal panels stacked vertically, clean black panel borders and white gutters between panels',
-  h3:'manga page layout with exactly 3 horizontal panels stacked vertically, clean black panel borders and white gutters between panels',
-  g4:'manga page divided into exactly 4 equal panels in a 2x2 grid, clean black panel borders and white gutters between panels',
-  g6:'manga page divided into exactly 6 panels in a 2 columns by 3 rows grid, clean black panel borders and white gutters between panels',
-  l12:'manga page layout with one large wide panel on top and two smaller panels side by side below, clean black panel borders and white gutters',
-  l21:'manga page layout with two smaller panels side by side on top and one large wide panel below, clean black panel borders and white gutters',
-  dina:'dynamic manga page layout with 5 panels of different sizes and slanted borders, clean black panel borders and white gutters'
-};
+let iaLay='',iaLugar=null,iaOutfit=null,iaRefFiles=[];
+/* ---- Diccionario de ESTILOS (el texto va en inglés porque los modelos lo siguen mejor) ---- */
+const IA_ESTILOS=[
+ {k:'shonen-battle',g:'manga',n:'Shonen Battle',e:'💥',p:'Shonen Jump battle manga style, by Oda and Toriyama, intense dynamic action lines, speed lines, impact frames, exaggerated perspective, flying debris, sharp inking, screentone, WHOOSH BOOM'},
+ {k:'shonen-romance',g:'manga',n:'Shonen Romance',e:'🏫',p:'Modern shonen romance manga, soft clean lineart, sparkling eyes, detailed school uniform, classroom with soft shading, bishounen style, diagonal cinematic panels'},
+ {k:'shojo',g:'manga',n:'Shojo',e:'🌸',p:'Shojo manga by Arina Tanemura, ultra detailed sparkling eyes, flowing hair, flowers in the background'},
+ {k:'seinen-dark',g:'manga',n:'Seinen Dark',e:'🗡️',p:'Seinen manga in the style of Berserk and Vagabond, hyper-detailed realistic anatomy, gritty textures, heavy crosshatching'},
+ {k:'isekai',g:'manga',n:'Isekai Fantasy',e:'🔮',p:'Isekai fantasy manga, elaborate fantasy clothing, magic circles, glowing effects'},
+ {k:'slice',g:'manga',n:'Slice of Life',e:'☕',p:'Slice of life manga, cozy daily life, detailed interiors, soft lighting'},
+ {k:'chibi',g:'manga',n:'Chibi / Comedia',e:'😆',p:'Super deformed chibi comedy manga, big heads, cute exaggerated expressions'},
+ {k:'horror',g:'manga',n:'Horror (Junji Ito)',e:'👁️',p:'Horror manga in the style of Junji Ito, disturbing detailed faces, heavy inks, unsettling atmosphere'},
+ {k:'manhwa',g:'manga',n:'Manhwa coreano',e:'📱',p:'Modern Korean manhwa webtoon, full color, sharp digital rendering, fashionable characters'},
+ {k:'mecha',g:'manga',n:'Mecha / Sci-Fi',e:'🤖',p:'Mecha sci-fi manga like Ghost in the Shell, detailed mechanical armor, futuristic details'},
+ {k:'sports',g:'manga',n:'Sports',e:'🏀',p:'Sports manga like Slam Dunk, dynamic muscle movement, motion blur, energetic action'},
+ {k:'ecchi-adulto',g:'manga',n:'Ecchi adulto',e:'🔥',p:'Adult seinen ecchi manga style. ALL characters are mature adults over 18 with adult faces and adult bodies, voluptuous proportions, tight clothing, sensual but not pornographic'},
+ {k:'marvel',g:'comic',n:'Marvel Heroico',e:'🦸',p:'Classic superhero comic book style by Jim Lee, heroic dynamic poses, bold inks, detailed muscular anatomy, vibrant colors, dramatic lighting'},
+ {k:'dc-oscuro',g:'comic',n:'DC Oscuro',e:'🦇',p:'Dark gritty superhero comic style by Greg Capullo, heavy shadows, dramatic noir atmosphere, detailed textures'},
+ {k:'indie',g:'comic',n:'Indie (Saga)',e:'🚀',p:'Indie comic book style like Saga from Image Comics, painterly digital colors, expressive characters, rich color palette'},
+ {k:'vintage90',g:'comic',n:'Vintage 90s',e:'📼',p:'Vintage 90s comic book style, bold exaggerated anatomy, crosshatching, retro halftone colors'},
+ {k:'cartoon',g:'comic',n:'Cartoon Teen Titans',e:'🎬',p:'Western teen cartoon style like Teen Titans, bold simple shapes, flat vibrant colors, expressive faces'},
+ {k:'golden-age',g:'comic',n:'Golden Age',e:'📰',p:'Golden age 1940s comic book style, Ben-Day dots, bold primary colors, retro printing'},
+ {k:'pop-art',g:'comic',n:'Pop Art',e:'🎨',p:'Pop art comic style, halftone dots, bold outlines, primary colors, Lichtenstein-like'},
+ {k:'sin-city',g:'comic',n:'Noir Sin City',e:'🕶️',p:'High contrast black and white noir comic like Sin City, stark shadows, white on black'},
+ {k:'graphic-novel',g:'comic',n:'Novela gráfica',e:'📖',p:'Realistic graphic novel painted style, cinematic lighting, detailed'},
+ {k:'webcomic',g:'comic',n:'Webcomic moderno',e:'💻',p:'Modern webcomic style, clean digital lines, flat colors, expressive characters'},
+ {k:'mignola',g:'comic',n:'Hellboy (Mignola)',e:'😈',p:'Hellboy style by Mike Mignola, heavy blacks, angular shapes, limited color palette'},
+ {k:'spiderverse',g:'comic',n:'Spider-Verse',e:'🕷️',p:'Spider-Verse stylized comic look, halftone, chromatic offset, dynamic energetic framing'}
+];
+/* ---- Diccionario de VIÑETAS: 8 distribuciones con miniatura y cuadros numerados ---- */
+const IA_LAYOUTS_D=[
+ {k:'shonen-impacto',n:'Shonen impacto',sv:[[2,2,34,56],[38,2,20,27],[38,31,20,27],[2,60,56,18]],labs:['grande a la izquierda','arriba a la derecha','abajo a la derecha','acción ancha abajo'],p:'manga page layout: one large vertical panel on the left taking about 60 percent of the width, two small panels stacked on the right (close-ups), and one wide action panel along the bottom with speed lines and impact effect. Clean black panel borders and white gutters'},
+ {k:'romance-diag',n:'Romance diagonal',sv:['2,2 58,2 58,30 2,50','2,54 58,34 58,78 2,78'],labs:['arriba (ambiente)','abajo (primer plano en diagonal)'],p:'manga page layout split by a 45 degree diagonal cut: the top panel is a wide establishing shot of the place, the bottom panel is a diagonal close-up. Clean black panel borders and white gutters'},
+ {k:'corte-z',n:'Corte en Z',sv:['2,2 58,2 58,18 2,32','2,36 58,22 58,48 2,62','2,66 58,52 58,78 2,78'],labs:['diagonal de arriba','diagonal del medio','diagonal de abajo'],p:'manga page layout with three diagonal panels crossing the page in a Z shape. Clean black panel borders and white gutters'},
+ {k:'horizontal3',n:'Horizontal 3',sv:[[2,2,56,23],[2,29,56,23],[2,56,56,22]],labs:['franja de arriba','franja del medio','franja de abajo'],p:'manga page layout with three horizontal cinematic strip panels stacked vertically. Clean black panel borders and white gutters'},
+ {k:'accion4',n:'4 paneles acción',sv:[[2,2,56,16],[2,20,27,30],[31,20,27,30],[2,52,56,26]],labs:['el ojo','el puño','el cuerpo','el suelo'],p:'manga action page with four panels: a tight close-up of the eye, a fist punch, the full body in motion, and the ground impact. Clean black panel borders and white gutters'},
+ {k:'escalera',n:'Escalera tensión',sv:[[2,2,56,20],[2,24,27,26],[31,24,27,26],[2,52,56,26]],labs:['ancho arriba','medio izquierda','medio derecha','grande abajo'],p:'manga page layout: one wide panel on top, two medium panels in the middle, and one large panel at the bottom, building tension. Clean black panel borders and white gutters'},
+ {k:'full',n:'Full page',sv:[[2,2,56,76]],labs:['la página completa'],p:'single full-page illustration, ONE big panel only, no panel borders'},
+ {k:'grid23',n:'Grid 2×3',sv:[[2,2,27,24],[31,2,27,24],[2,28,27,24],[31,28,27,24],[2,54,27,24],[31,54,27,24]],labs:['arriba izquierda','arriba derecha','medio izquierda','medio derecha','abajo izquierda','abajo derecha'],p:'manga page divided into exactly six equal panels in a grid of 2 columns by 3 rows. Clean black panel borders and white gutters'}
+];
+function iaSvg(l){
+  return '<svg viewBox="0 0 60 80" width="30" height="40" aria-hidden="true">'+l.sv.map(x=>typeof x==='string'?'<polygon points="'+x+'" fill="rgba(212,175,55,.28)" stroke="#d4af37" stroke-width="1.4"/>':'<rect x="'+x[0]+'" y="'+x[1]+'" width="'+x[2]+'" height="'+x[3]+'" rx="1" fill="rgba(212,175,55,.28)" stroke="#d4af37" stroke-width="1.4"/>').join('')+'</svg>';
+}
+const IA_LUGARES_BASE=['Dormitorio','Casa','Colegio','Trabajo','Calle','Parque','Café','Playa','Bosque','Ciudad de noche','Hospital','Gimnasio'];
+/* Muestra solo los primeros N y un botón "＋ Ver más" */
+function iaPlegable(cont,n){
+  const hijos=[...cont.children].filter(x=>!x.classList.contains('ia-mas'));
+  hijos.forEach((c,i)=>c.classList.toggle('ia-oculto',i>=n));
+  const old=cont.querySelector('.ia-mas');if(old)old.remove();
+  if(hijos.length>n){const b=document.createElement('button');b.type='button';b.className='chip ia-mas';b.textContent='＋ Ver más';let ab=false;b.onclick=()=>{ab=!ab;hijos.forEach((c,i)=>c.classList.toggle('ia-oculto',!ab&&i>=n));b.textContent=ab?'− Ver menos':'＋ Ver más'};cont.appendChild(b)}
+}
 const IA_EJEMPLOS=[
   'Un samurái bajo la lluvia, plano medio, mirada seria, tinta negra con mucho contraste',
   'Chica con una espada sobre un tejado de noche, luna llena, el viento mueve su pelo',
@@ -3291,27 +3358,72 @@ function iaAgregarTexto(t,reemplazar){
   const e=$('iaTxt');if(!e)return;
   e.value=(reemplazar||!e.value.trim())?t:e.value.trim().replace(/[.,;]$/,'')+', '+t;e.focus();
 }
+function iaMarcoToggle(){const m=$('iaMarco');if(m)m.classList.toggle('ver')}
+function iaPintarRefs(){
+  const c=$('iaRefPrev');if(!c)return;
+  c.innerHTML=iaRefFiles.map((f,i)=>'<div class="ia-refsq"><img src="'+URL.createObjectURL(f)+'" alt=""><b onclick="iaRefQuitar('+i+')">✕</b></div>').join('');
+}
+function iaRefQuitar(i){iaRefFiles.splice(i,1);iaPintarRefs()}
+function iaPintarLugares(){
+  const c=$('iaLugares');if(!c)return;
+  const comprados=(typeof TIENDA!=='undefined'?TIENDA.items:[]).filter(r=>r.tipo==='lugar'&&TIENDA.compras.has(String(r.id)));
+  let h=comprados.map(r=>'<button type="button" class="chip rec-chip'+(iaLugar&&iaLugar.id==='t'+r.id?' on':'')+'" data-t="'+esc(String(r.id))+'">'+(r.imagen_url?'<img src="'+esc(r.imagen_url)+'" alt="">':'📍')+'<span>'+esc(r.nombre)+'</span></button>').join('');
+  h+=IA_LUGARES_BASE.map(n=>'<button type="button" class="chip'+(iaLugar&&iaLugar.id==='b'+n?' on':'')+'" data-b="'+esc(n)+'">📍 '+esc(n)+'</button>').join('');
+  h+='<button type="button" class="chip'+(iaLugar&&iaLugar.id==='up'?' on':'')+'" data-up="1">📤 '+(iaLugar&&iaLugar.id==='up'?'Lugar subido ✓':'Subir lugar')+'</button>';
+  c.innerHTML=h;
+  c.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{const r=comprados.find(x=>String(x.id)===b.dataset.t);iaLugar=(iaLugar&&iaLugar.id==='t'+r.id)?null:{id:'t'+r.id,txt:r.nombre+(r.descripcion?': '+r.descripcion:''),img:r.imagen_url||null};iaPintarLugares()});
+  c.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const n=b.dataset.b;iaLugar=(iaLugar&&iaLugar.id==='b'+n)?null:{id:'b'+n,txt:n,img:null};iaPintarLugares()});
+  const up=c.querySelector('[data-up]');if(up)up.onclick=()=>{if(iaLugar&&iaLugar.id==='up'){iaLugar=null;iaPintarLugares();return}$('iaLugarFile').click()};
+  iaPlegable(c,6+comprados.length);
+}
+function iaPintarOutfits(){
+  const c=$('iaOutfits');if(!c)return;
+  const comprados=(typeof TIENDA!=='undefined'?TIENDA.items:[]).filter(r=>r.tipo==='outfit'&&TIENDA.compras.has(String(r.id)));
+  if(!comprados.length){c.innerHTML='<span style="font-size:11px;color:var(--text2)">Todavía no tenés outfits. Comprá en 🛍️ Tienda y aparecen acá.</span>';return}
+  c.innerHTML=comprados.map(r=>'<button type="button" class="chip rec-chip'+(iaOutfit&&iaOutfit.id===String(r.id)?' on':'')+'" data-o="'+esc(String(r.id))+'">'+(r.imagen_url?'<img src="'+esc(r.imagen_url)+'" alt="">':'👕')+'<span>'+esc(r.nombre)+'</span></button>').join('');
+  c.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{const r=comprados.find(x=>String(x.id)===b.dataset.o);iaOutfit=(iaOutfit&&iaOutfit.id===String(r.id))?null:{id:String(r.id),txt:r.nombre+(r.descripcion?': '+r.descripcion:''),img:r.imagen_url||null};iaPintarOutfits()});
+  iaPlegable(c,4);
+}
+function iaPintarPaneles(){
+  const c=$('iaPaneles');if(!c)return;
+  const l=IA_LAYOUTS_D.find(x=>x.k===iaLay);
+  if(!l||l.k==='full'){c.innerHTML='';return}
+  const ej=['Ej.: Evelin y Matías salen','Ej.: Evelin camina','Ej.: Evelin se cae','Ej.: Matías la mira sorprendido','Ej.: ella se ríe','Ej.: los dos se van'];
+  c.innerHTML=l.labs.map((lb,i)=>'<input class="input ia-panel-in" maxlength="160" placeholder="Viñeta '+(i+1)+' ('+esc(lb)+') — '+esc(ej[i]||'Ej.: qué pasa acá')+'">').join('');
+}
 async function abrirIA(modo,file){
   if(!miPerfil){alert('Iniciá sesión primero');return}
-  iaModo=modo;iaImg=null;iaBlob=null;iaEstilo=null;iaEstiloKey='';iaColorModo='';iaFidelidad='equilibrado';iaDistribucion='';iaPjSel=[];iaLoteUrls=[];iaUltimoId=null;$('iaRes').innerHTML='';
+  iaModo=modo;iaImg=null;iaBlob=null;iaEstilo=null;iaEstiloKey='';iaColorModo='';iaLay='';iaLugar=null;iaOutfit=null;iaRefFiles=[];iaPjSel=[];iaLoteUrls=[];iaUltimoId=null;$('iaRes').innerHTML='';
+  $('iaMarcoImg').innerHTML='<span>Tu imagen va a aparecer acá</span>';$('iaMarco').classList.remove('ver');$('iaMarcoVer').style.display='none';
   $('iaTitulo').innerText=modo==='lapiz'?'Dibujo a lápiz → Manga':'SalaMangas IA';
   $('iaDibujoBox').style.display=modo==='lapiz'?'block':'none';
   if(file){iaBlob=file;const u=URL.createObjectURL(file);$('iaDibujo').src=u}
-  const estilos=[['shonen','Shonen'],['shojo','Shojo'],['anime','Anime'],['cyberpunk','Cyberpunk'],['acuarela','Acuarela'],['comic-western','Cómic western'],['kawaii','Kawaii'],['retro','Retro 80s/90s'],['clasico','Manga clásico'],['screentone','Screentone'],['noir','Noir'],['vintage','Vintage'],['pastel','Pastel'],['dark','Dark Fantasy'],['chibi','Chibi'],['realista','Realista']];
-  $('iaEstilos').innerHTML=estilos.map(x=>'<button type="button" class="chip style-choice" data-k="'+x[0]+'">'+x[1]+'</button>').join('');
-  document.querySelectorAll('#iaEstilos .style-choice').forEach(c=>c.onclick=()=>{document.querySelectorAll('#iaEstilos .style-choice').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaEstilo=c.innerText;iaEstiloKey=c.dataset.k});
-  document.querySelectorAll('#iaColorModes .color-choice, #iaColorModes .chip').forEach(c=>{c.classList.remove('on');c.onclick=()=>{document.querySelectorAll('#iaColorModes .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaColorModo=c.dataset.color||c.textContent.trim()}});
+  /* Estilos: manga y cómic, 4 a la vista + "＋ Ver más" */
+  const grupos=[['manga','Manga asiático'],['comic','Cómic americano']];
+  $('iaEstilos').innerHTML=grupos.map(g=>'<div class="ia-gtit">'+g[1]+'</div><div class="ia-chips" id="iaEst_'+g[0]+'">'+IA_ESTILOS.filter(x=>x.g===g[0]).map(x=>'<button type="button" class="chip style-choice sty-chip" data-k="'+x.k+'"><span class="sty-th">'+x.e+'<img src="/estilos/'+x.k+'.jpg" alt="" onerror="this.remove()"></span><span>'+esc(x.n)+'</span></button>').join('')+'</div>').join('');
+  document.querySelectorAll('#iaEstilos .style-choice').forEach(c=>c.onclick=()=>{const ya=c.classList.contains('on');document.querySelectorAll('#iaEstilos .style-choice').forEach(x=>x.classList.remove('on'));if(ya){iaEstilo=null;iaEstiloKey='';return}c.classList.add('on');iaEstiloKey=c.dataset.k;iaEstilo=(IA_ESTILOS.find(x=>x.k===iaEstiloKey)||{}).n||''});
+  grupos.forEach(g=>iaPlegable($('iaEst_'+g[0]),4));
+  document.querySelectorAll('#iaColorModes .chip').forEach(c=>{c.classList.remove('on');c.onclick=()=>{const ya=c.classList.contains('on');document.querySelectorAll('#iaColorModes .chip').forEach(x=>x.classList.remove('on'));if(ya){iaColorModo='';return}c.classList.add('on');iaColorModo=c.dataset.color||c.textContent.trim()}});
+  /* Referencias con cuadraditos */
+  iaPintarRefs();
+  const ri=$('iaRefInput');ri.value='';ri.onchange=()=>{[...ri.files].forEach(f=>{if(iaRefFiles.length<4)iaRefFiles.push(f)});ri.value='';iaPintarRefs()};
+  const lf=$('iaLugarFile');lf.value='';lf.onchange=()=>{const f=lf.files[0];if(f){iaLugar={id:'up',txt:'Lugar de la imagen subida por el usuario',img:f}}lf.value='';iaPintarLugares()};
+  /* Viñetas: 4 a la vista + "＋ Ver más"; al elegir una aparecen las viñetas numeradas */
+  const lc=$('iaLayouts');lc.innerHTML=IA_LAYOUTS_D.map(l=>'<button type="button" class="chip lay-chip" data-lay="'+l.k+'">'+iaSvg(l)+'<span>'+esc(l.n)+'</span></button>').join('');
+  lc.querySelectorAll('.lay-chip').forEach(c=>c.onclick=()=>{const k=c.dataset.lay;if(iaLay===k){iaLay='';c.classList.remove('on')}else{lc.querySelectorAll('.lay-chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaLay=k}iaPintarPaneles()});
+  iaPlegable(lc,4);iaPintarPaneles();
   const vb=$('iaVinetasBox');if(vb){const pk=planClave(miPerfil);vb.style.display=['superpro','semidios','dios'].includes(pk)&&planVigente()? 'block':'none'}
-  const fbx=$('iaFidBox');if(fbx)fbx.style.display=modo==='lapiz'?'block':'none';
-  document.querySelectorAll('#iaFid .chip').forEach(c=>{c.classList.toggle('on',c.dataset.fid==='equilibrado');c.onclick=()=>{document.querySelectorAll('#iaFid .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaFidelidad=c.dataset.fid}});
-  document.querySelectorAll('#iaLayouts .chip').forEach(c=>{c.classList.remove('on');c.onclick=()=>{const k=c.dataset.lay;if(iaDistribucion===k){iaDistribucion='';c.classList.remove('on');return}document.querySelectorAll('#iaLayouts .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');iaDistribucion=k}});
   const ej=$('iaEjemplos');if(ej){ej.innerHTML=IA_EJEMPLOS.map((t,i)=>'<span class="chip" data-ej="'+i+'">'+esc(t)+'</span>').join('');ej.querySelectorAll('.chip').forEach(c=>c.onclick=()=>iaAgregarTexto(IA_EJEMPLOS[c.dataset.ej],true))}
   const sg=$('iaSugerencias');if(sg){sg.innerHTML=IA_SUGERENCIAS.map((t,i)=>'<span class="chip" data-sg="'+i+'">+ '+esc(t)+'</span>').join('');sg.querySelectorAll('.chip').forEach(c=>c.onclick=()=>iaAgregarTexto(IA_SUGERENCIAS[c.dataset.sg],false))}
   await cargarPersonajes();
-  $('iaPjs').innerHTML=PERSONAJES.length?PERSONAJES.map(p=>'<span class="chip" data-pj="'+p.id+'">👤 '+esc(p.nombre)+'</span>').join(''):vacio('Guardá personajes para usarlos como referencia');
-  document.querySelectorAll('#iaPjs .chip').forEach(c=>c.onclick=()=>{const id=c.dataset.pj;if(!c.classList.contains('on')&&iaPjSel.length>=IA_MAX_PJ){alert('Máximo '+IA_MAX_PJ+' personajes por generación. Cada personaje de referencia hace la imagen más difícil de lograr. Sacá uno para elegir otro.');return}c.classList.toggle('on');iaPjSel=c.classList.contains('on')?[...new Set([...iaPjSel,id])]:iaPjSel.filter(x=>x!==id);iaActualizarAviso()});
+  $('iaPjs').innerHTML=PERSONAJES.length?PERSONAJES.map(p=>'<span class="chip" data-pj="'+p.id+'">👤 '+esc(p.nombre)+'</span>').join(''):vacio('Guardá o comprá personajes para usarlos como referencia');
+  document.querySelectorAll('#iaPjs .chip').forEach(c=>c.onclick=()=>{const id=c.dataset.pj;if(!c.classList.contains('on')&&iaPjSel.length>=IA_MAX_PJ){alert('Máximo '+IA_MAX_PJ+' personajes por generación. Sacá uno para elegir otro.');return}c.classList.toggle('on');iaPjSel=c.classList.contains('on')?[...new Set([...iaPjSel,id])]:iaPjSel.filter(x=>x!==id);iaActualizarAviso()});
+  iaPlegable($('iaPjs'),4);
   iaActualizarAviso();
-  $('iaov').classList.add('on')
+  $('iaov').classList.add('on');
+  /* Lo comprado en la Tienda (lugares y outfits): se carga después para no demorar la pantalla */
+  try{if(typeof TIENDA!=='undefined'&&!TIENDA.items.length)await tiendaCargar()}catch(e){}
+  iaPintarLugares();iaPintarOutfits();
 }
 /* Achica la imagen (JPG) antes de mandarla: más rápido y liviano */
 async function iaRedimBlob(src,max,realce){
@@ -3329,27 +3441,45 @@ async function iaRedimBlob(src,max,realce){
 async function iaGenerar(){
   if(!requireUser())return;
   const btn=$('iaBtn');btn.disabled=true;btn.innerText='✨ Generando...';
-  $('iaRes').innerHTML=vacio('🎨 La IA está dibujando '+(iaModo==='lapiz'?'tu imagen':'tu imagen')+'... puede tardar entre 20 y 60 segundos. No cierres esta pantalla.');
+  $('iaRes').innerHTML=vacio('🎨 La IA está dibujando tu imagen... puede tardar entre 20 y 60 segundos. No cierres esta pantalla.');$('iaMarco').classList.remove('ver');$('iaMarcoImg').innerHTML='<span>🎨 Dibujando...</span>';
   try{
     if(iaModo==='lapiz'&&!iaBlob)throw new Error('Falta el dibujo a lápiz');
     if(iaPjSel.length>IA_MAX_PJ)throw new Error('Elegí como máximo '+IA_MAX_PJ+' personajes');
     const pj=PERSONAJES.filter(p=>iaPjSel.includes(String(p.id)));
-    /* Estilo y color son OPCIONALES: sin color elegido, la IA respeta el del dibujo */
-    const estiloTxt=iaEstilo||'manga clásico';
-    const colorTxt=$('iaColores').value.trim();
-    let prompt=($('iaTxt').value.trim()||'escena manga dinámica, expresiva y coherente')+'. Estilo visual: '+estiloTxt+'.';
-    if(colorTxt)prompt+=' Detalles de color: '+colorTxt+'.';
-    if(iaModo==='lapiz')prompt+=' Usar el dibujo de referencia como base: respetar la composición y los personajes, pero aplicar todo lo que pide el usuario (colores, cambios y detalles).';
+    /* PROMPT FINAL, en este orden: ESTILO + PERSONAJES + LUGAR + OUTFIT + VIÑETAS (diseño) + TEXTO DEL USUARIO + VIÑETAS NUMERADAS */
+    const est=IA_ESTILOS.find(x=>x.k===iaEstiloKey),lay=IA_LAYOUTS_D.find(x=>x.k===iaLay);
+    const userTxt=$('iaTxt').value.trim();
+    const paneles=[...document.querySelectorAll('#iaPaneles .ia-panel-in')].map((e,i)=>e.value.trim()?'Panel '+(i+1)+': '+e.value.trim():'').filter(Boolean);
     const enc=$('iaEncuadre')?.value.trim(),ang=$('iaAngulo')?.value.trim(),emo=$('iaEmocion')?.value.trim();
-    if($('iaVinetasBox')&&$('iaVinetasBox').style.display!=='none'){if(enc)prompt+=' Encuadre solicitado: '+enc+'.';if(ang)prompt+=' Ángulo solicitado: '+ang+'.';if(emo)prompt+=' Emoción solicitada: '+emo+'.';}
-    if(iaDistribucion&&IA_LAYOUTS[iaDistribucion])prompt+=' Distribución de la página: '+IA_LAYOUTS[iaDistribucion]+'.';
-    if(pj.length)prompt+=' Personajes que deben respetarse exactamente: '+pj.map(p=>p.nombre+': '+p.descripcion).join(' | ')+'.';
-    if(!iaDistribucion||iaDistribucion==='pagina')prompt+=' Una sola imagen final, sin collage.';
+    const conVin=$('iaVinetasBox')&&$('iaVinetasBox').style.display!=='none';
+    const pjTxt=pj.map((p,i)=>(i+1)+') '+p.nombre+': '+p.descripcion).join(' | ');
+    const partes=[est?est.p:'manga illustration, clean ink lines'];
+    if(pj.length)partes.push('CHARACTERS (respect each one exactly): '+pjTxt);
+    if(iaLugar)partes.push('LOCATION: '+iaLugar.txt);
+    if(iaOutfit)partes.push('OUTFIT: '+iaOutfit.txt);
+    if(lay)partes.push('PAGE LAYOUT: '+lay.p);
+    partes.push('SCENE: '+(userTxt||'dynamic, expressive manga scene'));
+    if(lay&&paneles.length)partes.push('PANELS in reading order — '+paneles.join(' | '));
+    if(conVin){if(enc)partes.push('Camera framing: '+enc);if(ang)partes.push('Camera angle: '+ang);if(emo)partes.push('Emotion: '+emo)}
+    if(iaModo==='lapiz')partes.push('Use the reference drawing as the base: respect its composition and characters, but apply everything the user asks (colors, changes and details)');
+    if(!lay||lay.k==='full')partes.push('One single final image, no collage');
+    const prompt=partes.join('. ')+'.';
+    /* Para el filtro se mandan SOLO las palabras del usuario (no los textos de estilo de la app) */
+    const texto=[userTxt,paneles.join(' '),pjTxt,iaLugar?iaLugar.txt:'',iaOutfit?iaOutfit.txt:'',enc||'',ang||'',emo||''].join(' . ');
     const fd=new FormData();
-    fd.append('prompt',prompt);fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey||'clasico');fd.append('color_modo',iaColorModo||'auto');fd.append('fidelidad',iaFidelidad);fd.append('distribucion',iaDistribucion);fd.append('num_images','1');fd.append('cantidad','1');
+    fd.append('prompt',prompt);fd.append('texto',texto);fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey||'clasico');fd.append('color_modo',iaColorModo||'auto');fd.append('num_images','1');fd.append('cantidad','1');
     if(iaBlob)fd.append('dibujo',await iaRedimBlob(iaBlob,1280,'contrast(1.15)'),'dibujo.jpg');
-    const conFoto=pj.find(p=>p.foto_url);
-    if(conFoto){try{fd.append('personaje',await iaRedimBlob(conFoto.foto_url,1000),'personaje.jpg')}catch(e){console.warn('Referencia de personaje:',e.message)}}
+    /* Referencias (solo SalaMangaS IA): fotos de los personajes + outfit + lugar + las que subió el usuario. Máximo 4. */
+    if(iaModo!=='lapiz'){
+      const refs=[];
+      pj.filter(p=>p.foto_url).forEach(p=>refs.push({src:p.foto_url,nota:'character "'+p.nombre+'"'}));
+      if(iaOutfit&&iaOutfit.img)refs.push({src:iaOutfit.img,nota:'outfit reference'});
+      if(iaLugar&&iaLugar.img)refs.push({src:iaLugar.img,nota:'location reference'});
+      iaRefFiles.forEach(f=>refs.push({src:f,nota:'extra reference'}));
+      const usadas=[];
+      for(const r of refs){if(usadas.length>=4)break;try{const b=await iaRedimBlob(r.src,1000);fd.append('ref',b,'ref'+usadas.length+'.jpg');usadas.push(r.nota)}catch(e){console.warn('Referencia omitida:',e.message)}}
+      if(usadas.length)fd.append('ref_notas',usadas.map((n,i)=>'Image '+(i+1)+': '+n).join('; '));
+    }
     const tk=await iaToken();
     const r=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:fd});
     const j=await r.json().catch(()=>({}));
@@ -3380,7 +3510,11 @@ async function iaReanudar(){
 }
 function iaMostrar(urls){
   iaLoteUrls=(urls||[]).slice(0,1).map(u=>String(u).indexOf('data:')===0?u:'/api/ia-imagen?u='+encodeURIComponent(u));
-  $('iaRes').innerHTML='<div class="ia-result-card"><div class="ia-grid"'+(iaLoteUrls.length===1?' style="grid-template-columns:1fr;max-width:260px;margin:0 auto"':'')+'>'+iaLoteUrls.map((u,i)=>'<div class="ia-cell"><img src="'+esc(u)+'" alt="Imagen generada" loading="lazy"><div class="ia-cell-btns"><button class="btn-main" onclick="iaElegir('+i+',\'portada\')">📕 Portada</button><button class="btn" onclick="iaElegir('+i+',\'pagina\')">📄 Página</button></div></div>').join('')+'</div><p style="font-size:11px;color:var(--text2);margin:8px 0 6px;text-align:center">'+(iaLoteUrls.length===1?'Si no te convence, regenerá para ver otra versión.':'Elegí la que más te guste, o regenerá para ver '+iaLoteUrls.length+' opciones nuevas.')+'</p><button class="btn" style="width:100%" onclick="iaGenerar()">🔄 Regenerar (gasta 1 generación)</button></div>';
+  const u=iaLoteUrls[0];
+  $('iaMarcoImg').innerHTML=u?'<img src="'+esc(u)+'" alt="Imagen generada">':'<span>No llegó la imagen</span>';
+  const v=$('iaMarcoVer');if(v)v.style.display=u?'block':'none';
+  if(u)$('iaMarco').classList.add('ver');
+  $('iaRes').innerHTML='<div class="ia-result-card"><div style="display:flex;gap:8px"><button class="btn-main" style="flex:1" onclick="iaElegir(0,\'portada\')">📕 Portada</button><button class="btn" style="flex:1" onclick="iaElegir(0,\'pagina\')">📄 Página</button></div><p style="font-size:11px;color:var(--text2);margin:8px 0 6px;text-align:center">Si no te convence, tocá 👁️ para cambiar el texto y regenerá.</p><button class="btn" style="width:100%" onclick="iaGenerar()">🔄 Regenerar (gasta 1 generación)</button></div>';
 }
 function iaError(e){
   if(e&&e.pendiente){$('iaRes').innerHTML='<p style="color:var(--gold3);font-size:13px;text-align:center">'+esc(e.message)+' Tu generación sigue en proceso y no se vuelve a descontar.</p><button class="btn-main" style="width:100%;margin-top:8px" onclick="iaReanudar()">⏳ Seguir esperando</button>';return}
