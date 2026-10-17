@@ -6,7 +6,7 @@
 // 6) si algo falla, el SERVIDOR devuelve la generación. Leonardo ya NO se usa acá (solo para crear personajes).
 import { out, getServiceClient } from './_shared.js';
 import { IAError, usuarioIA, iaActiva, modeloEscena, rpcUsuario, cantidadPorModo, directivaColor } from './_ia.js';
-import { motorActivo, motorImagenes, motorEditar } from './_motor.js';
+import { motorActivo, motorImagenes, motorEditar, motorConReferencias } from './_motor.js';
 import { filtrar } from './_filtro.js';
 
 const MAX_ARCHIVO = 8 * 1024 * 1024; // 8 MB (la app ya achica la imagen antes de mandarla)
@@ -33,13 +33,21 @@ export async function onRequestPost({ request, env }) {
     dibujo = esArchivo(dibujo) ? dibujo : null;
     if (dibujo && dibujo.size > MAX_ARCHIVO) return out(400, { error: 'La imagen es muy pesada (máximo 8 MB)' });
     if (modo === 'lapiz' && !dibujo) return out(400, { error: 'Falta el dibujo a lápiz' });
+    // Imágenes de referencia (fotos de personajes, lugar, outfit, las que sube el usuario): hasta 4
+    const refs = fd.getAll('ref').filter(esArchivo).slice(0, 4);
+    if (refs.some(f => f.size > MAX_ARCHIVO)) return out(400, { error: 'Una imagen de referencia es muy pesada (máximo 8 MB)' });
+    const refNotas = String(fd.get('ref_notas') || '').slice(0, 600);
+    // Fal tiene un filtro propio de imágenes: está activo para usuarios comunes y apagado para el CEO. (FAL_SAFETY_USUARIOS=off lo apaga para todos.)
+    const seguro = !ctx.esCeo && String(env.FAL_SAFETY_USUARIOS || '').toLowerCase() !== 'off';
 
     // La orden de color va al principio y al final: los modelos la obedecen mucho más así.
     const dirColor = directivaColor(colorModo);
     const prompt = dirColor ? (dirColor + ' ' + promptUsuario + ' ' + dirColor) : promptUsuario;
 
-    // Lista negra: SOLO usuarios comunes (el CEO verificado queda exento, salvo contenido sexual con menores)
-    const bloqueo = await filtrar(env, ctx, promptUsuario);
+    // Filtro: se revisan SOLO las palabras del usuario (texto, personajes, lugar, outfit, viñetas), no los textos de estilo de la app.
+    // Menores + sexual = bloqueo total para todos (CEO incluido). Sexo explícito/gore: solo bloquea a usuarios comunes.
+    const textoFiltro = String(fd.get('texto') || '').slice(0, 3000) || promptUsuario;
+    const bloqueo = await filtrar(env, ctx, textoFiltro);
     if (bloqueo) return out(400, { error: bloqueo, codigo: 'filtro' });
 
     // COBRAR (el CEO no gasta). Si no tiene generaciones, la base devuelve -1.
@@ -54,13 +62,16 @@ export async function onRequestPost({ request, env }) {
       let escena = await modeloEscena(env);
       // FLUX Kontext es un modelo de EDICIÓN: exige imagen de entrada y falla en texto→imagen. Sin imagen, se usa Qwen-Image.
       if (escena === 'kontext') { console.warn('ia_modelo_escena=kontext no sirve para texto→imagen: se usa qwen'); escena = 'qwen'; }
-      const { imagenes, motor } = await motorImagenes(env, { escena, prompt, w: ANCHO, h: ALTO, n: cantidadPorModo('ia'), colorModo, seguro: !ctx.esCeo });
+      const promptConRef = refs.length
+        ? 'Create ONE new vertical manga illustration using the reference images in this order: ' + (refNotas || 'each image is a reference') + '. Keep every character\'s face, hair, body and outfit exactly like its reference image, and keep the location/outfit references. Do NOT copy the reference layout; draw this new scene. ' + prompt
+        : prompt;
+      const { imagenes, motor } = await motorConReferencias(env, { escena, prompt: promptConRef, promptSinRef: prompt, archivos: refs, w: ANCHO, h: ALTO, n: cantidadPorModo('ia'), colorModo, seguro });
       return out(200, { ok: true, sync: true, imagenes, motor, cantidad: imagenes.length });
     }
 
     // ---- Lápiz: EDITA el dibujo con Qwen-Image-Edit ----
     const promptEdicion = 'Redraw the attached reference image as a finished manga illustration. KEEP the same character: same face, expression, hairstyle shape, pose, camera angle and composition. Apply ONLY the changes and details requested below; everything else stays the same as the reference. Requested changes and details: ' + promptUsuario + (dirColor ? ' ' + dirColor : '');
-    const { imagen, motor } = await motorEditar(env, { prompt: promptEdicion, archivo: dibujo, w: ANCHO, h: ALTO, seguro: !ctx.esCeo });
+    const { imagen, motor } = await motorEditar(env, { prompt: promptEdicion, archivo: dibujo, w: ANCHO, h: ALTO, seguro });
     return out(200, { ok: true, sync: true, imagenes: [imagen], motor, cantidad: 1 });
   } catch (e) {
     let devuelta = false;

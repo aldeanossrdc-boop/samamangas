@@ -2,6 +2,7 @@
 // Modelos (se pueden cambiar desde Cloudflare sin tocar código):
 //   FAL_MODELO_QWEN  = fal-ai/qwen-image        (SalaMangaS IA: texto → imagen)
 //   FAL_MODELO_EDIT  = fal-ai/qwen-image-edit   (Lápiz: edita tu dibujo)
+//   FAL_MODELO_MULTI = fal-ai/qwen-image-edit-plus (SalaMangaS IA con personajes/lugar/outfit de referencia)
 //   FAL_MODELO_CHAT  = google/gemini-2.5-flash  (asistentes, vía fal-ai/any-llm)
 import { IAError } from './_ia.js';
 
@@ -11,6 +12,7 @@ export const falDisponible = env => !!falKey(env);
 export const falModelo = (env, cual) => ({
   qwen: env.FAL_MODELO_QWEN || 'fal-ai/qwen-image',
   edit: env.FAL_MODELO_EDIT || 'fal-ai/qwen-image-edit',
+  multi: env.FAL_MODELO_MULTI || 'fal-ai/qwen-image-edit-plus',
   chat: env.FAL_MODELO_CHAT || 'google/gemini-2.5-flash'
 })[cual];
 
@@ -92,4 +94,29 @@ export async function falChat(env, { system, mensajes }) {
     if (res.status !== 422 && res.status !== 404) break;   // 422/404 = ese modelo no está disponible: se prueba el siguiente
   }
   throw ultimo && !ultimo.ok ? errorFal(ultimo.status, ultimo.txt) : new IAError('El asistente no pudo responder. Probá de nuevo.', 502);
+}
+
+// Crea una imagen NUEVA usando varias imágenes de referencia (personajes, lugar, outfit...).
+// Si el modelo rechaza tantas imágenes, reintenta con menos (3, 2, 1).
+export async function falEditarMulti(env, { prompt, archivos, w, h, seguro = true }) {
+  const modelo = falModelo(env, 'multi');
+  const urls = [];
+  for (const a of archivos) {
+    const tipo = a.type && a.type.startsWith('image/') ? a.type : 'image/jpeg';
+    urls.push('data:' + tipo + ';base64,' + aBase64(await a.arrayBuffer()));
+  }
+  const intentos = [...new Set([urls.length, 3, 2, 1].filter(n => n <= urls.length && n > 0))];
+  let ultimo = null;
+  for (const n of intentos) {
+    for (const conTamano of [true, false]) {
+      const input = { prompt, image_urls: urls.slice(0, n), num_images: 1, output_format: 'jpeg', sync_mode: true, enable_safety_checker: !!seguro };
+      if (conTamano) input.image_size = { width: w, height: h };
+      const res = await llamar(env, modelo, input);
+      if (res.ok) return imagenDe(res, modelo);
+      console.error('Fal multi', modelo, 'imgs=' + n, 'tam=' + conTamano, res.status, res.txt.slice(0, 400));
+      ultimo = res;
+      if (res.status !== 422) throw errorFal(res.status, res.txt);   // solo se reintenta si es un problema de datos (422)
+    }
+  }
+  throw errorFal(ultimo ? ultimo.status : 502, ultimo ? ultimo.txt : '');
 }
