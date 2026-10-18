@@ -2216,10 +2216,17 @@ async function guardarHist(){
 if(!rd||!miPerfil)return;
 try{await sb.from('historial').upsert({user_id:miPerfil.id,manga_id:String(rd.m.id),ultima_pagina:rd.pag,actualizado:new Date().toISOString()},{onConflict:'user_id,manga_id'})}catch(e){}
 }
-async function abrirLector(id){
+/* Todas las páginas de un manga: capítulo 1 + capítulos agregados. El CEO ve también los pendientes. */
+function mangaPaginas(m,cap,verTodos){
+  const lista=[{n:1,p:(m&&m.paginas_urls)||[],ok:true}].concat(((m&&Array.isArray(m.capitulos))?m.capitulos:[]).map((x,i)=>({n:(x&&x.n)||i+2,p:(x&&x.paginas_urls)||[],ok:((x&&x.estado)||'aprobado')==='aprobado'})));
+  const vis=lista.filter(x=>x.ok||verTodos);
+  if(cap){const x=vis.find(v=>v.n===cap);return x?x.p:[]}
+  return vis.reduce((a,x)=>a.concat(x.p),[]);
+}
+async function abrirLector(id,cap){
 let m=MANGAS.find(x=>String(x.id)===String(id));
 if(!m){try{const {data}=await sb.from('mangas').select('*').eq('id',id).maybeSingle();m=data}catch(e){}}
-const pags=(m&&m.paginas_urls)||[];
+const pags=mangaPaginas(m,cap,true);
 if(!pags.length){alert('Este manga todavía no tiene páginas disponibles');return}
 if(miPerfil && !(await esCeoReal())){
   try{
@@ -2581,7 +2588,19 @@ const CEO_R={
 pend:async b=>{
 const {data,error}=await sb.from('mangas').select('*').eq('estado','pendiente').order('created_at',{ascending:false});if(error)throw error;
 await cargarAutores(data);b.innerHTML=data.length?'':vacio('No hay mangas pendientes ✨');
-data.forEach(m=>rowCeo(b,tt(m.titulo)+'<small>'+esc(nomAutor(m.user_id))+' · '+(m.paginas_urls||[]).length+' págs</small>',bt('👁️ Ver',"abrirLector('"+m.id+"')")+bt('✅ Aprobar',"ceoEstado('"+m.id+"','aprobado')")+bt('❌ Rechazar',"ceoEstado('"+m.id+"','rechazado')",1)));
+data.forEach(m=>rowCeo(b,tt(m.titulo)+'<small>'+esc(nomAutor(m.user_id))+' · '+(m.paginas_urls||[]).length+' págs'+(((m.generos||[]).some(g=>/\+18/.test(g))||/ecchi adulto/i.test(m.estilo||''))?' · 🔞 +18':'')+'</small>',bt('👁️ Ver',"abrirLector('"+m.id+"')")+bt('✅ Aprobar',"ceoEstado('"+m.id+"','aprobado')")+bt('❌ Rechazar',"ceoEstado('"+m.id+"','rechazado')",1)));
+/* Capítulos nuevos de mangas ya publicados: también pasan por revisión */
+try{
+  const {data:cm,error:ec}=await sb.from('mangas').select('id,titulo,user_id,capitulos').order('created_at',{ascending:false}).limit(400);
+  if(!ec&&cm){
+    const pc=[];cm.forEach(m=>{(Array.isArray(m.capitulos)?m.capitulos:[]).forEach(x=>{if(x&&x.estado==='pendiente')pc.push({m:m,c:x})})});
+    if(pc.length){
+      await cargarAutores(pc.map(x=>x.m));
+      b.insertAdjacentHTML('beforeend','<h4 style="margin:14px 0 6px;color:var(--gold3)">📑 Capítulos pendientes ('+pc.length+')</h4>');
+      pc.forEach(x=>rowCeo(b,tt('«'+x.m.titulo+'» — Cap. '+x.c.n)+'<small>'+esc(nomAutor(x.m.user_id))+' · '+(x.c.paginas_urls||[]).length+' págs</small>',bt('👁️ Ver',"abrirLector('"+x.m.id+"',"+x.c.n+")")+bt('✅ Aprobar',"ceoResolverCap('"+x.m.id+"',"+x.c.n+",true)")+bt('❌ Rechazar',"ceoResolverCap('"+x.m.id+"',"+x.c.n+",false)",1)));
+    }
+  }
+}catch(e){}
 },
 mangas:async b=>{
 const {data,error}=await sb.from('mangas').select('*').order('created_at',{ascending:false}).limit(500);if(error)throw error;
@@ -2683,6 +2702,12 @@ notificar(r.split('_')[2],'chat_ceo','💬 El CEO te respondió en el chat direc
 ceoChat(r);
 });
 }
+async function ceoResolverCap(id,n,aprobar){await ceoAccion(async()=>{
+if(!aprobar&&!confirm('¿Rechazar este capítulo? Se borra y NO se publica.'))return;
+const {error}=await sb.rpc('ceo_resolver_capitulo',{p_id:String(id),p_n:Number(n),p_aprobar:!!aprobar});
+if(error){alert('Error: '+error.message+(/ceo_resolver_capitulo|schema|PGRST202/i.test(error.message||'')?'\n\nFalta correr generaciones_edad_moderacion.sql en Supabase.':''));return}
+ceoTab('pend');try{cargarStatsCEO()}catch(e){}
+})}
 async function ceoEstado(id,estado){await ceoAccion(async()=>{
 if(estado==='rechazado'&&!confirm('¿Rechazar este manga? Va a desaparecer de pendientes y NO se va a publicar.'))return;
 const {data,error}=await sb.from('mangas').update({estado}).eq('id',id).select();

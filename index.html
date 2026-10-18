@@ -292,7 +292,7 @@ body.light-mode .mainnav-bottom{background:rgba(255,255,255,.92)}
 .pj-preview-modal-img{width:100%;max-height:55vh;object-fit:contain;border-radius:14px;background:#07041a}
 .pj-preview-desc{white-space:pre-wrap;color:var(--text2);font-size:13px;line-height:1.55;margin-top:10px}
 
-.chat-room-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}.manga-logo-mark{position:absolute;right:6px;bottom:6px;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,209,102,.6);object-fit:cover;opacity:.85}
+.chat-room-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}.manga-logo-mark{position:absolute;left:6px;top:6px;width:24px;height:24px;border-radius:50%;border:1px solid rgba(255,209,102,.6);object-fit:cover;opacity:.8;pointer-events:none;z-index:1}
 @media(max-width:520px){.create-opts-4{grid-template-columns:1fr 1fr}.step-nav{flex-wrap:wrap}}
 /* ===== FIXES 02/10/2026: CHAT MANGA + CEO FULLSCREEN ===== */
 #screen-ceo{position:fixed;inset:0;z-index:140;max-width:none;width:100%;height:100dvh;margin:0;padding:12px 16px 20px;background:radial-gradient(circle at 50% 0%,#1a0a3a,#07041a);overflow-y:auto;}
@@ -788,6 +788,33 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .ia-refsq b{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .rec-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px!important;font-size:12px}
 .rec-chip img{width:26px;height:26px;border-radius:7px;object-fit:cover}
+
+.lz-titulo input:first-child{font-size:18px;font-weight:700;color:var(--gold3);border-bottom:1px solid rgba(255,209,102,.25)!important}
+.progreso-ov{position:fixed;inset:0;z-index:9999;background:rgba(5,3,18,.9);display:none;align-items:center;justify-content:center;padding:24px}
+.progreso-ov.on{display:flex}
+.progreso-box{width:100%;max-width:340px;background:#150d33;border:1px solid rgba(212,175,55,.45);border-radius:16px;padding:22px;text-align:center}
+.prog-bar{height:14px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:16px 0 8px}
+.prog-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd45c,#ffb300);border-radius:999px;transition:width .25s}
+.bd-card{display:flex;gap:12px;align-items:stretch;width:100%}
+.bd-cover{width:92px;flex:0 0 92px;aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:26px}
+.bd-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.bd-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.bd-info b{font-size:15px;color:var(--gold3)}.bd-info em{font-size:11px;color:var(--text2);font-style:normal}
+.bd-btns{display:flex;gap:6px;margin-top:auto}
+.cr-res{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px}
+.cr-res div{background:rgba(255,255,255,.05);border:1px solid rgba(212,175,55,.2);border-radius:12px;padding:8px 10px}
+.cr-res b{display:block;font-size:16px;color:var(--gold3)}
+.mm-card{display:flex;gap:12px;align-items:center;padding:8px;border:1px solid rgba(212,175,55,.25);border-radius:12px;margin-bottom:8px;cursor:pointer;background:rgba(255,255,255,.03)}
+.mm-cover{width:56px;flex:0 0 56px;aspect-ratio:3/4;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.06)}
+.mm-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.mm-card b{font-size:14px;color:var(--gold3)}.mm-card small{display:block;color:var(--text2);font-size:11px}
+.md-cover{width:70%;max-width:260px;aspect-ratio:2/3;object-fit:cover;border-radius:14px;display:block;margin:0 auto 12px;border:1px solid rgba(212,175,55,.4)}
+.md-sino{font-size:13px;color:var(--text2);line-height:1.5;margin:8px 0 12px;white-space:pre-wrap}
+.pv-cab{padding:14px;text-align:center;color:#fff}.pv-cab b{font-size:18px;display:block}.pv-cab small{display:block;color:#bbb;margin-top:4px}
+.pv-cover{width:100%;display:block}
+
+.manga-18 .mcover{filter:blur(18px) brightness(.65)}
+.manga-18::after{content:"🔞 +18 · verificá tu edad";position:absolute;left:50%;top:42%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#ffd45c;font-size:11px;font-weight:700;padding:6px 10px;border-radius:10px;text-align:center;pointer-events:none;z-index:2;width:78%}
 .ia-cell{position:relative}
 .ia-cell:after{content:'SalaMangaS IA';position:absolute;right:7px;top:7px;font-size:9px;letter-spacing:.3px;padding:3px 5px;border-radius:5px;color:#fff;background:rgba(20,10,35,.62);pointer-events:none}
 .create-opt .ico{font-size:23px!important}
@@ -916,22 +943,25 @@ Entrar con Google
 </div>
 </div>
 <div id="screen-crear" class="screen">
-<h1 class="title">Crear Nuevo Manga</h1>
-<p class="subtitle">Elegí cómo querés crear tu obra</p>
+<h1 class="title">Crear</h1>
+<div class="card" id="crearResumen"></div>
 <div class="card">
-<h3 class="section">✨ Crear</h3>
+<h3 class="section">✨ Crear nuevo manga</h3>
 <div class="create-opts create-opts-4">
 <div class="create-opt" onclick="nuevoCrear('pagina')"><span class="ico">🖼️</span><span class="name">Página por página</span><span class="desc">Subí tus páginas una por una</span></div>
-<div class="create-opt" onclick="nuevoCrear('ia')"><span class="ico">🤖</span><span class="name">SalaMangaS IA</span><span class="desc">Crear desde cero o referencias</span></div>
+<div class="create-opt" onclick="nuevoCrear('ia')"><span class="ico"><img src="/logo-ia.png" onerror="this.onerror=null;this.src='/logo.jpg'" alt="SalaMangaS IA" style="width:46px;height:46px;border-radius:12px;object-fit:cover"></span><span class="name">SalaMangaS IA</span><span class="desc">Crear desde cero o referencias</span></div>
 <div class="create-opt" onclick="lapizAbrir()"><span class="ico">✏️</span><span class="name">Subir dibujos a lápiz</span><span class="desc">Renacer con IA</span></div>
 <div class="create-opt" onclick="nuevoCrear('pdf')"><span class="ico">📄</span><span class="name">PDF</span><span class="desc">10 a 25 páginas</span></div>
 </div>
 </div>
 <div class="card">
-<h3 class="section">📚 Mis cosas</h3>
+<h3 class="section">📚 Mis mangas</h3>
+<div id="crearMisMangas"><p style="font-size:12px;color:var(--text2)">Cargando tus mangas...</p></div>
+</div>
+<div class="card">
+<h3 class="section">🧰 Mis cosas</h3>
 <div style="display:grid;grid-template-columns:1fr;gap:8px">
 <button class="btn" onclick="abrirPersonajes()">👥 Mis personajes</button>
-<button class="btn" onclick="alert('La sección Mis mangas se abre desde Inicio / tu perfil.')">📚 Mis mangas</button>
 <button class="btn" onclick="abrirBorradores()">💾 Mis borradores</button>
 <button class="btn" onclick="alertaMonetizar()">💰 Monetizar</button>
 </div>
@@ -986,7 +1016,7 @@ Entrar con Google
 <div id="lapizAviso" class="ia-aviso2"></div>
 <button class="btn-main" id="btnRenacer" data-ia-btn="lapiz" data-label="🎨 Crear manga" onclick="renacerLapiz()">🎨 Crear manga</button>
 <button class="btn" data-ia-recarga="btnRenacer" style="display:none;width:100%;margin-top:8px" onclick="abrirRecargaIA()">🎨 Recarga IA</button>
-<h3 class="section">📄 Páginas <span style="font-size:11px;color:var(--text2)">(máximo 20)</span></h3>
+<h3 class="section">📄 Páginas <span style="font-size:11px;color:var(--text2)">(20 incluidas · hasta 30)</span></h3>
 <div id="lapizSlots" class="pages-dots"></div>
 <div class="lz-row"><button class="btn-ghost" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-ghost" onclick="abrirVistaPreviaCreacion()">👁️ Vista previa</button></div>
 <button class="btn-main" style="width:100%;margin-top:12px" onclick="publicar()">Publicar</button>
@@ -998,12 +1028,12 @@ Entrar con Google
 <div id="screen-crear-pagina" class="screen">
 <div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">🖼️</span><span class="create-head-txt">Página por página</span></div></div>
 <div class="card">
-<label class="lbl">Título</label><input id="paginaTitulo" class="input" placeholder="Título del manga">
-<label class="lbl">Subtítulos</label><input id="paginaSubtitulo" class="input" placeholder="Subtítulo">
-<label class="lbl">Portada</label><input id="paginaPortada" class="input" type="file" accept="image/*">
-<label class="lbl">Sinopsis</label><textarea id="paginaSinopsis" class="input" placeholder="Sinopsis"></textarea><button type="button" class="btn-ghost" style="font-size:11px;padding:5px 9px;margin-top:6px" onclick="abrirAsistente('sinopsis',{campo:'paginaSinopsis'})">🤖 Ayudame a escribirla</button>
+<div id="paginaFormBase">
+<div class="lz-titulo"><input id="paginaTitulo" class="input" placeholder="Título del manga (obligatorio)" maxlength="120"><input id="paginaSubtitulo" class="input" placeholder="Subtítulo (opcional)" maxlength="160"></div>
+<div class="lz-grid"><div><div id="paginaCoverTile" class="lz-cover" onclick="crCoverTap('pagina')"><span>＋ Portada<br><small>tocá para subirla</small></span></div><input id="paginaPortada" type="file" accept="image/*" style="display:none"></div><div class="lz-sino"><textarea id="paginaSinopsis" class="input" placeholder="Sinopsis"></textarea><button type="button" class="btn-ghost" style="font-size:11px;padding:5px 9px;margin-top:6px" onclick="abrirAsistente('sinopsis',{campo:'paginaSinopsis'})">🤖 Ayudame a escribirla</button></div></div>
 <label class="lbl">Géneros</label><div id="paginaGeneros"></div>
-<h3 class="section">📄 Páginas (máximo 20)</h3><div id="paginaSlots" class="pages-dots"></div>
+</div>
+<h3 class="section">📄 Páginas (20 incluidas · hasta 30)</h3><div id="paginaSlots" class="pages-dots"></div>
 <button class="btn" style="width:100%;margin-top:8px" onclick="agregarPaginaSlot()">＋ Agregar página</button>
 <div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
 <div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button><button class="btn" onclick="abrirVistaPreviaCreacion()">Vista previa</button></div>
@@ -1012,13 +1042,11 @@ Entrar con Google
 <div id="screen-crear-pdf" class="screen">
 <div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">📄</span><span class="create-head-txt">PDF</span></div></div>
 <div class="card">
-<label class="lbl">Título</label><input id="pdfTitulo" class="input" placeholder="Título del manga">
-<label class="lbl">Subtítulos</label><input id="pdfSubtitulo" class="input" placeholder="Subtítulo">
-<label class="lbl">Portada (opcional: si no, se usa la 1ª página)</label><input id="pdfPortada" class="input" type="file" accept="image/*">
+<div class="lz-titulo"><input id="pdfTitulo" class="input" placeholder="Título del manga (obligatorio)" maxlength="120"><input id="pdfSubtitulo" class="input" placeholder="Subtítulo (opcional)" maxlength="160"></div>
+<div class="lz-grid"><div><div id="pdfCoverTile" class="lz-cover" onclick="crCoverTap('pdf')"><span>＋ Portada<br><small>opcional · tocá</small></span></div><input id="pdfPortada" type="file" accept="image/*" style="display:none"></div><div class="lz-sino"><textarea id="pdfSinopsis" class="input" placeholder="Sinopsis"></textarea><button type="button" class="btn-ghost" style="font-size:11px;padding:5px 9px;margin-top:6px" onclick="abrirAsistente('sinopsis',{campo:'pdfSinopsis'})">🤖 Ayudame a escribirla</button></div></div>
 <label class="lbl">Géneros</label><div id="pdfGeneros"></div>
-<label class="lbl">Sinopsis</label><textarea id="pdfSinopsis" class="input" placeholder="Sinopsis"></textarea><button type="button" class="btn-ghost" style="font-size:11px;padding:5px 9px;margin-top:6px" onclick="abrirAsistente('sinopsis',{campo:'pdfSinopsis'})">🤖 Ayudame a escribirla</button>
 <div id="pdfPlanSlots" style="margin-top:14px"></div>
-<div id="pdfPreview" class="pdf-preview"></div>
+<div id="pdfPreview" class="pdf-preview"></div><button class="btn" style="width:100%;margin-top:8px" onclick="abrirVistaPreviaCreacion()">👁️ Vista previa</button>
 <p class="plan-note">PDF permitido: 10 a 25 páginas. Después de publicar podés seguir creando según tu plan.</p>
 <div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button><button class="btn-main" onclick="publicarPDF()">Publicar</button></div>
 </div>
@@ -1037,20 +1065,31 @@ Entrar con Google
 </div>
 <div id="ia-legacy-ui" style="display:none" aria-hidden="true">
 <p class="subtitle" style="margin-bottom:16px">Podés empezar de cero o subir imágenes de referencia.</p>
-<button class="btn-main" style="margin-top:0" onclick="abrirIA('ia')">✨ Abrir SalaMangaS IA</button>
-<label class="lbl">Título</label><input id="iaCrearTitulo" class="input" placeholder="Título del manga">
-<label class="lbl">Subtítulo</label><input id="iaCrearSubtitulo" class="input" placeholder="Subtítulo">
-<label class="lbl">Portada (opcional: se puede usar una imagen de la IA)</label><input id="iaCrearPortada" class="input" type="file" accept="image/*">
-<label class="lbl">Sinopsis</label><textarea id="iaCrearSinopsis" class="input" placeholder="Sinopsis"></textarea>
+<button class="btn-main" style="margin-top:0;margin-bottom:12px" onclick="abrirIA('ia')">✨ Abrir SalaMangaS IA</button>
+<div class="lz-titulo"><input id="iaCrearTitulo" class="input" placeholder="Título del manga (obligatorio)" maxlength="120"><input id="iaCrearSubtitulo" class="input" placeholder="Subtítulo (opcional)" maxlength="160"></div>
+<div class="lz-grid"><div><div id="iaCrearCoverTile" class="lz-cover" onclick="crCoverTap('iaCrear')"><span>＋ Portada<br><small>o usá una imagen de la IA</small></span></div><input id="iaCrearPortada" type="file" accept="image/*" style="display:none"></div><div class="lz-sino"><textarea id="iaCrearSinopsis" class="input" placeholder="Sinopsis"></textarea><button type="button" class="btn-ghost" style="font-size:11px;padding:5px 9px;margin-top:6px" onclick="abrirAsistente('sinopsis',{campo:'iaCrearSinopsis'})">🤖 Ayudame a escribirla</button></div></div>
+
 <label class="lbl">Géneros</label><div id="iaCrearGeneros"></div>
 <label class="lbl">Estilo visual</label><div id="iaCrearEstilos"></div>
-<h3 class="section">📄 Páginas (máximo 20)</h3><div id="iaCrearSlots" class="pages-dots"></div>
+<h3 class="section">📄 Páginas (20 incluidas · hasta 30)</h3><div id="iaCrearSlots" class="pages-dots"></div><button class="btn" style="width:100%;margin-top:8px" onclick="abrirVistaPreviaCreacion()">👁️ Vista previa</button>
 <div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
 </div>
 <div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button></div>
 </div>
 </div>
 <div id="crear-legacy" style="display:none" aria-hidden="true"><input id="titulo"><textarea id="sinopsis"></textarea><div id="generos-wrap"></div><div id="estilos-wrap"></div><div id="pages-dots"></div><div id="portadaPreview"></div></div>
+<div id="edad-modal" class="modal-overlay"><div class="modal-box" style="max-width:420px"><button class="modal-close" onclick="cerrarEdad()">✕</button>
+<h2 style="font-family:'Cinzel',serif;color:var(--gold);text-align:center">🔞 Contenido +18</h2>
+<p style="font-size:13px;color:var(--text2);line-height:1.5">Para crear o ver contenido +18 (géneros +18, estilo Ecchi adulto, personajes y escenas sensuales) tenés que confirmar que sos mayor de edad.</p>
+<label class="lbl">Tu fecha de nacimiento</label><input id="edadFecha" class="input" type="date">
+<label style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--text2);margin:10px 0"><input id="edadOk" type="checkbox" style="margin-top:3px"><span>Declaro que tengo <b>18 años o más</b> y que la fecha es real. Si declaro ser menor, no voy a poder acceder a este contenido.</span></label>
+<div class="warn-mini" style="margin-bottom:10px">Reglas: se permite contenido sensual suave (ropa escotada, corta o ajustada, ropa interior, playa, pileta). <b>No</b> se permite desnudo explícito ni sexo. Todo lo que se sube pasa por revisión. Contenido sexual con menores: prohibido y bloqueado siempre.</div>
+<small id="edadMsg" style="color:#ff6b81;display:block;min-height:16px;margin-bottom:6px"></small>
+<button id="edadBtn" class="btn-main" style="width:100%" onclick="edadConfirmar()">Verificar mi edad</button>
+<p style="font-size:10px;color:var(--text2);margin-top:8px">No guardamos tu fecha de nacimiento: solo si sos mayor o no.</p>
+</div></div>
+<div id="progreso-ov" class="progreso-ov"><div class="progreso-box"><div style="font-size:30px">📤</div><b id="progTit" style="font-size:16px;color:var(--gold3)">Subiendo tu manga...</b><div class="prog-bar"><i id="progFill"></i></div><div id="progPct" style="font-size:22px;font-weight:700;color:var(--gold3)">0%</div><small id="progTxt" style="color:var(--text2)"></small><p style="font-size:11px;color:var(--text2);margin-top:10px">No cierres esta pantalla hasta que termine.</p></div></div>
+<div id="mangadet" class="ov"><div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('mangadet')">←</div><h2>📚 Mi manga</h2></div><div class="ov-body" id="mdBody"></div></div>
 <div id="preview-creacion" class="preview-full" onclick="cerrarVistaPreviaCreacion()">
 <button class="preview-x" onclick="event.stopPropagation();cerrarVistaPreviaCreacion()">✕</button>
 <div id="previewCreacionBody"></div>
@@ -1136,20 +1175,23 @@ Entrar con Google
 <div class="warn-mini">200 Sakuras diarias para todos los planes. No se acumulan. Si no las usás ese día, se pierden.</div>
 <h3 class="section">💸 Costos</h3>
 <ul style="font-size:13px;color:var(--text2);padding-left:18px;line-height:1.6">
-<li>Crear 1 página: 50 🪙</li><li>Crear 1 capítulo completo de 15–20 páginas: 500 🪙</li><li>Crear 1 PDF de 10–25 páginas: 500 🪙</li><li>Leer 1 página nueva: 25 🪙</li><li>Releer una página: 10 🪙</li><li>Casillero/capítulo/PDF extra: 500 🪙</li>
+<li>Página extra sobre las 20 incluidas por capítulo (hasta 30): 100 🪙</li><li>Capítulo extra sobre el tope de tu plan: 2000 🪙</li><li>PDF extra sobre el tope de tu plan: 2000 🪙</li><li>Leer 1 página nueva: 25 🪙</li><li>Releer una página: 10 🪙</li><li>Las creaciones con IA se pagan <b>solo con 🔴 Sakuras IA</b></li>
 </ul>
 <h3 class="section">🛒 Comprar Sakuras</h3>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<div class="pack-card"><div class="cant">250 🪙</div><div class="precio">$1000 ARS / $1 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(250)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(250)">🅿️ PayPal</button></div>
-<div class="pack-card"><div class="cant">700 🪙</div><div class="precio">$2000 ARS / $2 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(700)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(700)">🅿️ PayPal</button></div>
-<div class="pack-card"><div class="cant">1500 🪙</div><div class="precio">$3000 ARS / $3 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(1500)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(1500)">🅿️ PayPal</button></div>
-<div class="pack-card"><div class="cant">3000 🪙</div><div class="precio">$5000 ARS / $5 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(3000)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(3000)">🅿️ PayPal</button></div>
+<div class="pack-card"><div class="cant">1000 🪙</div><div class="precio">$1000 ARS / $1 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(1000)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(1000)">🅿️ PayPal</button></div>
+<div class="pack-card"><div class="cant">2000 🪙</div><div class="precio">$2000 ARS / $2 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(2000)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(2000)">🅿️ PayPal</button></div>
+<div class="pack-card"><div class="cant">3000 🪙</div><div class="precio">$3000 ARS / $3 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(3000)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(3000)">🅿️ PayPal</button></div>
+<div class="pack-card"><div class="cant">5000 🪙</div><div class="precio">$5000 ARS / $5 USD</div><button class="btn btn-main" onclick="comprarSakurasMP(5000)">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasPayPal(5000)">🅿️ PayPal</button></div>
 </div>
 </div>
 <div id="sakTabIA" style="display:none">
-<div class="warn-mini">🔴 Las Sakuras IA sirven <b>solo</b> para generar imágenes con IA (1 generación = 1 Sakura IA). No se ganan gratis: solo se compran. Se acumulan, no vencen y se usan cuando se acaban las generaciones de tu plan. Para usarlas necesitás un plan Pro o superior. No se mezclan con las Sakuras normales.</div>
+<div class="warn-mini">🔴 Las Sakuras IA son la moneda de la <b>IA</b>: se compran con plata y con ellas <b>canjeás generaciones</b> (abajo) y comprás personajes extra con IA (400 🔴 c/u). No se ganan gratis, se acumulan y no vencen. Primero se usan las generaciones de tu plan y después las que canjeaste. Para usar la IA necesitás un plan Pro o superior. <b>No se mezclan con las Sakuras normales 🪙</b>, que sirven para páginas extra, capítulos extra, leer y la tienda.</div>
 <h3 class="section">🛒 Comprar Sakuras IA</h3>
 <div id="sakPacksIA" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+<h3 class="section" style="margin-top:18px">🎨 Canjear Sakuras IA por generaciones</h3>
+<div class="warn-mini">Tus generaciones: <b id="sakGenResumen">—</b></div>
+<div id="sakCanje" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"></div>
 </div>
 </div></div>
 <div id="suscripciones-modal" class="modal-overlay">
@@ -1769,8 +1811,36 @@ function elegirMonto(m,el){
   if(document.getElementById('mpPrice'))document.getElementById('mpPrice').innerText=label;
   if(document.getElementById('ppPrice'))document.getElementById('ppPrice').innerText=label;
 }
-const GENEROS = ["Acción","Romance","Terror","Drama","Comedia","Isekai","Fantasía","Ciencia Ficción","Slice of Life","Misterio","Aventura","Sobrenatural","Suspense","Religioso"];
-const ESTILOS = ["Shonen", "Shojo", "Anime", "Cyberpunk", "Acuarela", "Cómic western", "Kawaii", "Retro 80s/90s", "Manga clásico", "Screentone", "Noir", "Vintage", "Pastel", "Dark Fantasy", "Chibi", "Realista"];
+/* ---- Diccionario de ESTILOS (el texto va en inglés porque los modelos lo siguen mejor) ---- */
+const IA_ESTILOS=[
+ {k:'shonen-battle',g:'manga',n:'Shonen Battle',e:'💥',p:'Shonen Jump battle manga style, by Oda and Toriyama, intense dynamic action lines, speed lines, impact frames, exaggerated perspective, flying debris, sharp inking, screentone, WHOOSH BOOM'},
+ {k:'shonen-romance',g:'manga',n:'Shonen Romance',e:'🏫',p:'Modern shonen romance manga, soft clean lineart, sparkling eyes, detailed school uniform, classroom with soft shading, bishounen style, diagonal cinematic panels'},
+ {k:'shojo',g:'manga',n:'Shojo',e:'🌸',p:'Shojo manga by Arina Tanemura, ultra detailed sparkling eyes, flowing hair, flowers in the background'},
+ {k:'seinen-dark',g:'manga',n:'Seinen Dark',e:'🗡️',p:'Seinen manga in the style of Berserk and Vagabond, hyper-detailed realistic anatomy, gritty textures, heavy crosshatching'},
+ {k:'isekai',g:'manga',n:'Isekai Fantasy',e:'🔮',p:'Isekai fantasy manga, elaborate fantasy clothing, magic circles, glowing effects'},
+ {k:'slice',g:'manga',n:'Slice of Life',e:'☕',p:'Slice of life manga, cozy daily life, detailed interiors, soft lighting'},
+ {k:'chibi',g:'manga',n:'Chibi / Comedia',e:'😆',p:'Super deformed chibi comedy manga, big heads, cute exaggerated expressions'},
+ {k:'horror',g:'manga',n:'Horror (Junji Ito)',e:'👁️',p:'Horror manga in the style of Junji Ito, disturbing detailed faces, heavy inks, unsettling atmosphere'},
+ {k:'manhwa',g:'manga',n:'Manhwa coreano',e:'📱',p:'Modern Korean manhwa webtoon, full color, sharp digital rendering, fashionable characters'},
+ {k:'mecha',g:'manga',n:'Mecha / Sci-Fi',e:'🤖',p:'Mecha sci-fi manga like Ghost in the Shell, detailed mechanical armor, futuristic details'},
+ {k:'sports',g:'manga',n:'Sports',e:'🏀',p:'Sports manga like Slam Dunk, dynamic muscle movement, motion blur, energetic action'},
+ {k:'ecchi-adulto',g:'manga',n:'Ecchi adulto',e:'🔥',p:'Adult seinen ecchi manga style. ALL characters are mature adults over 18 with adult faces and adult bodies, voluptuous proportions, tight clothing, sensual but not pornographic'},
+ {k:'marvel',g:'comic',n:'Marvel Heroico',e:'🦸',p:'Classic superhero comic book style by Jim Lee, heroic dynamic poses, bold inks, detailed muscular anatomy, vibrant colors, dramatic lighting'},
+ {k:'dc-oscuro',g:'comic',n:'DC Oscuro',e:'🦇',p:'Dark gritty superhero comic style by Greg Capullo, heavy shadows, dramatic noir atmosphere, detailed textures'},
+ {k:'indie',g:'comic',n:'Indie (Saga)',e:'🚀',p:'Indie comic book style like Saga from Image Comics, painterly digital colors, expressive characters, rich color palette'},
+ {k:'vintage90',g:'comic',n:'Vintage 90s',e:'📼',p:'Vintage 90s comic book style, bold exaggerated anatomy, crosshatching, retro halftone colors'},
+ {k:'cartoon',g:'comic',n:'Cartoon Teen Titans',e:'🎬',p:'Western teen cartoon style like Teen Titans, bold simple shapes, flat vibrant colors, expressive faces'},
+ {k:'golden-age',g:'comic',n:'Golden Age',e:'📰',p:'Golden age 1940s comic book style, Ben-Day dots, bold primary colors, retro printing'},
+ {k:'pop-art',g:'comic',n:'Pop Art',e:'🎨',p:'Pop art comic style, halftone dots, bold outlines, primary colors, Lichtenstein-like'},
+ {k:'sin-city',g:'comic',n:'Noir Sin City',e:'🕶️',p:'High contrast black and white noir comic like Sin City, stark shadows, white on black'},
+ {k:'graphic-novel',g:'comic',n:'Novela gráfica',e:'📖',p:'Realistic graphic novel painted style, cinematic lighting, detailed'},
+ {k:'webcomic',g:'comic',n:'Webcomic moderno',e:'💻',p:'Modern webcomic style, clean digital lines, flat colors, expressive characters'},
+ {k:'mignola',g:'comic',n:'Hellboy (Mignola)',e:'😈',p:'Hellboy style by Mike Mignola, heavy blacks, angular shapes, limited color palette'},
+ {k:'spiderverse',g:'comic',n:'Spider-Verse',e:'🕷️',p:'Spider-Verse stylized comic look, halftone, chromatic offset, dynamic energetic framing'}
+];
+const GENEROS = ["Acción","Romance","Terror","Drama","Comedia","Isekai","Fantasía","Ciencia Ficción","Slice of Life","Misterio","Aventura","Sobrenatural","Suspense","Religioso","Deportes","Mecha","Escolar","Ecchi +18","Seinen +18","Harem +18","Yuri +18","Yaoi / BL +18","Romance adulto +18","Sensual +18","Thriller adulto +18"];
+/* UNA sola lista de estilos para toda la app: crear (lápiz, página por página, PDF, IA), personajes y SalaMangaS IA */
+const ESTILOS = IA_ESTILOS.map(x=>x.n);
 function renderGeneros(){
 const w = document.getElementById('generos-wrap');
 w.innerHTML = '';
@@ -1847,54 +1917,65 @@ return data.secure_url;
 }
 /* guardarBorrador() real: más abajo, en la sección TANDA C (guarda también páginas y portada) */
 async function publicar(){
-if(!miPerfil){alert('Creá una cuenta para publicar');return;}
+if(!miPerfil){alert('Creá una cuenta para publicar');return false;}
+const cont=window._continuar||null;
 const titulo = document.getElementById('titulo').value.trim();
-if(!titulo){alert('Poné un título');return;}
-if(paginas.length<(window._modoCrear==='pdf'?10:15)){alert('Necesitás al menos 15 páginas. Tenés '+paginas.length);return;}
-if(paginas.length > 20){alert('Un capítulo no puede superar las 20 páginas.');return;}
-if(window._modoCrear==='lapiz'&&!estiloSel){alert('Elegí un estilo visual y su color.');return;}
-if(!(await esCeoReal())){
+const minPag=(window._modoCrear==='pdf'?10:15);
+if(!cont&&!titulo){alert('Poné un título');return false;}
+if(paginas.length<minPag){alert('Necesitás al menos '+minPag+' páginas. Tenés '+paginas.length);return false;}
+if(paginas.length > MAX_PAGS){alert('Un capítulo no puede superar las '+MAX_PAGS+' páginas.');return false;}
+if(!cont&&!(await esCeoReal())){
   const limite = limiteMangas(miPerfil);
   let cantidadActual = 0;
   try{ const {count} = await sb.from('mangas').select('*',{count:'exact',head:true}).eq('user_id',miPerfil.id); cantidadActual = count||0; }catch(e){}
   if(limite!==null && cantidadActual >= limite){
-    alert('Tu plan ('+(miPerfil.tier||'gratis')+') permite hasta '+limite+' manga(s), y ya llegaste al límite.\n\nPodés comprar un manga extra desde ⭐ Suscripciones ($10.000 ARS / $10 USD, pago único).');
-    return;
+    alert('Tu plan ('+(miPerfil.tier||'gratis')+') permite hasta '+limite+' manga(s), y ya llegaste al límite.\n\nPodés seguir tus mangas publicados agregando capítulos, o comprar un manga extra desde ⭐ Suscripciones ($10.000 ARS / $10 USD, pago único).');
+    return false;
   }
 }
-const costoPaginas = (paginas.length>=15 && paginas.length<=20) ? 500 : paginas.length*50;
-/* El cobro de capítulo completo se decide en el wrapper de publicar(),
-   para respetar la cuota gratis mensual de cada plan. */
-if(!(await esCeoReal()) && !(paginas.length>=15 && paginas.length<=20)){
-  const r = await gastarSakurasPropio(costoPaginas);
-  if(!r.ok){ alert('Crear estas '+paginas.length+' páginas cuesta '+costoPaginas+' Sakuras y no te alcanzan.\n\nConseguí más en 🪙 Sakuras.'); return; }
+/* El cobro (páginas extra / capítulo extra) lo hace el wrapper de publicar() de más abajo, DESPUÉS de que se publica bien. */
+const nTot=paginas.length,totalPasos=nTot+((!cont&&portadaArchivo)?1:0)+1;let hechos=0;
+const tit=cont?('Subiendo el capítulo '+cont.n+'...'):'Subiendo tu manga...';
+progresoMostrar(tit,0,'Preparando...');
+const urlsPaginas=[];
+for(let i=0;i<nTot;i++){
+  try{urlsPaginas.push(await subirACloudinary(paginas[i].file));}catch(err){progresoOcultar();alert('Error en la página '+(i+1)+': '+err.message);return false;}
+  hechos++;progresoMostrar(tit,hechos/totalPasos*100,'Página '+(i+1)+' de '+nTot);
 }
-alert('Subiendo páginas...');
-const urlsPaginas = [];
-for(const p of paginas){
-try{const url = await subirACloudinary(p.file);urlsPaginas.push(url);}catch(err){alert('Error: '+err.message);return;}
+if(cont){
+  progresoMostrar(tit,95,'Guardando el capítulo...');
+  const {data:nuevoN,error:errCap}=await sb.rpc('agregar_capitulo',{p_id:String(cont.id),p_paginas:urlsPaginas});
+  if(errCap){progresoOcultar();alert(/agregar_capitulo|schema|PGRST202/i.test(errCap.message||'')?'Falta correr capitulos.sql en Supabase para poder agregar capítulos.':'No se pudo guardar el capítulo: '+errCap.message);return false;}
+  progresoMostrar('¡Listo!',100,'Capítulo '+nuevoN+' enviado a revisión');await new Promise(r=>setTimeout(r,700));progresoOcultar();
+  try{await refrescarPerfil()}catch(e){}
+  alert('¡Capítulo '+nuevoN+' enviado a revisión! 🎉\n\nSe publica cuando el equipo lo apruebe. Te avisamos con una notificación.');
+  paginas=[];
+  return true;
 }
 let portadaUrl = null;
-if(portadaArchivo){try{ portadaUrl = await subirACloudinary(portadaArchivo); }catch(e){alert('No se pudo subir la portada, se publica sin ella. Podés editarla después.');}}
+if(portadaArchivo){progresoMostrar(tit,hechos/totalPasos*100,'Subiendo la portada...');try{ portadaUrl = await subirACloudinary(portadaArchivo); }catch(e){alert('No se pudo subir la portada, se publica sin ella.');}hechos++;}
+progresoMostrar(tit,95,'Guardando tu manga...');
 const _fila={user_id:miPerfil.id,titulo,subtitulo:subtituloActual(),generos:generosSel,estilo:estiloSel,sinopsis:document.getElementById('sinopsis').value,portada_url:portadaUrl,paginas_urls:urlsPaginas,estado:'pendiente',vistas:0,likes:0};
-let {error} = await sb.from('mangas').insert(_fila);
+let {error}=await sb.from('mangas').insert(_fila);
 if(error && /subtitulo/i.test(error.message||'')){
   delete _fila.subtitulo;
-  ({error} = await sb.from('mangas').insert(_fila));
-  if(!error) alert('Ojo: el subtítulo no se guardó porque en Supabase falta la columna "subtitulo". Corré el SQL que te pasé y listo.');
+  ({error}=await sb.from('mangas').insert(_fila));
+  if(!error) alert('Ojo: el subtítulo no se guardó porque en Supabase falta la columna "subtitulo".');
 }
-if(error){alert('Error: '+error.message);return;}
+if(error){progresoOcultar();alert('Error: '+error.message);return false;}
+progresoMostrar('¡Listo!',100,'Tu manga fue enviado a revisión');await new Promise(r=>setTimeout(r,700));progresoOcultar();
 await refrescarPerfil();
 alert('¡Manga enviado a revisión! 🎉');
 try{
 const {count} = await sb.from('mangas').select('*',{count:'exact',head:true}).eq('user_id',miPerfil.id);
 if(count===1) document.getElementById('bienvenida-creador-modal').classList.add('on');
 }catch(e){}
-setTimeout(()=>{if(!document.getElementById('pages-dots').children.length) agregarFilaPuntitos();},0);document.getElementById('titulo').value='';document.getElementById('sinopsis').value='';
+document.getElementById('titulo').value='';document.getElementById('sinopsis').value='';
 generosSel=[];estiloSel=null;paginas=[];portadaArchivo=null;
 document.querySelectorAll('#generos-wrap .chip, #estilos-wrap .chip').forEach(c=>c.classList.remove('on'));
 document.getElementById('pages-dots').innerHTML='';document.getElementById('pages-dots').style.display='flex';document.getElementById('pdfPreview').classList.remove('on');document.getElementById('pdfPreview').innerHTML='';document.getElementById('portadaPreview').innerHTML='';
 filaActual=0;
+return true;
 }
 /* null = sin límite (Mangakars Pro no tiene tope definido en la especificación) */
 function limiteMangas(perfil){
@@ -2292,7 +2373,7 @@ document.addEventListener('click',function(e){
 },true);
 /* ==== FIN TOCAR NOMBRE ==== */
 function cardManga(m){
-const d=document.createElement('div');d.className='mcard';
+const d=document.createElement('div');d.className='mcard'+((esMangaAdulto(m)&&!esMayor18())?' manga-18':'');
 const k=String(m.id),uid=m.user_id;
 const pags=[m.portada_url,...(m.paginas_urls||[])].filter(Boolean);
 let idx=0;
@@ -2337,10 +2418,18 @@ async function guardarHist(){
 if(!rd||!miPerfil)return;
 try{await sb.from('historial').upsert({user_id:miPerfil.id,manga_id:String(rd.m.id),ultima_pagina:rd.pag,actualizado:new Date().toISOString()},{onConflict:'user_id,manga_id'})}catch(e){}
 }
-async function abrirLector(id){
+/* Todas las páginas de un manga: capítulo 1 (paginas_urls) + los capítulos agregados (capitulos[]) */
+function mangaPaginas(m,cap,verTodos){
+  const lista=[{n:1,p:(m&&m.paginas_urls)||[],ok:true}].concat(((m&&Array.isArray(m.capitulos))?m.capitulos:[]).map((c,i)=>({n:(c&&c.n)||i+2,p:(c&&c.paginas_urls)||[],ok:((c&&c.estado)||'aprobado')==='aprobado'})));
+  const vis=lista.filter(x=>x.ok||verTodos);
+  if(cap){const x=vis.find(v=>v.n===cap);return x?x.p:[]}
+  return vis.reduce((a,x)=>a.concat(x.p),[]);
+}
+async function abrirLector(id,cap){
 let m=MANGAS.find(x=>String(x.id)===String(id));
 if(!m){try{const {data}=await sb.from('mangas').select('*').eq('id',id).maybeSingle();m=data}catch(e){}}
-const pags=(m&&m.paginas_urls)||[];
+if(m&&esMangaAdulto(m)&&!esMayor18()){exigirMayor18(()=>abrirLector(id,cap));return}
+const pags=mangaPaginas(m,cap,!!miPerfil&&(m.user_id===miPerfil.id||esCeoSync()));
 if(!pags.length){alert('Este manga todavía no tiene páginas disponibles');return}
 if(miPerfil && !(await esCeoReal())){
   try{
@@ -2924,7 +3013,7 @@ const SAKURA_PACKS=['250','700','2200'];
    INTERRUPTOR (prendido): requiere haber corrido sakuras_ia.sql e ia_generaciones.sql en Supabase
    y tener subidas las funciones de pagos. Si hay que apagar las compras de IA: false. */
 const SAKURAS_IA_SERVER_LISTO=true;
-const SAKURAS_IA_PACKS=[{n:5,ars:'1.000',usd:1},{n:15,ars:'2.000',usd:2},{n:25,ars:'3.000',usd:3},{n:50,ars:'5.000',usd:5}];
+const SAKURAS_IA_PACKS=[{n:1000,ars:'1.000',usd:1},{n:2000,ars:'2.000',usd:2},{n:3000,ars:'3.000',usd:3},{n:5000,ars:'5.000',usd:5}];
 function fmtSak(n){return (Number(n)||0).toLocaleString('es-AR')}
 function pintarSaldosModal(){
   const a=document.getElementById('sakurasSaldo'),b=document.getElementById('sakurasIASaldo');
@@ -2933,7 +3022,7 @@ function pintarSaldosModal(){
 }
 function pintarPacksIA(){
   const w=document.getElementById('sakPacksIA');if(!w)return;
-  w.innerHTML=SAKURAS_IA_PACKS.map(p=>'<div class="pack-card"'+(SAKURAS_IA_SERVER_LISTO?'':' style="opacity:.6"')+'><div class="cant">'+p.n+' 🔴 IA</div><div class="precio">$'+p.ars+' ARS / $'+p.usd+' USD</div><div style="font-size:11px;color:var(--text2);margin-top:2px">o '+Math.floor(p.n/2)+' personajes</div>'+(SAKURAS_IA_SERVER_LISTO?'<button class="btn btn-main" onclick="comprarSakurasIAMP('+p.n+')">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasIAPayPal('+p.n+')">🅿️ PayPal</button>':'<div style="font-size:12px;color:var(--text2);margin-top:6px">Próximamente</div>')+'</div>').join('');
+  w.innerHTML=SAKURAS_IA_PACKS.map(p=>'<div class="pack-card"'+(SAKURAS_IA_SERVER_LISTO?'':' style="opacity:.6"')+'><div class="cant">'+p.n+' 🔴 IA</div><div class="precio">$'+p.ars+' ARS / $'+p.usd+' USD</div><div style="font-size:11px;color:var(--text2);margin-top:2px">alcanza para '+(CANJE_GENS.find(x=>x.c===p.n)||{g:0}).g+' generaciones</div>'+(SAKURAS_IA_SERVER_LISTO?'<button class="btn btn-main" onclick="comprarSakurasIAMP('+p.n+')">💳 MP</button><button class="btn" style="margin-top:6px;width:100%" onclick="comprarSakurasIAPayPal('+p.n+')">🅿️ PayPal</button>':'<div style="font-size:12px;color:var(--text2);margin-top:6px">Próximamente</div>')+'</div>').join('');
 }
 function sakTab(t){
   const ia=(t==='ia');
@@ -2941,7 +3030,7 @@ function sakTab(t){
   if(n)n.style.display=ia?'none':'';if(i)i.style.display=ia?'':'none';
   const bn=document.getElementById('sakBtnNormal'),bi=document.getElementById('sakBtnIA');
   if(bn)bn.className=ia?'btn':'btn btn-main';if(bi)bi.className=ia?'btn btn-main':'btn';
-  if(ia)pintarPacksIA();
+  if(ia){pintarPacksIA();pintarCanje()}
 }
 async function comprarSakurasIAMP(n){
   if(!requireUser())return;
@@ -3055,8 +3144,13 @@ return new Promise(ok=>{const im=new Image();im.onload=()=>{const s=Math.min(1,(
 }
 async function guardarBorrador(){
   sincronizarCrear();
-  const titulo=document.getElementById('titulo').value.trim();
+  const _c=window._continuar||null;
+  let titulo=document.getElementById('titulo').value.trim();
+  if(_c)titulo=_c.titulo;
   if(!titulo){alert('Poné un título');return}
+  const _lim=limiteBorradores(),_lista0=JSON.parse(localStorage.getItem('borradores')||'[]');
+  const _mismo=_c?_lista0.find(d=>d.continuar&&String(d.continuar.id)===String(_c.id)):null;
+  if(!esCeoSync()&&!_mismo&&_lista0.length>=_lim){alert('Tu plan permite hasta '+_lim+' borrador(es): depende de cuántos mangas podés crear según tu plan, más los mangas extra que compraste.\n\nBorrá un borrador o publicá para liberar lugar.');return}
   const btn=event&&event.target;if(btn){btn.disabled=true;btn.innerText='Guardando...'}
   try{
     const pages=[];
@@ -3065,9 +3159,9 @@ async function guardarBorrador(){
     const m=window._modoCrear||'pagina',pf=CREAR_PFX[m]||'pagina';
     const subtitulo=(document.getElementById(pf+'Subtitulo')||{}).value||'';
     const pdfPreview=document.getElementById('pdfPreview');
-    const draft={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),modo:m,titulo,generos:[...generosSel],estilo:estiloSel,subtitulo,sinopsis:document.getElementById('sinopsis').value,portada,paginas:pages,pdfNombre:pdfPreview?.querySelector('.pdf-info')?.innerText||'',fecha:new Date().toISOString()};
-    const lista=JSON.parse(localStorage.getItem('borradores')||'[]');lista.unshift(draft);
-    localStorage.setItem('borradores',JSON.stringify(lista.slice(0,5)));
+    const draft={id:_mismo?_mismo.id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),continuar:_c,modo:m,titulo,generos:[...generosSel],estilo:estiloSel,subtitulo,sinopsis:document.getElementById('sinopsis').value,portada,paginas:pages,pdfNombre:pdfPreview?.querySelector('.pdf-info')?.innerText||'',fecha:new Date().toISOString()};
+    const lista=JSON.parse(localStorage.getItem('borradores')||'[]').filter(d=>d.id!==draft.id);lista.unshift(draft);
+    localStorage.setItem('borradores',JSON.stringify(lista.slice(0,10)));
     alert('Borrador completo guardado ✅ ('+pages.length+' páginas'+(portada?' + portada':'')+')');
   }catch(e){
     if(e && e.name==='QuotaExceededError') alert('No entró en el almacenamiento del navegador (son muchas páginas). Probá con menos páginas o publicá directamente.');
@@ -3075,12 +3169,19 @@ async function guardarBorrador(){
   }
   if(btn){btn.disabled=false;btn.innerHTML='💾 Guardar Borrador'}
 }
+function limiteBorradores(){
+  if(!miPerfil)return 1;
+  const l=limiteMangas(miPerfil);
+  return Math.min(10,l===null?10:Math.max(1,l));
+}
 function abrirBorradores(){
-  const l=$('borradoresLista'),lista=JSON.parse(localStorage.getItem('borradores')||'[]');
-  l.innerHTML=lista.length?'':vacio('No tenés borradores guardados');
-  lista.forEach((d,i)=>{
+  const l=$('borradoresLista'),lista=JSON.parse(localStorage.getItem('borradores')||'[]'),lim=esCeoSync()?10:limiteBorradores();
+  l.innerHTML='<div class="warn-mini" style="margin-bottom:10px">Borradores: <b>'+lista.length+' / '+lim+'</b> · dependen de cuántos mangas podés crear según tu plan (más los extras que compraste).</div>'+(lista.length?'':vacio('No tenés borradores guardados'));
+  lista.forEach(d=>{
     const r=document.createElement('div');r.className='rk';r.style.cursor='default';
-    r.innerHTML='<div style="flex:1"><b style="color:var(--gold3)">'+esc(d.titulo)+'</b><small>'+(d.paginas?d.paginas.length:0)+' págs · '+new Date(d.fecha).toLocaleDateString('es')+'</small></div><button class="mini" onclick="cargarBorrador(\''+d.id+'\')">Abrir</button><button class="mini red" onclick="borrarBorrador(\''+d.id+'\')">🗑️</button>';
+    const portada=d.portada||((d.paginas&&d.paginas[0])||'');
+    const n=d.paginas?d.paginas.length:0;
+    r.innerHTML='<div class="bd-card"><div class="bd-cover">'+(portada?'<img src="'+portada+'" alt="">':'📖')+'</div><div class="bd-info"><b>'+esc(d.titulo)+'</b>'+(d.continuar?'<em>✍️ Capítulo '+esc(String(d.continuar.n))+' en preparación</em>':'<em>'+esc(d.modo==='lapiz'?'Lápiz':d.modo==='ia'?'SalaMangaS IA':d.modo==='pdf'?'PDF':'Página por página')+'</em>')+'<small>'+n+' págs · '+new Date(d.fecha).toLocaleDateString('es')+'</small><div class="bd-btns"><button class="mini" onclick="cargarBorrador(\''+d.id+'\')">Abrir</button><button class="mini red" onclick="borrarBorrador(\''+d.id+'\')">🗑️</button></div></div></div>';
     l.appendChild(r);
   });
   $('borradores-modal').classList.add('on');
@@ -3102,8 +3203,8 @@ async function cargarPersonajes(){
 }
 async function abrirPersonajes(){if(!miPerfil){alert('Iniciá sesión primero');return}$('pj').classList.add('on');await cargarPersonajes();pintarPersonajes()}
 /* ==== PERSONAJES IA ==== */
-let _pjIA={img:null,estilo:'Manga blanco y negro',info:null,busy:false};
-const PJ_IA_ESTILOS=['Manga blanco y negro','Anime a color','Chibi','Dark fantasy','Realista'];
+let _pjIA={img:null,estilo:'Shonen Battle',info:null,busy:false};
+const PJ_IA_ESTILOS=IA_ESTILOS.map(x=>x.n); /* mismos estilos que el resto de la app */
 const pjEsCeo=()=>(typeof esCeoSync==='function')&&esCeoSync();
 async function pjIAEstado(){
   const e=$('pjIAEstado');
@@ -3120,7 +3221,8 @@ async function crearPersonajeIA(){
   const box=$('pjIAEstilos');
   if(!box.children.length){
     box.innerHTML=PJ_IA_ESTILOS.map((t,i)=>'<span class="chip'+(i===0?' on':'')+'" data-e="'+esc(t)+'">'+esc(t)+'</span>').join('');
-    box.addEventListener('click',ev=>{const c=ev.target.closest('.chip');if(!c)return;box.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');_pjIA.estilo=c.dataset.e});
+    iaPlegable(box,4);
+    box.addEventListener('click',ev=>{const c=ev.target.closest('.chip');if(!c||!c.dataset.e)return;if(c.dataset.e==='Ecchi adulto'&&!esMayor18()){exigirMayor18();return}box.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');_pjIA.estilo=c.dataset.e});
   }
   $('pj-ia-modal').classList.add('on');await pjIAEstado();
 }
@@ -3145,14 +3247,14 @@ async function pjIAGenerar(){
   if(_pjIA.busy||!requireUser())return;
   const nombre=($('pjIANom').value||'').trim(),desc=pjIAArmarDesc();
   if(nombre.length<2||desc.length<5){alert('Poné el nombre y completá al menos algunos datos del personaje (pelo, ropa, edad...).');return}
-  if(!pjEsCeo()&&_pjIA.info&&_pjIA.info.puede===false){alert('Ya usaste los personajes de tu plan. Cada personaje extra cuesta 2 Sakuras IA.');abrirSakuras('ia');return}
+  if(!pjEsCeo()&&_pjIA.info&&_pjIA.info.puede===false){alert('Ya usaste los personajes de tu plan. Cada personaje extra cuesta 400 Sakuras IA.');abrirSakuras('ia');return}
   _pjIA.busy=true;const b=$('pjIABtn');b.disabled=true;b.innerText='⏳ Generando...';
   $('pjIAAcc').style.display='none';$('pjIARes').innerHTML='<div>🎨 Creando la hoja de tu personaje...<br><small>puede tardar entre 30 y 60 segundos</small></div>';
   try{
     const tk=await iaToken();
-    const r=await fetch('/api/ia-personaje',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({nombre:nombre,descripcion:desc,estilo:_pjIA.estilo,genero:($('pjfGenero')||{}).value||''})});
+    const r=await fetch('/api/ia-personaje',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({nombre:nombre,descripcion:desc,estilo:_pjIA.estilo,estilo_txt:((IA_ESTILOS.find(x=>x.n===_pjIA.estilo)||{}).p||''),genero:($('pjfGenero')||{}).value||''})});
     const j=await r.json().catch(()=>({}));
-    if(!r.ok){if(j.codigo==='sin_credito')abrirSakuras('ia');throw new Error(j.error||'Error del servidor')}
+    if(!r.ok){if(j.codigo==='sin_credito')abrirSakuras('ia');if(j.codigo==='edad')exigirMayor18();throw new Error(j.error||'Error del servidor')}
     if(!j.id)throw new Error('La IA no devolvió el número de trabajo. Probá de nuevo.');
     const urls=await iaEsperar(j.id,tk);
     const u=(urls||[])[0];if(!u)throw new Error('La IA no devolvió la imagen. Probá de nuevo.');
@@ -3175,7 +3277,7 @@ async function pjIAAceptar(){
   try{
     if(!pjEsCeo()){
       const {data,error}=await sb.rpc('consumir_personaje_ia');if(error)throw error;
-      if(data==='sin_credito'){alert('No te quedan personajes. Cada personaje extra cuesta 2 Sakuras IA.');abrirSakuras('ia');_pjIA.busy=false;return}
+      if(data==='sin_credito'){alert('No te quedan personajes. Cada personaje extra cuesta 400 Sakuras IA.');abrirSakuras('ia');_pjIA.busy=false;return}
       consumido=true;
     }
     const blob=await (await fetch(_pjIA.img)).blob();
@@ -3296,33 +3398,6 @@ function iaActualizarAviso(){
 async function iaToken(){const {data:{session}}=await sb.auth.getSession();return session?session.access_token:''}
 let iaEstiloKey='',iaLoteUrls=[],iaUltimoId=null,iaColorModo='',iaLogoData=null;
 let iaLay='',iaLugar=null,iaOutfit=null,iaRefFiles=[];
-/* ---- Diccionario de ESTILOS (el texto va en inglés porque los modelos lo siguen mejor) ---- */
-const IA_ESTILOS=[
- {k:'shonen-battle',g:'manga',n:'Shonen Battle',e:'💥',p:'Shonen Jump battle manga style, by Oda and Toriyama, intense dynamic action lines, speed lines, impact frames, exaggerated perspective, flying debris, sharp inking, screentone, WHOOSH BOOM'},
- {k:'shonen-romance',g:'manga',n:'Shonen Romance',e:'🏫',p:'Modern shonen romance manga, soft clean lineart, sparkling eyes, detailed school uniform, classroom with soft shading, bishounen style, diagonal cinematic panels'},
- {k:'shojo',g:'manga',n:'Shojo',e:'🌸',p:'Shojo manga by Arina Tanemura, ultra detailed sparkling eyes, flowing hair, flowers in the background'},
- {k:'seinen-dark',g:'manga',n:'Seinen Dark',e:'🗡️',p:'Seinen manga in the style of Berserk and Vagabond, hyper-detailed realistic anatomy, gritty textures, heavy crosshatching'},
- {k:'isekai',g:'manga',n:'Isekai Fantasy',e:'🔮',p:'Isekai fantasy manga, elaborate fantasy clothing, magic circles, glowing effects'},
- {k:'slice',g:'manga',n:'Slice of Life',e:'☕',p:'Slice of life manga, cozy daily life, detailed interiors, soft lighting'},
- {k:'chibi',g:'manga',n:'Chibi / Comedia',e:'😆',p:'Super deformed chibi comedy manga, big heads, cute exaggerated expressions'},
- {k:'horror',g:'manga',n:'Horror (Junji Ito)',e:'👁️',p:'Horror manga in the style of Junji Ito, disturbing detailed faces, heavy inks, unsettling atmosphere'},
- {k:'manhwa',g:'manga',n:'Manhwa coreano',e:'📱',p:'Modern Korean manhwa webtoon, full color, sharp digital rendering, fashionable characters'},
- {k:'mecha',g:'manga',n:'Mecha / Sci-Fi',e:'🤖',p:'Mecha sci-fi manga like Ghost in the Shell, detailed mechanical armor, futuristic details'},
- {k:'sports',g:'manga',n:'Sports',e:'🏀',p:'Sports manga like Slam Dunk, dynamic muscle movement, motion blur, energetic action'},
- {k:'ecchi-adulto',g:'manga',n:'Ecchi adulto',e:'🔥',p:'Adult seinen ecchi manga style. ALL characters are mature adults over 18 with adult faces and adult bodies, voluptuous proportions, tight clothing, sensual but not pornographic'},
- {k:'marvel',g:'comic',n:'Marvel Heroico',e:'🦸',p:'Classic superhero comic book style by Jim Lee, heroic dynamic poses, bold inks, detailed muscular anatomy, vibrant colors, dramatic lighting'},
- {k:'dc-oscuro',g:'comic',n:'DC Oscuro',e:'🦇',p:'Dark gritty superhero comic style by Greg Capullo, heavy shadows, dramatic noir atmosphere, detailed textures'},
- {k:'indie',g:'comic',n:'Indie (Saga)',e:'🚀',p:'Indie comic book style like Saga from Image Comics, painterly digital colors, expressive characters, rich color palette'},
- {k:'vintage90',g:'comic',n:'Vintage 90s',e:'📼',p:'Vintage 90s comic book style, bold exaggerated anatomy, crosshatching, retro halftone colors'},
- {k:'cartoon',g:'comic',n:'Cartoon Teen Titans',e:'🎬',p:'Western teen cartoon style like Teen Titans, bold simple shapes, flat vibrant colors, expressive faces'},
- {k:'golden-age',g:'comic',n:'Golden Age',e:'📰',p:'Golden age 1940s comic book style, Ben-Day dots, bold primary colors, retro printing'},
- {k:'pop-art',g:'comic',n:'Pop Art',e:'🎨',p:'Pop art comic style, halftone dots, bold outlines, primary colors, Lichtenstein-like'},
- {k:'sin-city',g:'comic',n:'Noir Sin City',e:'🕶️',p:'High contrast black and white noir comic like Sin City, stark shadows, white on black'},
- {k:'graphic-novel',g:'comic',n:'Novela gráfica',e:'📖',p:'Realistic graphic novel painted style, cinematic lighting, detailed'},
- {k:'webcomic',g:'comic',n:'Webcomic moderno',e:'💻',p:'Modern webcomic style, clean digital lines, flat colors, expressive characters'},
- {k:'mignola',g:'comic',n:'Hellboy (Mignola)',e:'😈',p:'Hellboy style by Mike Mignola, heavy blacks, angular shapes, limited color palette'},
- {k:'spiderverse',g:'comic',n:'Spider-Verse',e:'🕷️',p:'Spider-Verse stylized comic look, halftone, chromatic offset, dynamic energetic framing'}
-];
 /* ---- Diccionario de VIÑETAS: 8 distribuciones con miniatura y cuadros numerados ---- */
 const IA_LAYOUTS_D=[
  {k:'shonen-impacto',n:'Shonen impacto',sv:[[2,2,34,56],[38,2,20,27],[38,31,20,27],[2,60,56,18]],labs:['grande a la izquierda','arriba a la derecha','abajo a la derecha','acción ancha abajo'],p:'manga page layout: one large vertical panel on the left taking about 60 percent of the width, two small panels stacked on the right (close-ups), and one wide action panel along the bottom with speed lines and impact effect. Clean black panel borders and white gutters'},
@@ -3401,7 +3476,7 @@ async function abrirIA(modo,file){
   /* Estilos: manga y cómic, 4 a la vista + "＋ Ver más" */
   const grupos=[['manga','Manga asiático'],['comic','Cómic americano']];
   $('iaEstilos').innerHTML=grupos.map(g=>'<div class="ia-gtit">'+g[1]+'</div><div class="ia-chips" id="iaEst_'+g[0]+'">'+IA_ESTILOS.filter(x=>x.g===g[0]).map(x=>'<button type="button" class="chip style-choice sty-chip" data-k="'+x.k+'"><span class="sty-th">'+x.e+'<img src="/estilos/'+x.k+'.jpg" alt="" onerror="this.remove()"></span><span>'+esc(x.n)+'</span></button>').join('')+'</div>').join('');
-  document.querySelectorAll('#iaEstilos .style-choice').forEach(c=>c.onclick=()=>{const ya=c.classList.contains('on');document.querySelectorAll('#iaEstilos .style-choice').forEach(x=>x.classList.remove('on'));if(ya){iaEstilo=null;iaEstiloKey='';return}c.classList.add('on');iaEstiloKey=c.dataset.k;iaEstilo=(IA_ESTILOS.find(x=>x.k===iaEstiloKey)||{}).n||''});
+  document.querySelectorAll('#iaEstilos .style-choice').forEach(c=>c.onclick=()=>{const ya=c.classList.contains('on');if(!ya&&c.dataset.k==='ecchi-adulto'&&!esMayor18()){exigirMayor18();return}document.querySelectorAll('#iaEstilos .style-choice').forEach(x=>x.classList.remove('on'));if(ya){iaEstilo=null;iaEstiloKey='';return}c.classList.add('on');iaEstiloKey=c.dataset.k;iaEstilo=(IA_ESTILOS.find(x=>x.k===iaEstiloKey)||{}).n||''});
   grupos.forEach(g=>iaPlegable($('iaEst_'+g[0]),4));
   document.querySelectorAll('#iaColorModes .chip').forEach(c=>{c.classList.remove('on');c.onclick=()=>{const ya=c.classList.contains('on');document.querySelectorAll('#iaColorModes .chip').forEach(x=>x.classList.remove('on'));if(ya){iaColorModo='';return}c.classList.add('on');iaColorModo=c.dataset.color||c.textContent.trim()}});
   /* Referencias con cuadraditos */
@@ -3484,7 +3559,7 @@ async function iaGenerar(){
     const r=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:fd});
     const j=await r.json().catch(()=>({}));
     if(!r.ok){
-      if(j.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}
+      if(j.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}if(j.codigo==='edad')exigirMayor18();
       throw new Error(j.error||'Error del servidor');
     }
     if(j.sync&&j.imagenes){iaMostrar(j.imagenes)}
@@ -3599,8 +3674,10 @@ const PLANES_SALAMANGAS={
  dios:{nombre:'Mangakers Dios',precioARS:30000,precioUSD:30,mangas:2,personajes:15,lugares:5,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:true,porcentaje:100,insignia:'Dios'}
 };
 const SALAS={mangakars:'SalaMangakers',pro:'SalaMangakers Pro',dios:'Dios del Manga'};
-const GENEROS_DEFINITIVOS=["Acción","Romance","Terror","Drama","Comedia","Isekai","Fantasía","Ciencia Ficción","Slice of Life","Misterio","Aventura","Sobrenatural","Suspense","Religioso"];
-const COSTOS_SAKURAS={pagina:50,capitulo:500,pdf:500,leerNueva:25,releer:10,extra:500};
+const GENEROS_DEFINITIVOS=GENEROS; /* misma lista en los 4 modos de crear y en el buscador */
+/* Precios (Sakuras comunes): página extra sobre las 20 incluidas = 100; capítulo o PDF extra sobre el tope del plan = 2000 */
+const COSTOS_SAKURAS={pagina:100,capitulo:2000,pdf:2000,leerNueva:25,releer:10,extra:2000};
+const PAGS_GRATIS=20, MAX_PAGS=30;
 function planClave(p){
   if(!p)return 'gratis';
   if(p.tier==='superpro')return 'superpro';
@@ -3763,11 +3840,7 @@ function ocultarCrearPantallas(){
 function volverCrear(){ocultarCrearPantallas();$('screen-crear').classList.add('on');window.scrollTo(0,0)}
 /* ==== LAPIZ (Tanda C): subir dibujos a lápiz + Renacer en la misma pantalla ==== */
 let lapizDibujoFile=null,_lapizUltimoId=null,_lapizResUrl=null,_lapizAgregada=false,_lapizCoverUrl=null;
-function lapizIaKey(label){
-  const t=String(label||'').toLowerCase().trim();
-  const mapa={'shonen':'shonen','shojo':'shojo','anime':'anime','cyberpunk':'cyberpunk','acuarela':'acuarela','cómic western':'comic-western','comic western':'comic-western','kawaii':'kawaii','retro 80s/90s':'retro','manga clásico':'clasico','manga clasico':'clasico','screentone':'screentone','noir':'noir','vintage':'vintage','pastel':'pastel','dark fantasy':'dark','chibi':'chibi','realista':'realista'};
-  return mapa[t]||'clasico';
-}
+function lapizIaKey(label){const e=IA_ESTILOS.find(x=>x.n===String(label||'').trim());return e?e.k:'clasico'}
 function lapizCoverRender(){
   const t=$('lapizCoverTile');if(!t)return;
   if(_lapizCoverUrl){try{URL.revokeObjectURL(_lapizCoverUrl)}catch(e){}_lapizCoverUrl=null}
@@ -3849,7 +3922,7 @@ async function renacerLapiz(){
     const label=chip?chip.textContent.trim():'Manga clásico';
     const colorModo=colorChip?(colorChip.dataset.color||colorChip.textContent.trim()):'auto';
     const spec=($('lapizPrompt').value||'').trim();
-    const prompt=(spec||'limpiar las líneas, mantener personajes y composición')+'. Estilo visual: '+label+'.';
+    const prompt=(spec||'limpiar las líneas, mantener personajes y composición')+'. Estilo visual: '+((IA_ESTILOS.find(x=>x.n===label)||{}).p||label)+'.';
     const fd=new FormData();
     fd.append('prompt',prompt);fd.append('modo','lapiz');fd.append('estilo',chip?lapizIaKey(label):'clasico');fd.append('color_modo',colorModo);fd.append('fidelidad','equilibrado');fd.append('num_images','1');fd.append('cantidad','1');
     fd.append('dibujo',await iaRedimBlob(lapizDibujoFile,1280,'contrast(1.15)'),'dibujo.jpg');
@@ -3857,7 +3930,7 @@ async function renacerLapiz(){
     const r=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:fd});
     const j=await r.json().catch(()=>({}));
     if(!r.ok){
-      if(j.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}
+      if(j.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}if(j.codigo==='edad')exigirMayor18();
       throw new Error(j.error||'Error del servidor');
     }
     if(j.sync&&j.imagenes){await lapizMostrar(j.imagenes)}
@@ -3886,7 +3959,7 @@ async function lapizReanudar(){
 }
 async function lapizUsarResultado(){
   if(!_lapizResUrl||_lapizAgregada)return;
-  if(paginas.length>=20){alert('Máximo 20 páginas por capítulo.');return}
+  if(paginas.length>=MAX_PAGS){alert('Máximo '+MAX_PAGS+' páginas por capítulo (desde la 21, cada página cuesta '+COSTOS_SAKURAS.pagina+' Sakuras).');return}
   try{
     const r=await fetch(_lapizResUrl);if(!r.ok)throw new Error('No se pudo descargar la imagen');
     const b=await r.blob();
@@ -3910,26 +3983,33 @@ document.addEventListener('change',function(e){
 });
 /* ==== FIN LAPIZ ==== */
 function agregarFilaLapiz(){
- if(paginas.length>=20){alert('Máximo 20 páginas por capítulo.');return}
+ if(paginas.length>=MAX_PAGS){alert('Máximo '+MAX_PAGS+' páginas por capítulo (desde la 21, cada página cuesta '+COSTOS_SAKURAS.pagina+' Sakuras).');return}
  const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=e=>{const f=e.target.files[0];if(!f)return;paginas.push({file:f});renderLapizSlots()};inp.click()
 }
 function renderLapizSlots(){
  const w=$('lapizSlots');if(!w)return;w.innerHTML='';paginas.forEach((p,i)=>{const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+URL.createObjectURL(p.file)+')';d.title='Página '+(i+1);d.onclick=()=>{if(confirm('¿Quitar esta página?')){paginas.splice(i,1);renderLapizSlots()}};w.appendChild(d)});
- if(paginas.length<20){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=agregarFilaLapiz;w.appendChild(d)}
+ if(paginas.length<MAX_PAGS){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=agregarFilaLapiz;w.appendChild(d)}
 }
 function abrirVistaPreviaCreacion(){
+ try{sincronizarCrear()}catch(e){}
  const w=$('previewCreacionBody');w.innerHTML='';
+ const c=window._continuar||null;
+ const tit=c?('«'+c.titulo+'» — Capítulo '+c.n):($('titulo').value.trim()||'Sin título');
+ const sub=c?'':(subtituloActual()||'');
+ if(portadaArchivo&&!c){const im=document.createElement('img');im.className='pv-cover';im.alt='Portada';im.src=URL.createObjectURL(portadaArchivo);w.appendChild(im)}
+ const cab=document.createElement('div');cab.className='pv-cab';cab.innerHTML='<b>'+esc(tit)+'</b>'+(sub?'<small>'+esc(sub)+'</small>':'')+(!c&&$('sinopsis').value.trim()?'<small>'+esc($('sinopsis').value.trim())+'</small>':'')+'<small>'+paginas.length+' página(s)</small>';
+ w.appendChild(cab);
  paginas.forEach((p,i)=>{const img=document.createElement('img');img.src=URL.createObjectURL(p.file);img.alt='Página '+(i+1);w.appendChild(img)});
  $('preview-creacion').classList.add('on')
 }
 function cerrarVistaPreviaCreacion(){$('preview-creacion').classList.remove('on')}
 /* Página por página: usar los slots definitivos y límite 20 */
 function agregarPaginaSlot(){
- if(paginas.length>=20){alert('Un capítulo no puede superar 20 páginas.');return}
+ if(paginas.length>=MAX_PAGS){alert('Máximo '+MAX_PAGS+' páginas por capítulo (desde la 21, cada página cuesta '+COSTOS_SAKURAS.pagina+' Sakuras).');return}
  const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=e=>{const f=e.target.files[0];if(!f)return;paginas.push({file:f});renderPaginaSlots()};inp.click()
 }
 function renderPaginaSlots(){
- const w=$('paginaSlots');if(!w)return;w.innerHTML='';paginas.forEach((p,i)=>{const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+URL.createObjectURL(p.file)+')';d.onclick=()=>{if(confirm('¿Quitar página '+(i+1)+'?')){paginas.splice(i,1);renderPaginaSlots()}};w.appendChild(d)});if(paginas.length<20){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=agregarPaginaSlot;w.appendChild(d)}
+ const w=$('paginaSlots');if(!w)return;w.innerHTML='';paginas.forEach((p,i)=>{const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+URL.createObjectURL(p.file)+')';d.onclick=()=>{if(confirm('¿Quitar página '+(i+1)+'?')){paginas.splice(i,1);renderPaginaSlots()}};w.appendChild(d)});if(paginas.length<MAX_PAGS){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=agregarPaginaSlot;w.appendChild(d)}
 }
 /* PDF según plan */
 function renderPDFSlots(){
@@ -3959,6 +4039,7 @@ function abrirCrearPantalla(tipo){
  if(tipo==='lapiz-2'){renderLapizSlots();lapizActualizarAviso()}
  if(tipo==='pagina')renderPaginaSlots();
  if(tipo==='ia')renderIASlots();
+ ['pagina','pdf','iaCrear'].forEach(crCoverRender);aplicarContinuarUI();
  window.scrollTo(0,0);
 }
 /* ===== IA visible: SOLO el CEO; y todos cuando el CEO prende "IA conectada" en el panel ===== */
@@ -3985,7 +4066,14 @@ function renderCrearAux(){
   w.dataset.rendered='1';
   items.forEach((txt,i)=>{
    const c=document.createElement('span');c.className='chip'+(esEstilo?' style-choice':'')+(i>=4?' chip-mas-oculto':'');c.textContent=txt;
-   c.onclick=esEstilo?()=>{w.querySelectorAll('.style-choice').forEach(x=>x.classList.remove('on'));c.classList.add('on')}:()=>c.classList.toggle('on');
+   c.onclick=esEstilo?()=>{
+     const poner=()=>{w.querySelectorAll('.style-choice').forEach(x=>x.classList.remove('on'));c.classList.add('on')};
+     if(txt==='Ecchi adulto'&&!esMayor18()){exigirMayor18(poner);return}
+     poner();
+   }:()=>{
+     if(!c.classList.contains('on')&&/\+18/.test(txt)&&!esMayor18()){exigirMayor18(()=>c.classList.add('on'));return}
+     c.classList.toggle('on');
+   };
    w.appendChild(c);
   });
   if(items.length>4){
@@ -4006,7 +4094,7 @@ function renderCrearAux(){
 function renderIASlots(){
  const w=$('iaCrearSlots');if(!w)return;w.innerHTML='';
  paginas.forEach((p,i)=>{const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+URL.createObjectURL(p.file)+')';d.onclick=()=>{if(confirm('¿Quitar página '+(i+1)+'?')){paginas.splice(i,1);renderIASlots()}};w.appendChild(d)});
- if(paginas.length<20){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=()=>abrirIA('ia');w.appendChild(d)}
+ if(paginas.length<MAX_PAGS){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=()=>abrirIA('ia');w.appendChild(d)}
 }
 /* Copia los datos de la pantalla de crear activa a lo que usa publicar() y guardarBorrador() */
 function subtituloActual(){
@@ -4026,6 +4114,7 @@ function sincronizarCrear(){
  else if(!portadaArchivo&&paginas[0])portadaArchivo=paginas[0].file;
 }
 function limpiarCrearUI(sinVolver){
+ window._continuar=null;
  paginas=[];portadaArchivo=null;generosSel=[];estiloSel=null;filaActual=0;
  ['lapiz','pagina','pdf','iaCrear'].forEach(pf=>{
   ['Titulo','Subtitulo','Sinopsis','Portada','Prompt'].forEach(s=>{const e=$(pf+s);if(e)e.value=''});
@@ -4035,12 +4124,13 @@ function limpiarCrearUI(sinVolver){
  const vb=$('lapizVistaBox');if(vb)vb.innerHTML='<div>Subí un dibujo para verlo acá</div>';
  if(typeof lapizReset==='function')lapizReset();
  renderLapizSlots();renderPaginaSlots();renderIASlots();
+ ['pagina','pdf','iaCrear'].forEach(crCoverRender);aplicarContinuarUI();
  if(!sinVolver)volverCrear();
 }
 async function publicarPDF(){
  if(!paginas.length){alert('Subí un PDF primero.');return}
  if(paginas.length<10||paginas.length>25){alert('El PDF debe tener entre 10 y 25 páginas.');return}
- paginas=paginas.slice(0,20);
+ paginas=paginas.slice(0,MAX_PAGS);
  window._modoCrear='pdf';
  await publicar();
 }
@@ -4049,6 +4139,7 @@ function cargarBorrador(id){
  if(!d)return;
  const modo=d.modo||'pagina';
  limpiarCrearUI(true);
+ window._continuar=d.continuar||null;
  go('crear');
  abrirCrearPantalla(modo==='lapiz'?'lapiz-2':modo);
  const pf=CREAR_PFX[modo]||'pagina';
@@ -4061,6 +4152,7 @@ function cargarBorrador(id){
  if(modo==='pagina')renderPaginaSlots();
  if(modo==='lapiz')renderLapizSlots();
  if(modo==='pdf'){renderPDFSlots();const pv=$('pdfPreview');if(pv&&d.pdfNombre){pv.innerHTML='<div class=\"pdf-info\">📄 '+esc(d.pdfNombre)+' · borrador cargado</div>';pv.classList.add('on')}}
+ ['pagina','pdf','iaCrear'].forEach(crCoverRender);
  renderCrearAux();
  sincronizarCrear();
  cerrarOv('borradores-modal');
@@ -4087,26 +4179,29 @@ function consumirCuotaCreacion(){
 const publicarOriginal=publicar;
 publicar=async function(){
  sincronizarCrear();
+ if(!window._continuar&&(generosSel.some(g=>/\+18/.test(g))||/ecchi adulto/i.test(estiloSel||''))&&!esMayor18()){exigirMayor18();return}
  const _esCeo=await esCeoReal();
- if(paginas.length>20){alert('Un capítulo no puede pasar de 20 páginas. Si querés más, creá otro capítulo.');return}
- if(paginas.length===0){alert('Agregá páginas antes de publicar.');return}
- const costo=paginas.length===20?COSTOS_SAKURAS.capitulo:paginas.length*COSTOS_SAKURAS.pagina;
- if(!_esCeo){
-   const k=planClave(miPerfil);
-   if(k==='gratis'&&paginas.length>20)return;
-   /* El capítulo completo cuesta 500; una carga parcial cuesta 50 por página. */
- }
  const n=paginas.length;
- const esCompleto=n>=15&&n<=20;
+ if(n>MAX_PAGS){alert('Un capítulo no puede pasar de '+MAX_PAGS+' páginas.');return}
+ if(n===0){alert('Agregá páginas antes de publicar.');return}
  const cuota=cuotasCreacion();
- const tieneGratis=esCompleto && cuota.usados<cuota.limite;
- if(esCompleto && !tieneGratis && !_esCeo){
-   const r=await gastarSakurasPropio(COSTOS_SAKURAS.capitulo);
-   if(!r.ok){alert('Ya usaste los capítulos gratis de este mes. Crear otro capítulo completo cuesta 500 Sakuras.');return}
+ const tieneGratis=cuota.usados<cuota.limite;
+ const extras=Math.max(0,n-PAGS_GRATIS);
+ const costoExtras=extras*COSTOS_SAKURAS.pagina;
+ const costoCap=tieneGratis?0:COSTOS_SAKURAS.capitulo;
+ const total=costoExtras+costoCap;
+ if(!_esCeo&&total>0){
+   const det=(costoCap?'capítulo extra '+costoCap:'')+(costoCap&&costoExtras?' + ':'')+(costoExtras?extras+' página(s) extra × '+COSTOS_SAKURAS.pagina+' = '+costoExtras:'');
+   if((miPerfil.sakuras||0)<total){alert('Publicar esto cuesta '+total+' Sakuras ('+det+') y no te alcanzan.\n\nConseguí más en 🪙 Sakuras.');return}
+   if(!confirm('Esto cuesta '+total+' Sakuras ('+det+'). ¿Publicar?'))return;
  }
- await publicarOriginal();
- if(esCompleto && tieneGratis && !_esCeo)consumirCuotaCreacion();
- if(n&&paginas.length===0)limpiarCrearUI();
+ const ok=await publicarOriginal();
+ if(!ok)return;
+ if(!_esCeo&&total>0){const r=await gastarSakurasPropio(total);if(!r.ok)console.warn('No se pudo cobrar tras publicar')}
+ if(tieneGratis&&!_esCeo)consumirCuotaCreacion();
+ window._continuar=null;
+ if(paginas.length===0)limpiarCrearUI();
+ try{renderCrearHome()}catch(e){}
 }
 /* Donación creador: montos definitivos 1000–10000 y mensaje según plan */
 function abrirDonarCreador(){
@@ -5288,6 +5383,164 @@ function tnCopiar(id){
   const r=TIENDA.items.find(x=>String(x.id)===String(id));if(!r)return;
   const t=(r.nombre||'')+(r.descripcion?': '+r.descripcion:'');
   try{navigator.clipboard.writeText(t).then(()=>alert('Descripción copiada. Pegala en las instrucciones de la IA.'),()=>prompt('Copiá este texto:',t))}catch(e){prompt('Copiá este texto:',t)}
+}
+
+/* ===================== CREAR (rediseño): progreso, portada compacta, mis mangas, capítulos ===================== */
+function progresoMostrar(tit,pct,txt){
+  const o=$('progreso-ov');if(!o)return;o.classList.add('on');
+  $('progTit').textContent=tit||'Subiendo tu manga...';
+  const p=Math.max(0,Math.min(100,Number(pct)||0));
+  $('progFill').style.width=p+'%';$('progPct').textContent=Math.round(p)+'%';$('progTxt').textContent=txt||'';
+}
+function progresoOcultar(){const o=$('progreso-ov');if(o)o.classList.remove('on')}
+
+/* Portada en cuadro grande (igual que el lápiz) para Página por página, PDF y SalaMangaS IA */
+function crCoverRender(pf){
+  const t=$(pf+'CoverTile');if(!t)return;
+  t.classList.remove('acts');
+  const activo=CREAR_PFX[window._modoCrear]===pf;
+  if(portadaArchivo&&activo){
+    t.innerHTML='<img src="'+URL.createObjectURL(portadaArchivo)+'" alt="Portada"><div class="lz-cover-acts"><button type="button" onclick="event.stopPropagation();crCoverEditar(\''+pf+'\')">✏️ Editar</button><button type="button" onclick="event.stopPropagation();lapizCoverVer()">👁️ Vista previa</button></div>';
+  }else t.innerHTML='<span>＋ Portada<br><small>'+(pf==='pdf'?'opcional · tocá':'tocá para subirla')+'</small></span>';
+}
+function crCoverTap(pf){
+  const t=$(pf+'CoverTile');if(!t)return;
+  if(!(portadaArchivo&&CREAR_PFX[window._modoCrear]===pf)){const i=$(pf+'Portada');if(i)i.click();return}
+  t.classList.toggle('acts');
+}
+function crCoverEditar(pf){const t=$(pf+'CoverTile');if(t)t.classList.remove('acts');const i=$(pf+'Portada');if(i)i.click()}
+document.addEventListener('change',function(e){
+  const t=e.target;if(!t||!t.id)return;
+  const m=/^(pagina|pdf|iaCrear)Portada$/.exec(t.id);
+  if(m&&t.files&&t.files[0]){portadaArchivo=t.files[0];crCoverRender(m[1])}
+});
+
+/* ---- Seguir con la historia: SOLO se agregan páginas/capítulos; título, portada, género y estilo quedan fijos ---- */
+window._continuar=null;
+function aplicarContinuarUI(){
+  const scr=$('screen-crear-pagina');if(!scr)return;
+  const c=window._continuar,form=$('paginaFormBase');let b=$('contBanner');
+  if(!c){if(b)b.remove();if(form)form.style.display='';return}
+  if(form)form.style.display='none';
+  if(!b){b=document.createElement('div');b.id='contBanner';b.className='warn-mini';b.style.marginBottom='12px';const card=scr.querySelector('.card');card.insertBefore(b,card.firstChild)}
+  b.innerHTML='✍️ <b>Capítulo '+esc(String(c.n))+'</b> de «'+esc(c.titulo)+'»<br><small>Solo agregás páginas. El título, la portada, el género y el estilo ya quedaron definidos. Para cambiarlos hacé un <b>nuevo volumen</b> (usa un manga de tu plan).</small><div style="display:flex;gap:6px;margin-top:8px"><button class="btn" style="flex:1" onclick="agregarPaginaSlot()">🖼️ Subir páginas</button><button class="btn" style="flex:1" onclick="abrirIA(\'ia\')">🤖 SalaMangaS IA</button></div><button class="btn-ghost" style="margin-top:6px;font-size:12px" onclick="salirContinuar()">✕ Cancelar capítulo</button>';
+}
+function salirContinuar(){window._continuar=null;limpiarCrearUI(true);volverCrear()}
+async function crearContinuar(id){
+  if(!requireUser())return;
+  let m=MIS_MANGAS.find(x=>String(x.id)===String(id));
+  if(!m){try{const {data}=await sb.from('mangas').select('*').eq('id',id).maybeSingle();m=data}catch(e){}}
+  if(!m||m.user_id!==miPerfil.id){alert('No se encontró ese manga.');return}
+  cerrarOv('mangadet');
+  const dr=JSON.parse(localStorage.getItem('borradores')||'[]').find(d=>d.continuar&&String(d.continuar.id)===String(m.id));
+  if(dr){cargarBorrador(dr.id);return}
+  limpiarCrearUI(true);
+  window._continuar={id:m.id,titulo:m.titulo,n:(Array.isArray(m.capitulos)?m.capitulos.length:0)+2};
+  go('crear');abrirCrearPantalla('pagina');
+}
+function nuevoVolumen(){cerrarOv('mangadet');nuevoCrear('pagina')}
+
+/* ---- Pantalla Crear: contador de Sakuras + mis mangas ---- */
+let MIS_MANGAS=[];
+async function renderCrearHome(){
+  const r=$('crearResumen'),lst=$('crearMisMangas');if(!r||!lst)return;
+  if(!miPerfil){r.innerHTML='<p style="font-size:12px;color:var(--text2)">Iniciá sesión para crear.</p>';lst.innerHTML='';return}
+  let ceo=false;try{ceo=await esCeoReal()}catch(e){}
+  const q=cuotasCreacion(),lim=q.limite===Infinity?'∞':q.limite,rest=q.limite===Infinity?'sin límite':Math.max(0,q.limite-q.usados);
+  const ia=(typeof window.iaResumenSaldo==='function')?window.iaResumenSaldo():null;
+  const iaTxt=ia?(ia.ceo?'∞':(Number(ia.plan||0)+Number(ia.extra||0))):'—';
+  r.innerHTML='<div class="cr-res"><div>🪙 Sakuras<b>'+Number(miPerfil.sakuras||0).toLocaleString('es')+'</b></div><div>🔴 Sakuras IA<b>'+Number(miPerfil.sakuras_ia||0).toLocaleString('es')+'</b></div><div>📖 Capítulos gratis este mes<b>'+q.usados+' / '+lim+'</b><small>te quedan '+rest+'</small></div><div>🎨 Generaciones IA disponibles<b>'+iaTxt+'</b><small>plan + Sakuras IA</small></div></div><p style="font-size:11px;color:var(--text2);margin:10px 0 0">Páginas extra (de la 21 a la 30): 100 🪙 c/u · Capítulo o PDF extra: 2000 🪙 · Las creaciones con IA usan solo 🔴 Sakuras IA.</p>';
+  try{const {data}=await sb.from('mangas').select('*').eq('user_id',miPerfil.id).order('created_at',{ascending:false});MIS_MANGAS=data||[]}catch(e){MIS_MANGAS=[]}
+  const lm=limiteMangas(miPerfil);
+  const cab='<p style="font-size:11px;color:var(--text2);margin:0 0 8px">Mangas creados: <b>'+MIS_MANGAS.length+((lm===null||ceo)?'':' / '+lm)+'</b></p>';
+  lst.innerHTML=cab+(MIS_MANGAS.length?MIS_MANGAS.map(m=>{
+    const nc=1+(Array.isArray(m.capitulos)?m.capitulos.length:0),pt=m.portada_url||((m.paginas_urls||[])[0])||'';
+    return '<div class="mm-card" onclick="abrirMangaCreador(\''+String(m.id).replace(/'/g,'')+'\')"><div class="mm-cover">'+(pt?'<img src="'+esc(pt)+'" alt="">':'')+'</div><div><b>'+esc(m.titulo)+'</b><small>'+nc+' capítulo(s) · '+(m.estado==='pendiente'?'⏳ en revisión':'✅ publicado')+'</small></div></div>';
+  }).join(''):'<p style="font-size:12px;color:var(--text2)">Todavía no publicaste ningún manga. Elegí una forma de crear arriba 👆</p>');
+}
+function abrirMangaCreador(id){
+  const m=MIS_MANGAS.find(x=>String(x.id)===String(id));if(!m)return;
+  const q=String(m.id).replace(/'/g,''),caps=Array.isArray(m.capitulos)?m.capitulos:[],nc=caps.length+1;
+  const hayBor=JSON.parse(localStorage.getItem('borradores')||'[]').some(d=>d.continuar&&String(d.continuar.id)===String(m.id));
+  const pt=m.portada_url||((m.paginas_urls||[])[0])||'';
+  const gens=(m.generos||[]).map(g=>'<span class="chip on" style="cursor:default">'+esc(g)+'</span>').join('');
+  let h=(pt?'<img class="md-cover" src="'+esc(pt)+'" alt="Portada">':'')+'<h2 style="text-align:center;margin:0">'+esc(m.titulo)+'</h2>'+(m.subtitulo?'<div style="text-align:center;color:var(--text2);font-size:13px">'+esc(m.subtitulo)+'</div>':'')+'<p class="md-sino">'+esc(m.sinopsis||'Sin sinopsis')+'</p><div style="display:flex;gap:6px;flex-wrap:wrap">'+gens+(m.estilo?'<span class="chip on" style="cursor:default">🎨 '+esc(m.estilo)+'</span>':'')+'</div>';
+  h+='<h3 class="section" style="margin-top:16px">📑 Capítulos ('+nc+')</h3>';
+  for(let i=1;i<=nc;i++){const n=(i===1?(m.paginas_urls||[]):((caps[i-2]||{}).paginas_urls||[])).length;h+='<div class="rk" style="cursor:default"><div style="flex:1"><b>Capítulo '+i+'</b><small>'+n+' páginas'+((i>1&&(caps[i-2]||{}).estado==='pendiente')?' · ⏳ en revisión':'')+'</small></div><button class="mini" onclick="cerrarOv(\'mangadet\');abrirLector(\''+q+'\','+i+')">Ver</button></div>'}
+  h+='<button class="btn-main" style="width:100%;margin-top:14px" onclick="crearContinuar(\''+q+'\')">✍️ Seguir con la historia'+(hayBor?' (ver o editar el borrador)':' · capítulo '+(nc+1))+'</button>';
+  h+='<button class="btn" style="width:100%;margin-top:8px" onclick="cerrarOv(\'mangadet\');abrirLector(\''+q+'\')">📄 Sus páginas (ver)</button>';
+  h+='<div class="warn-mini" style="margin-top:12px">Una vez publicado, solo podés agregar páginas y capítulos. No se pueden cambiar la portada, el género ni el estilo: para eso hacé un <b>nuevo volumen</b> (consume un manga de tu plan).</div>';
+  h+='<button class="btn-ghost" style="width:100%;margin-top:8px" onclick="nuevoVolumen()">📚 Nuevo volumen</button>';
+  $('mdBody').innerHTML=h;$('mangadet').classList.add('on');
+}
+/* Al entrar a Crear se actualiza el contador y la lista de mangas */
+(function(){
+  const _goBase=go;
+  go=function(id){const r=_goBase.apply(this,arguments);if(id==='crear'){try{renderCrearHome()}catch(e){}}return r};
+  const _volverBase=volverCrear;
+  volverCrear=function(){const r=_volverBase.apply(this,arguments);try{renderCrearHome()}catch(e){}return r};
+})();
+
+/* ===================== MONEDAS: Sakuras 🪙 (todo lo que NO es IA) y Sakuras IA 🔴 (solo IA) ===================== */
+const CANJE_GENS=[{g:5,c:1000},{g:10,c:2000},{g:30,c:3000},{g:50,c:5000}];
+window.iaResumenSaldo=function(){
+  if(!miPerfil)return null;
+  if(esCeoSync())return {ceo:true,plan:0,extra:0};
+  const cupo=({pro:20,superpro:50,semidios:100,dios:200})[planClave(miPerfil)]||0;
+  const extra=Number(miPerfil.generaciones_extra||0);
+  if(!(planVigente()&&cupo>0))return {ceo:false,plan:0,extra:extra,sinPlan:true};
+  const d=miPerfil.ultima_recarga_ia?new Date(miPerfil.ultima_recarga_ia):null,n=new Date();
+  const mesOk=d&&d.getUTCFullYear()===n.getUTCFullYear()&&d.getUTCMonth()===n.getUTCMonth();
+  return {ceo:false,plan:mesOk?Math.max(0,Number(miPerfil.generaciones_ia||0)):cupo,extra:extra};
+};
+function pintarCanje(){
+  const w=$('sakCanje');if(!w)return;
+  const r=window.iaResumenSaldo&&window.iaResumenSaldo(),res=$('sakGenResumen');
+  if(res)res.textContent=!r?'—':(r.ceo?'sin límite (CEO)':(r.plan+' del plan + '+r.extra+' canjeadas'));
+  w.innerHTML=CANJE_GENS.map(p=>'<div class="pack-card"><div class="cant">'+p.g+' generaciones</div><div class="precio">'+p.c.toLocaleString('es')+' 🔴 Sakuras IA</div><button class="btn btn-main" style="margin-top:8px;width:100%" onclick="canjearGeneraciones('+p.g+')">Canjear</button></div>').join('');
+}
+async function canjearGeneraciones(g){
+  if(!requireUser())return;
+  const p=CANJE_GENS.find(x=>x.g===g);if(!p)return;
+  if(!(esCeoSync()||(planVigente()&&planClave(miPerfil)!=='gratis'))){alert('Para usar la IA necesitás un plan Pro o superior.');return}
+  const tiene=Number(miPerfil.sakuras_ia||0);
+  if(tiene<p.c){alert('Necesitás '+p.c.toLocaleString('es')+' Sakuras IA para canjear '+g+' generaciones. Te faltan '+(p.c-tiene).toLocaleString('es')+'. Comprá Sakuras IA arriba.');return}
+  if(!confirm('¿Canjear '+p.c.toLocaleString('es')+' 🔴 Sakuras IA por '+g+' generaciones?'))return;
+  try{
+    const {data,error}=await sb.rpc('canjear_generaciones',{p_gens:g});
+    if(error)throw error;
+    if(data!=='ok'){alert(data==='sin_sakuras_ia'?'No tenés Sakuras IA suficientes.':'No se pudo canjear ('+data+').');return}
+    try{await refrescarPerfil()}catch(e){}
+    pintarSaldosModal();pintarCanje();
+    alert('✅ Listo: sumaste '+g+' generaciones.');
+  }catch(e){alert(/canjear_generaciones|schema|PGRST202/i.test(e.message||'')?'Falta correr generaciones_edad_moderacion.sql en Supabase.':'Error: '+(e.message||e))}
+}
+
+/* ===================== EDAD (+18) ===================== */
+let _edadCb=null;
+function esMayor18(){return esCeoSync()||!!(miPerfil&&miPerfil.mayor_18===true)}
+function esMangaAdulto(m){return !!m&&((Array.isArray(m.generos)&&m.generos.some(g=>/\+18/.test(g)))||/ecchi adulto/i.test(m.estilo||''))}
+function exigirMayor18(cb){
+  if(esMayor18()){if(cb)cb();return true}
+  if(!miPerfil){alert('Iniciá sesión para ver o crear contenido +18.');return false}
+  if(miPerfil.bloqueo_18){alert('No podés acceder a contenido +18.');return false}
+  _edadCb=cb||null;$('edadFecha').value='';$('edadOk').checked=false;$('edadMsg').textContent='';$('edad-modal').classList.add('on');
+  return false;
+}
+function cerrarEdad(){$('edad-modal').classList.remove('on');_edadCb=null}
+async function edadConfirmar(){
+  const f=$('edadFecha').value,m=$('edadMsg'),b=$('edadBtn');
+  if(!f){m.textContent='Poné tu fecha de nacimiento.';return}
+  if(!$('edadOk').checked){m.textContent='Tenés que confirmar la declaración.';return}
+  b.disabled=true;m.textContent='';
+  try{
+    const {data,error}=await sb.rpc('verificar_edad',{p_nacimiento:f});
+    if(error)throw error;
+    if(data==='ok'){try{await refrescarPerfil()}catch(e){}const cb=_edadCb;cerrarEdad();try{cargarInicio()}catch(e){}if(cb)cb();b.disabled=false;return}
+    if(data==='menor'||data==='bloqueado'){try{await refrescarPerfil()}catch(e){}cerrarEdad();alert('No podés acceder a contenido +18.');b.disabled=false;return}
+    m.textContent=data==='fecha_invalida'?'La fecha no es válida.':'No se pudo verificar ('+data+').';
+  }catch(e){m.textContent=/verificar_edad|schema|PGRST202/i.test(e.message||'')?'Falta correr generaciones_edad_moderacion.sql en Supabase.':'Error: '+(e.message||e)}
+  b.disabled=false;
 }
 </script>
 </body>
