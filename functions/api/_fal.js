@@ -61,8 +61,10 @@ async function imagenDe(res, etiqueta) {
 export async function falImagenes(env, { prompt, w, h, n = 1, colorModo = '', seguro = true }) {
   const modelo = falModelo(env, 'qwen');
   const input = { prompt, image_size: { width: w, height: h }, num_images: 1, output_format: 'jpeg', sync_mode: true, enable_safety_checker: !!seguro };
-  if (colorModo === 'B/N') input.negative_prompt = 'color, colorful, colored, saturated';
-  if (colorModo === 'Color') input.negative_prompt = 'monochrome, grayscale, black and white';
+  const sinDesnudos = seguro ? 'nudity, nude, naked, bare nipples, exposed genitals, explicit sexual acts' : '';
+  const negColor = colorModo === 'B/N' ? 'color, colorful, colored, saturated' : colorModo === 'Color' ? 'monochrome, grayscale, black and white' : '';
+  const neg = [negColor, sinDesnudos].filter(Boolean).join(', ');
+  if (neg) input.negative_prompt = neg;
   const pedidos = Array.from({ length: Math.max(1, n) }, async () => {
     const res = await llamar(env, modelo, input);
     if (!res.ok) { console.error('Fal imagen', modelo, res.status, res.txt.slice(0, 500)); throw errorFal(res.status, res.txt); }

@@ -13,7 +13,7 @@ const normalizar = t => sinAcentos(t)
 const MSG = 'No se permite ese contenido en SalaMangaS. Probá describirlo de otra forma.';
 
 // Palabras sexuales / de cuerpo (con un menor, CUALQUIERA de estas bloquea)
-const SEXUAL = '(desnud\\w*|sexual\\w*|sexo|porno\\w*|erotic\\w*|ecchi|hentai|sensual\\w*|tetas?|pechos|senos|escote|nalgas|culo|trasero|lenceri\\w*|bikini|calzon\\w*|ropa interior|violar\\w*|violacion|provocativ\\w*|voluptuos\\w*|curvas|ajustad\\w*|entallad\\w*|seduc\\w*)';
+const SEXUAL = '(desnud\\w*|sexual\\w*|sexo|porno\\w*|erotic\\w*|ecchi|hentai|sensual\\w*|tetas?|pechos|senos|escot\\w*|nalgas|culo|trasero|lenceri\\w*|bikini|calzon\\w*|minifalda|shorts? (muy )?cortos?|ropa interior|violar\\w*|violacion|provocativ\\w*|voluptuos\\w*|curvas|ajustad\\w*|entallad\\w*|seduc\\w*)';
 // Palabras que NO dejan dudas: es un menor
 const MENOR_SEGURO = '(nino|nina|ninos|ninas|ninez|menor|menores|bebe|adolescente|adolescentes|preadolescente|colegial|colegiala|colegiales|colegiala|infantil|criatura|lolita|loli|lolicon|shota|shotacon|jardin de infantes|primaria|secundaria|high ?school|middle ?school|teen|teenager|underage|minor|kid|kids|child|children|little girl|little boy)';
 // Palabras ambiguas (pueden ser jóvenes adultos): bloquean con contenido sexual si NO hay señal de adulto
@@ -70,4 +70,10 @@ export async function filtrar(env, ctx, ...textos) {
     if ((' ' + t + ' ').includes(' ' + w + ' ')) return MSG;
   }
   return null;
+}
+
+// ¿El texto pide contenido sensual/+18? (no es un bloqueo: obliga a tener la edad verificada). Ropa común como "ajustada" o "curvas" NO cuenta.
+const TRIGGER_18 = new RegExp('\\b(desnud\\w*|sexual\\w*|sexo|erotic\\w*|ecchi|sensual\\w*|sexy|sexi|tetas?|pechos|senos|escot\\w*|nalgas|culo|trasero|lenceri\\w*|bikini|ropa interior|calzon\\w*|provocativ\\w*|voluptuos\\w*|seduc\\w*)\\b');
+export function esContenidoAdulto(...textos) {
+  return TRIGGER_18.test(normalizar(textos.filter(Boolean).join(' . ')));
 }

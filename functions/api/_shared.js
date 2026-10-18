@@ -73,15 +73,15 @@ export const PRECIOS_PLANES_USD = {
   dios: '30.00'
 };
 
-export const CANT_SAKURAS = { '250': 250, '700': 700, '1500': 1500, '3000': 3000 };
-export const PRECIOS_SAKURAS_ARS = { '250': 1000, '700': 2000, '1500': 3000, '3000': 5000 };
-export const PRECIOS_SAKURAS_USD = { '250': '1.00', '700': '2.00', '1500': '3.00', '3000': '5.00' };
+export const CANT_SAKURAS = { '1000': 1000, '2000': 2000, '3000': 3000, '5000': 5000 };
+export const PRECIOS_SAKURAS_ARS = { '1000': 1000, '2000': 2000, '3000': 3000, '5000': 5000 };
+export const PRECIOS_SAKURAS_USD = { '1000': '1.00', '2000': '2.00', '3000': '3.00', '5000': '5.00' };
 
 // Sakuras IA (segunda moneda: solo para generar con IA). Se acumulan y no vencen.
-export const CANT_SAKURAS_IA = { '5': 5, '15': 15, '25': 25, '50': 50 };
+export const CANT_SAKURAS_IA = { '1000': 1000, '2000': 2000, '3000': 3000, '5000': 5000 };
 // Packs de Sakuras IA (precios finales): 5 gen o 2 pers. · 15 gen o 4 pers. · 25 gen o 7 pers. · 50 gen o 10 pers.
-export const PRECIOS_SAKURAS_IA_ARS = { '5': 1000, '15': 2000, '25': 3000, '50': 5000 };
-export const PRECIOS_SAKURAS_IA_USD = { '5': '1.00', '15': '2.00', '25': '3.00', '50': '5.00' };
+export const PRECIOS_SAKURAS_IA_ARS = { '1000': 1000, '2000': 2000, '3000': 3000, '5000': 5000 };
+export const PRECIOS_SAKURAS_IA_USD = { '1000': '1.00', '2000': '2.00', '3000': '3.00', '5000': '5.00' };
 
 export const MANGA_EXTRA_ARS = 10000;
 export const MANGA_EXTRA_USD = '10.00';

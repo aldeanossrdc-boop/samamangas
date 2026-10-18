@@ -7,10 +7,16 @@
 import { out, getServiceClient } from './_shared.js';
 import { IAError, usuarioIA, iaActiva, modeloEscena, rpcUsuario, cantidadPorModo, directivaColor } from './_ia.js';
 import { motorActivo, motorImagenes, motorEditar, motorConReferencias } from './_motor.js';
-import { filtrar } from './_filtro.js';
+import { filtrar, esContenidoAdulto } from './_filtro.js';
 
 const MAX_ARCHIVO = 8 * 1024 * 1024; // 8 MB (la app ya achica la imagen antes de mandarla)
 const ANCHO = 832, ALTO = 1248;      // vertical 2:3 FIJO
+// ¿Esta cuenta verificó que es mayor de 18? (el CEO siempre puede)
+async function esMayor18(env, ctx) {
+  if (ctx.esCeo) return true;
+  try { const { data } = await getServiceClient(env).from('profiles').select('mayor_18').eq('id', ctx.user.id).maybeSingle(); return !!(data && data.mayor_18); }
+  catch (e) { return false; }
+}
 const esArchivo = f => f && typeof f === 'object' && typeof f.size === 'number' && typeof f.arrayBuffer === 'function';
 
 export async function onRequestPost({ request, env }) {
@@ -42,13 +48,19 @@ export async function onRequestPost({ request, env }) {
 
     // La orden de color va al principio y al final: los modelos la obedecen mucho más así.
     const dirColor = directivaColor(colorModo);
-    const prompt = dirColor ? (dirColor + ' ' + promptUsuario + ' ' + dirColor) : promptUsuario;
+    // Usuarios comunes: sensual suave sí (ropa escotada, corta, ajustada, ropa interior, playa), desnudo explícito NO. El CEO queda libre.
+    const reglaSuave = ctx.esCeo ? '' : ' No nudity: at most swimwear or lingerie level, no exposed nipples or genitals, no explicit sexual acts.';
+    const prompt = (dirColor ? (dirColor + ' ' + promptUsuario + ' ' + dirColor) : promptUsuario) + reglaSuave;
 
     // Filtro: se revisan SOLO las palabras del usuario (texto, personajes, lugar, outfit, viñetas), no los textos de estilo de la app.
     // Menores + sexual = bloqueo total para todos (CEO incluido). Sexo explícito/gore: solo bloquea a usuarios comunes.
     const textoFiltro = String(fd.get('texto') || '').slice(0, 3000) || promptUsuario;
     const bloqueo = await filtrar(env, ctx, textoFiltro);
     if (bloqueo) return out(400, { error: bloqueo, codigo: 'filtro' });
+    // Contenido +18 (sensual): solo con la edad verificada. Se pide ANTES de cobrar.
+    if ((String(fd.get('estilo')) === 'ecchi-adulto' || esContenidoAdulto(textoFiltro)) && !(await esMayor18(env, ctx))) {
+      return out(403, { error: 'Para crear contenido +18 tenés que verificar tu edad.', codigo: 'edad' });
+    }
 
     // COBRAR (el CEO no gasta). Si no tiene generaciones, la base devuelve -1.
     if (!ctx.esCeo) {
@@ -70,7 +82,7 @@ export async function onRequestPost({ request, env }) {
     }
 
     // ---- Lápiz: EDITA el dibujo con Qwen-Image-Edit ----
-    const promptEdicion = 'Redraw the attached reference image as a finished manga illustration. KEEP the same character: same face, expression, hairstyle shape, pose, camera angle and composition. Apply ONLY the changes and details requested below; everything else stays the same as the reference. Requested changes and details: ' + promptUsuario + (dirColor ? ' ' + dirColor : '');
+    const promptEdicion = 'Redraw the attached reference image as a finished manga illustration. KEEP the same character: same face, expression, hairstyle shape, pose, camera angle and composition. Apply ONLY the changes and details requested below; everything else stays the same as the reference. Requested changes and details: ' + promptUsuario + (dirColor ? ' ' + dirColor : '') + reglaSuave;
     const { imagen, motor } = await motorEditar(env, { prompt: promptEdicion, archivo: dibujo, w: ANCHO, h: ALTO, seguro });
     return out(200, { ok: true, sync: true, imagenes: [imagen], motor, cantidad: 1 });
   } catch (e) {
