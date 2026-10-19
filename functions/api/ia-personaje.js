@@ -54,7 +54,7 @@ export async function onRequestPost({ request, env }) {
       'a large full-body front view standing, a large full-body side view, a full-body back view, a three-quarter view in a relaxed pose, and two close-up portraits (the face and a detail of an accessory). ' +
       'Consistent face, hair, body, outfit and accessories in every view. Neat panel layout on a plain soft neutral background. ' +
       'ABSOLUTELY NO text, no letters, no words, no labels, no captions, no titles, no numbers, no watermark, no logo. ' +
-      'Safe for work reference sheet: the character is fully clothed, neutral relaxed poses, tasteful, no nudity. ' +
+      (ctx.esCeo ? '' : 'Safe for work reference sheet: the character is fully clothed, neutral relaxed poses, tasteful, no nudity. ') +
       'Art style: ' + est.txt + '. Character "' + nombre + '": ' + desc;
 
     const { id } = await crearGeneracion(env, { prompt, estilo: est.estilo, modelo: 'phoenix', dibujoId: null, personajeId: null, cantidad: 1, colorModo: est.color });

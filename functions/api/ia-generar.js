@@ -75,7 +75,7 @@ export async function onRequestPost({ request, env }) {
       // FLUX Kontext es un modelo de EDICIÓN: exige imagen de entrada y falla en texto→imagen. Sin imagen, se usa Qwen-Image.
       if (escena === 'kontext') { console.warn('ia_modelo_escena=kontext no sirve para texto→imagen: se usa qwen'); escena = 'qwen'; }
       const promptConRef = refs.length
-        ? 'Create ONE new vertical manga illustration using the reference images in this order: ' + (refNotas || 'each image is a reference') + '. Keep every character\'s face, hair, body and outfit exactly like its reference image, and keep the location/outfit references. Do NOT copy the reference layout; draw this new scene. ' + prompt
+        ? 'Create ONE new vertical manga illustration using the reference images in this order: ' + (refNotas || 'each image is a reference') + '. Keep every character\'s face, hair, body and outfit exactly like its reference image, and keep the location/outfit references. IMPORTANT: a character reference is a MODEL SHEET that shows several views of ONE character: use it ONLY to learn that character\'s face, hair, body and outfit. NEVER reproduce the sheet, never draw several views, poses, labels or panels of the character, and never copy its background. Draw only the single scene requested below. ' + prompt
         : prompt;
       const { imagenes, motor } = await motorConReferencias(env, { escena, prompt: promptConRef, promptSinRef: prompt, archivos: refs, w: ANCHO, h: ALTO, n: cantidadPorModo('ia'), colorModo, seguro });
       return out(200, { ok: true, sync: true, imagenes, motor, cantidad: imagenes.length });
