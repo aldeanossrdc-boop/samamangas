@@ -3972,7 +3972,8 @@ CEO_R.regalar=async b=>{
   b.innerHTML=`<div class="card"><h3 class="section">🎁 Regalar</h3><p style="font-size:12px;color:var(--text2)">Paso 1: ¿Qué querés regalar?</p>
   <div class="ceo-gift-grid" style="margin-top:8px">
   <button class="btn" onclick="setGiftTipo('sakuras')">🪙 Sakuras</button><button class="btn" onclick="setGiftTipo('sakuras_ia')">🔴 Sakuras IA</button><button class="btn" onclick="setGiftTipo('plan')">⭐ Plan</button>
-  <button class="btn" onclick="setGiftTipo('manga')">📚 Manga extra</button><button class="btn" onclick="setGiftTipo('paginas')">📄 Páginas</button><button class="btn" onclick="setGiftTipo('capitulos')">📖 Capítulos</button></div>
+  <button class="btn" onclick="setGiftTipo('manga')">📚 Manga extra</button><button class="btn" onclick="setGiftTipo('paginas')">📄 Páginas</button><button class="btn" onclick="setGiftTipo('capitulos')">📖 Capítulos</button>
+  <button class="btn" onclick="setGiftTipo('personaje')">🧑 Personaje</button><button class="btn" onclick="setGiftTipo('outfit')">👕 Outfit</button><button class="btn" onclick="setGiftTipo('lugar')">📍 Lugar</button></div>
   <div id="giftWizard" style="margin-top:12px"></div></div>`;
  if(window._giftPre){window._giftUid=window._giftPre.uid;$('giftWizard').innerHTML='<p class="warn-mini">🎁 Regalo para: <b>'+esc(window._giftPre.nombre||'Usuario')+'</b>. Elegí arriba qué querés regalarle.</p>'}
 };
@@ -3987,6 +3988,15 @@ function setGiftTipo(tipo){
  else if(tipo==='plan')q.innerHTML='<select id="giftPlan" class="input"><option value="pro">Mangakers Pro — 30 días</option><option value="superpro">Súper Mangakers Pro — 30 días</option><option value="semidios">Semi Dios Mangakers — 30 días</option><option value="dios">Mangakers Dios — 30 días</option></select>';
  else if(tipo==='paginas')q.innerHTML='<input id="giftPaginas" class="input" type="number" min="1" placeholder="Cantidad de páginas">';
  else if(tipo==='capitulos')q.innerHTML='<input id="giftCapitulos" class="input" type="number" min="1" placeholder="Cantidad de capítulos">';
+ else if(tipo==='personaje'||tipo==='outfit'||tipo==='lugar'){
+  q.innerHTML='<select id="giftRecurso" class="input"><option value="">Cargando la tienda...</option></select><p class="warn-mini">Se regala algo de la tienda oficial (lo publicás en la pestaña Tienda). '+(tipo==='personaje'?'El personaje queda directo en la lista de la persona.':'Le aparece en su tienda → Mis compras.')+'</p>';
+  (async()=>{try{
+    const {data,error}=await sb.from('recursos_tienda').select('id,nombre,categoria').eq('tipo',tipo).order('created_at',{ascending:false}).limit(200);
+    if(error)throw error;
+    const sel=$('giftRecurso');if(!sel)return;
+    sel.innerHTML=(data&&data.length)?'<option value="">Elegí uno...</option>'+data.map(r=>'<option value="'+esc(String(r.id))+'">'+esc(r.nombre)+(r.categoria==='D'?' · Dama':r.categoria==='H'?' · Hombre':'')+'</option>').join(''):'<option value="">No hay publicados todavía</option>';
+  }catch(e){const sel=$('giftRecurso');if(sel)sel.innerHTML='<option value="">Error: '+esc(e.message||e)+'</option>'}})();
+ }
  else q.innerHTML='<p class="warn-mini">Se regalará 1 manga extra.</p>';
 }
 let _giftTimer=null;
@@ -4037,6 +4047,14 @@ async function confirmarRegaloCEO(){
    const n=Number($('giftCapitulos').value);
    const r=await ceoDarSakuras(u,n*500,'🎁 ¡El CEO te regaló '+n+' capítulo(s) para leer! ('+(n*500)+' Sakuras) 📖');
    if(!r.ok)alert(r.error);else fin(true,'',r.aviso);
+  }else if(t==='personaje'||t==='outfit'||t==='lugar'){
+   const rid=($('giftRecurso')||{}).value;
+   if(!rid){alert('Elegí qué querés regalar.');return}
+   const r=await sb.rpc('ceo_regalar_recurso',{p_recurso:String(rid),p_destino:u});
+   if(r.error){alert(r.error.message+(/ceo_regalar_recurso|schema|PGRST202/i.test(r.error.message||'')?'\n\nFalta correr regalos_recursos.sql en Supabase.':''));return}
+   const msg={ok:'',ya_lo_tiene:'Esa persona ya lo tiene.',no_existe:'Ese artículo ya no existe.',sin_usuario:'No se encontró al usuario.'}[r.data];
+   if(r.data!=='ok'){alert(msg||('No se pudo regalar ('+r.data+')'));return}
+   fin(true,'Se lo avisamos en la campana.','');
   }else if(t==='manga'){
    const r=await sb.rpc('ceo_dar_manga_extra',{destino:u});
    if(r.error){alert(r.error.message);return}

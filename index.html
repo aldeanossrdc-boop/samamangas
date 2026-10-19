@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="manifest" href="/manifest.json">
@@ -815,6 +816,33 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 
 .manga-18 .mcover{filter:blur(18px) brightness(.65)}
 .manga-18::after{content:"🔞 +18 · verificá tu edad";position:absolute;left:50%;top:42%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#ffd45c;font-size:11px;font-weight:700;padding:6px 10px;border-radius:10px;text-align:center;pointer-events:none;z-index:2;width:78%}
+
+.page-dot{position:relative;background-size:cover;background-position:center}
+.page-dot .pg-n{position:absolute;left:3px;bottom:3px;background:rgba(0,0,0,.7);color:#ffd45c;font-size:10px;font-weight:700;border-radius:6px;padding:1px 5px}
+#pg-acc-modal .acc-btn{display:block;width:100%;margin-top:8px}
+
+.editor-ov{position:fixed;inset:0;z-index:9998;background:#07041a;display:none;flex-direction:column}
+.editor-ov.on{display:flex}
+.ed-top{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;gap:8px;border-bottom:1px solid rgba(212,175,55,.3);color:#ffd45c}
+.ed-scroll{flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:10px;background:#0b0820}
+.ed-stage{position:relative;line-height:0}
+.ed-stage img{width:100%;display:block;user-select:none;-webkit-user-drag:none}
+.ed-layer{position:absolute;inset:0;overflow:hidden}
+.ed-el{position:absolute;transform-origin:center;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.ed-el.sel{outline:2px dashed #ffd45c;outline-offset:3px}
+.ed-txt{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;font-family:"Comic Neue","Comic Sans MS",sans-serif;font-weight:700;line-height:1.1;word-break:break-word;pointer-events:none}
+.ed-onom{white-space:nowrap;font-family:Bangers,Impact,"Arial Black",sans-serif;paint-order:stroke fill;line-height:1}
+.ed-bottom{background:#120c2c;border-top:1px solid rgba(212,175,55,.3);padding:8px;max-height:46vh;overflow:auto}
+.ed-tabs{display:flex;gap:6px;margin-bottom:8px}
+.ed-tabs button{flex:1;padding:8px 4px;border-radius:10px;border:1px solid rgba(212,175,55,.35);background:rgba(255,255,255,.05);color:#fff;font-size:12px}
+.ed-tabs button.on{background:linear-gradient(135deg,#ffd45c,#ffb300);color:#241a00;font-weight:700}
+.ed-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.ed-gbtn{background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.3);border-radius:10px;padding:6px 2px;color:#fff;font-size:10px;line-height:1.2;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:58px;justify-content:center}
+.ed-sel{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;padding:8px;border:1px solid rgba(212,175,55,.4);border-radius:12px;background:rgba(255,255,255,.04)}
+.ed-sel input[type=range]{width:100%}
+.ed-sw{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.ed-sw i{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.5);display:inline-block}
+.ed-row{display:flex;gap:6px;align-items:center;font-size:11px;color:#ddd}
 .ia-cell{position:relative}
 .ia-cell:after{content:'SalaMangaS IA';position:absolute;right:7px;top:7px;font-size:9px;letter-spacing:.3px;padding:3px 5px;border-radius:5px;color:#fff;background:rgba(20,10,35,.62);pointer-events:none}
 .create-opt .ico{font-size:23px!important}
@@ -1078,6 +1106,21 @@ Entrar con Google
 </div>
 </div>
 <div id="crear-legacy" style="display:none" aria-hidden="true"><input id="titulo"><textarea id="sinopsis"></textarea><div id="generos-wrap"></div><div id="estilos-wrap"></div><div id="pages-dots"></div><div id="portadaPreview"></div></div>
+<div id="editor-ov" class="editor-ov">
+<div class="ed-top"><button class="btn" style="padding:8px 12px" onclick="edCancelar()">✕ Cancelar</button><b>✏️ Editor de página</b><button class="btn-main" style="padding:8px 14px;margin:0" onclick="edGuardar()">💾 Guardar</button></div>
+<div class="ed-scroll"><div id="edStage" class="ed-stage"><img id="edImg" alt=""><div id="edLayer" class="ed-layer"></div></div></div>
+<div class="ed-bottom">
+<div id="edSelBar" class="ed-sel" style="display:none"></div>
+<div class="ed-tabs"><button id="edTabg" class="on" onclick="edTab('g')">💬 Globos</button><button id="edTabo" onclick="edTab('o')">💥 Onomat.</button><button id="edTabx" onclick="edTab('x')">🔤 Texto</button><button id="edTabs" onclick="edTab('s')">✨ Extras</button></div>
+<div id="edPanel"></div>
+</div></div>
+<div id="pg-acc-modal" class="modal-overlay"><div class="modal-box" style="max-width:340px"><button class="modal-close" onclick="cerrarAccionPagina()">✕</button>
+<h3 id="pgAccTit" style="color:var(--gold);text-align:center;margin:0 0 6px">Página</h3>
+<img id="pgAccImg" alt="" style="width:100%;max-height:260px;object-fit:contain;border-radius:10px;background:rgba(0,0,0,.35)">
+<button class="btn-main acc-btn" onclick="accionPagina('editar')">✏️ Editar (globos, onomatopeyas, textos)</button>
+<div style="display:flex;gap:8px"><button class="btn acc-btn" style="flex:1" onclick="accionPagina('antes')">◀ Mover antes</button><button class="btn acc-btn" style="flex:1" onclick="accionPagina('despues')">Mover después ▶</button></div>
+<button class="btn acc-btn" style="border-color:#ff6b81;color:#ff6b81" onclick="accionPagina('quitar')">🗑️ Quitar esta página</button>
+</div></div>
 <div id="edad-modal" class="modal-overlay"><div class="modal-box" style="max-width:420px"><button class="modal-close" onclick="cerrarEdad()">✕</button>
 <h2 style="font-family:'Cinzel',serif;color:var(--gold);text-align:center">🔞 Contenido +18</h2>
 <p style="font-size:13px;color:var(--text2);line-height:1.5">Para crear o ver contenido +18 (géneros +18, estilo Ecchi adulto, personajes y escenas sensuales) tenés que confirmar que sos mayor de edad.</p>
@@ -3148,23 +3191,22 @@ async function guardarBorrador(){
   let titulo=document.getElementById('titulo').value.trim();
   if(_c)titulo=_c.titulo;
   if(!titulo){alert('Poné un título');return}
-  const _lim=limiteBorradores(),_lista0=JSON.parse(localStorage.getItem('borradores')||'[]');
+  const _lim=limiteBorradores(),_lista0=await bdTodos().catch(()=>[]);
   const _mismo=_c?_lista0.find(d=>d.continuar&&String(d.continuar.id)===String(_c.id)):null;
   if(!esCeoSync()&&!_mismo&&_lista0.length>=_lim){alert('Tu plan permite hasta '+_lim+' borrador(es): depende de cuántos mangas podés crear según tu plan, más los mangas extra que compraste.\n\nBorrá un borrador o publicá para liberar lugar.');return}
   const btn=event&&event.target;if(btn){btn.disabled=true;btn.innerText='Guardando...'}
   try{
     const pages=[];
-    for(const p of paginas){if(p&&p.file){const du=await _comprimirImg(URL.createObjectURL(p.file),900);if(du)pages.push(du)}}
+    for(const p of paginas){if(p&&p.file){const du=await _comprimirImg(URL.createObjectURL(p.file),1400);if(du)pages.push(du)}}
     const portada=portadaArchivo?await _comprimirImg(URL.createObjectURL(portadaArchivo),700):null;
     const m=window._modoCrear||'pagina',pf=CREAR_PFX[m]||'pagina';
     const subtitulo=(document.getElementById(pf+'Subtitulo')||{}).value||'';
     const pdfPreview=document.getElementById('pdfPreview');
     const draft={id:_mismo?_mismo.id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),continuar:_c,modo:m,titulo,generos:[...generosSel],estilo:estiloSel,subtitulo,sinopsis:document.getElementById('sinopsis').value,portada,paginas:pages,pdfNombre:pdfPreview?.querySelector('.pdf-info')?.innerText||'',fecha:new Date().toISOString()};
-    const lista=JSON.parse(localStorage.getItem('borradores')||'[]').filter(d=>d.id!==draft.id);lista.unshift(draft);
-    localStorage.setItem('borradores',JSON.stringify(lista.slice(0,10)));
+    await bdPut(draft);
     alert('Borrador completo guardado ✅ ('+pages.length+' páginas'+(portada?' + portada':'')+')');
   }catch(e){
-    if(e && e.name==='QuotaExceededError') alert('No entró en el almacenamiento del navegador (son muchas páginas). Probá con menos páginas o publicá directamente.');
+    if(e && e.name==='QuotaExceededError') alert('Tu celular no tiene lugar para guardar este borrador. Liberá espacio e intentá de nuevo.');
     else alert('No se pudo guardar el borrador completo. Si las imágenes son muy pesadas, reducí su tamaño e intentá de nuevo.');
   }
   if(btn){btn.disabled=false;btn.innerHTML='💾 Guardar Borrador'}
@@ -3174,8 +3216,8 @@ function limiteBorradores(){
   const l=limiteMangas(miPerfil);
   return Math.min(10,l===null?10:Math.max(1,l));
 }
-function abrirBorradores(){
-  const l=$('borradoresLista'),lista=JSON.parse(localStorage.getItem('borradores')||'[]'),lim=esCeoSync()?10:limiteBorradores();
+async function abrirBorradores(){
+  const l=$('borradoresLista'),lista=await bdTodos().catch(()=>[]),lim=esCeoSync()?10:limiteBorradores();window._bdCache=lista;
   l.innerHTML='<div class="warn-mini" style="margin-bottom:10px">Borradores: <b>'+lista.length+' / '+lim+'</b> · dependen de cuántos mangas podés crear según tu plan (más los extras que compraste).</div>'+(lista.length?'':vacio('No tenés borradores guardados'));
   lista.forEach(d=>{
     const r=document.createElement('div');r.className='rk';r.style.cursor='default';
@@ -3186,9 +3228,9 @@ function abrirBorradores(){
   });
   $('borradores-modal').classList.add('on');
 }
-function borrarBorrador(id){
-  const lista=JSON.parse(localStorage.getItem('borradores')||'[]').filter(d=>d.id!==id);
-  localStorage.setItem('borradores',JSON.stringify(lista));abrirBorradores();
+async function borrarBorrador(id){
+  try{await bdDel(id)}catch(e){}
+  abrirBorradores();
 }
 /* ===== PERSONAJES =====
    FIX: antes se guardaban en localStorage (solo en ese navegador, el CEO
@@ -3556,6 +3598,42 @@ async function iaGenerar(){
       if(usadas.length)fd.append('ref_notas',usadas.map((n,i)=>'Image '+(i+1)+': '+n).join('; '));
     }
     const tk=await iaToken();
+    /* Con viñetas elegidas: se dibuja UNA imagen por viñeta (con sus personajes y su texto) y la página se arma con el diseño exacto */
+    if(iaModo!=='lapiz'&&lay&&lay.k!=='full'&&lay.sv.length>1){
+      const nP=lay.sv.length;
+      if(!esCeoSync()&&!confirm('Esta página tiene '+nP+' viñetas: se dibujan '+nP+' imágenes y se gastan '+nP+' generaciones (una por viñeta).\n\n¿Seguir?')){const c0=new Error('cancelado');c0.cancelado=true;throw c0}
+      const textosP=[...document.querySelectorAll('#iaPaneles .ia-panel-in')].map(e=>e.value.trim());
+      const imgsP=[];
+      for(let i=0;i<nP;i++){
+        $('iaMarcoImg').innerHTML='<span>🎨 Dibujando viñeta '+(i+1)+' de '+nP+'...</span>';
+        $('iaRes').innerHTML=vacio('🎨 Viñeta '+(i+1)+' de '+nP+'... puede tardar. No cierres esta pantalla.');
+        const t=textosP[i]||'';
+        const pp=[est?est.p:'manga illustration, clean ink lines'];
+        if(pj.length)pp.push('CHARACTERS (draw only the ones that appear in this panel, respect each one exactly): '+pjTxt);
+        if(iaLugar)pp.push('LOCATION: '+iaLugar.txt);
+        if(iaOutfit)pp.push('OUTFIT: '+iaOutfit.txt);
+        pp.push('This is ONE SINGLE PANEL ('+(i+1)+' of '+nP+', '+lay.labs[i]+') of a manga page. Draw ONLY this moment: '+(t||userTxt||'the next moment of the scene'));
+        if(userTxt&&t)pp.push('Story context: '+userTxt);
+        pp.push('Single full-frame illustration, NO panel borders, NO page layout, NO text, NO speech bubbles');
+        const f2=new FormData();
+        f2.append('prompt',pp.join('. ')+'.');f2.append('texto',[t,userTxt,pjTxt,iaLugar?iaLugar.txt:'',iaOutfit?iaOutfit.txt:''].join(' . '));
+        f2.append('modo','ia');f2.append('estilo',iaEstiloKey||'clasico');f2.append('color_modo',iaColorModo||'auto');f2.append('num_images','1');f2.append('cantidad','1');
+        fd.getAll('ref').forEach((b,k)=>f2.append('ref',b,'ref'+k+'.jpg'));
+        if(fd.get('ref_notas'))f2.append('ref_notas',fd.get('ref_notas'));
+        const rr=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:f2});
+        const jj=await rr.json().catch(()=>({}));
+        if(!rr.ok){
+          if(jj.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}if(jj.codigo==='edad')exigirMayor18();
+          throw new Error((i?('Se dibujaron '+i+' de '+nP+' viñetas. '):'')+(jj.error||'Error del servidor'));
+        }
+        imgsP.push((jj.imagenes||[])[0]);
+      }
+      try{await refrescarPerfil()}catch(e){}
+      $('iaMarcoImg').innerHTML='<span>🧩 Armando la página...</span>';
+      iaMostrar([await iaComponer(lay,imgsP)]);
+      btn.disabled=false;btn.innerText='✨ Generar';
+      return;
+    }
     const r=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:fd});
     const j=await r.json().catch(()=>({}));
     if(!r.ok){
@@ -3564,7 +3642,7 @@ async function iaGenerar(){
     }
     if(j.sync&&j.imagenes){iaMostrar(j.imagenes)}
     else{iaUltimoId=j.id;iaMostrar(await iaEsperar(j.id,tk))}
-  }catch(e){iaError(e)}
+  }catch(e){if(e&&e.cancelado){$('iaRes').innerHTML='';$('iaMarcoImg').innerHTML='<span>Tu imagen va a aparecer acá</span>'}else iaError(e)}
   btn.disabled=false;btn.innerText='✨ Generar';
 }
 async function iaEsperar(id,tk){
@@ -3589,7 +3667,7 @@ function iaMostrar(urls){
   $('iaMarcoImg').innerHTML=u?'<img src="'+esc(u)+'" alt="Imagen generada">':'<span>No llegó la imagen</span>';
   const v=$('iaMarcoVer');if(v)v.style.display=u?'block':'none';
   if(u)$('iaMarco').classList.add('ver');
-  $('iaRes').innerHTML='<div class="ia-result-card"><div style="display:flex;gap:8px"><button class="btn-main" style="flex:1" onclick="iaElegir(0,\'portada\')">📕 Portada</button><button class="btn" style="flex:1" onclick="iaElegir(0,\'pagina\')">📄 Página</button></div><p style="font-size:11px;color:var(--text2);margin:8px 0 6px;text-align:center">Si no te convence, tocá 👁️ para cambiar el texto y regenerá.</p><button class="btn" style="width:100%" onclick="iaGenerar()">🔄 Regenerar (gasta 1 generación)</button></div>';
+  $('iaRes').innerHTML='<div class="ia-result-card"><div style="display:flex;gap:8px"><button class="btn-main" style="flex:1" onclick="iaElegir(0,\'portada\')">📕 Portada</button><button class="btn" style="flex:1" onclick="iaElegir(0,\'pagina\')">📄 Página</button></div><button class="btn" style="width:100%;margin-top:8px" onclick="iaEditarResultado()">✏️ Editar (globos, onomatopeyas, textos)</button><p style="font-size:11px;color:var(--text2);margin:8px 0 6px;text-align:center">Si no te convence, tocá 👁️ para cambiar el texto y regenerá.</p><button class="btn" style="width:100%" onclick="iaGenerar()">🔄 Regenerar (gasta 1 generación)</button></div>';
 }
 function iaError(e){
   if(e&&e.pendiente){$('iaRes').innerHTML='<p style="color:var(--gold3);font-size:13px;text-align:center">'+esc(e.message)+' Tu generación sigue en proceso y no se vuelve a descontar.</p><button class="btn-main" style="width:100%;margin-top:8px" onclick="iaReanudar()">⏳ Seguir esperando</button>';return}
@@ -3661,8 +3739,9 @@ function iniciarApp(){
   limpiarMensajesAntiguos();
   if(localStorage.getItem('modoClaro')==='1')document.body.classList.add('light-mode');
   manejarRetornoPayPal();
+  bdMigrar();
   sb.auth.getSession().then(()=>cargarSesion()).catch(()=>{});
-  sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'&&miPerfil&&!window._cerrandoSesion){console.warn('Sesión terminada por Supabase');miPerfil=null;try{ceoResetVerif()}catch(e){}const _lm=document.getElementById('login-modal');if(_lm)_lm.classList.remove('hide');const _cb=document.getElementById('chatbar');if(_cb)_cb.style.display='none';return}if(session&&session.user&&(event==='SIGNED_IN'||event==='INITIAL_SESSION')&&(!miPerfil||miPerfil.id!==session.user.id)){setTimeout(()=>{if(sb.auth&&session.user) cargarSesion().catch(e=>console.warn('No se pudo restaurar el perfil:',e.message||e))},0)}});
+  sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'&&miPerfil&&!window._cerrandoSesion){console.warn('Sesión terminada por Supabase');setTimeout(async()=>{try{const {data:{session:_s2}}=await sb.auth.getSession();if(_s2&&_s2.user)return}catch(e){}if(!miPerfil||window._cerrandoSesion)return;miPerfil=null;try{ceoResetVerif()}catch(e){}const _lm2=document.getElementById('login-modal');if(_lm2)_lm2.classList.remove('hide');const _cb2=document.getElementById('chatbar');if(_cb2)_cb2.style.display='none'},1500);return;miPerfil=null;try{ceoResetVerif()}catch(e){}const _lm=document.getElementById('login-modal');if(_lm)_lm.classList.remove('hide');const _cb=document.getElementById('chatbar');if(_cb)_cb.style.display='none';return}if(session&&session.user&&(event==='SIGNED_IN'||event==='INITIAL_SESSION')&&(!miPerfil||miPerfil.id!==session.user.id)){setTimeout(()=>{if(sb.auth&&session.user) cargarSesion().catch(e=>console.warn('No se pudo restaurar el perfil:',e.message||e))},0)}});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iniciarApp);else iniciarApp();
 /* ===== SALAMANGAS DEFINITIVO 02/10/2026 ===== */
@@ -3982,35 +4061,22 @@ document.addEventListener('change',function(e){
   else if(t.id==='lapizDibujo'&&t.files&&t.files[0]){lapizSetDibujo(t.files[0])}
 });
 /* ==== FIN LAPIZ ==== */
-function agregarFilaLapiz(){
- if(paginas.length>=MAX_PAGS){alert('Máximo '+MAX_PAGS+' páginas por capítulo (desde la 21, cada página cuesta '+COSTOS_SAKURAS.pagina+' Sakuras).');return}
- const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=e=>{const f=e.target.files[0];if(!f)return;paginas.push({file:f});renderLapizSlots()};inp.click()
-}
-function renderLapizSlots(){
- const w=$('lapizSlots');if(!w)return;w.innerHTML='';paginas.forEach((p,i)=>{const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+URL.createObjectURL(p.file)+')';d.title='Página '+(i+1);d.onclick=()=>{if(confirm('¿Quitar esta página?')){paginas.splice(i,1);renderLapizSlots()}};w.appendChild(d)});
- if(paginas.length<MAX_PAGS){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=agregarFilaLapiz;w.appendChild(d)}
-}
+function agregarFilaLapiz(){agregarPaginaSlot()}
 function abrirVistaPreviaCreacion(){
  try{sincronizarCrear()}catch(e){}
  const w=$('previewCreacionBody');w.innerHTML='';
  const c=window._continuar||null;
  const tit=c?('«'+c.titulo+'» — Capítulo '+c.n):($('titulo').value.trim()||'Sin título');
  const sub=c?'':(subtituloActual()||'');
- if(portadaArchivo&&!c){const im=document.createElement('img');im.className='pv-cover';im.alt='Portada';im.src=URL.createObjectURL(portadaArchivo);w.appendChild(im)}
+ const poner=(parent,file,alt)=>{const im=document.createElement('img');im.className='pv-cover';im.alt=alt;im.decoding='async';im.onerror=()=>{if(!im._r){im._r=1;const fr=new FileReader();fr.onload=()=>{im.src=fr.result};fr.readAsDataURL(file)}};im.src=URL.createObjectURL(file);parent.appendChild(im)};
+ if(portadaArchivo&&!c)poner(w,portadaArchivo,'Portada');
  const cab=document.createElement('div');cab.className='pv-cab';cab.innerHTML='<b>'+esc(tit)+'</b>'+(sub?'<small>'+esc(sub)+'</small>':'')+(!c&&$('sinopsis').value.trim()?'<small>'+esc($('sinopsis').value.trim())+'</small>':'')+'<small>'+paginas.length+' página(s)</small>';
  w.appendChild(cab);
- paginas.forEach((p,i)=>{const img=document.createElement('img');img.src=URL.createObjectURL(p.file);img.alt='Página '+(i+1);w.appendChild(img)});
+ paginas.forEach((p,i)=>poner(w,p.file,'Página '+(i+1)));
  $('preview-creacion').classList.add('on')
 }
 function cerrarVistaPreviaCreacion(){$('preview-creacion').classList.remove('on')}
 /* Página por página: usar los slots definitivos y límite 20 */
-function agregarPaginaSlot(){
- if(paginas.length>=MAX_PAGS){alert('Máximo '+MAX_PAGS+' páginas por capítulo (desde la 21, cada página cuesta '+COSTOS_SAKURAS.pagina+' Sakuras).');return}
- const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=e=>{const f=e.target.files[0];if(!f)return;paginas.push({file:f});renderPaginaSlots()};inp.click()
-}
-function renderPaginaSlots(){
- const w=$('paginaSlots');if(!w)return;w.innerHTML='';paginas.forEach((p,i)=>{const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+URL.createObjectURL(p.file)+')';d.onclick=()=>{if(confirm('¿Quitar página '+(i+1)+'?')){paginas.splice(i,1);renderPaginaSlots()}};w.appendChild(d)});if(paginas.length<MAX_PAGS){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=agregarPaginaSlot;w.appendChild(d)}
-}
 /* PDF según plan */
 function renderPDFSlots(){
  const w=$('pdfPlanSlots');if(!w)return;w.innerHTML='';
@@ -4091,11 +4157,6 @@ function renderCrearAux(){
  ['lapizGeneros','paginaGeneros','pdfGeneros','iaCrearGeneros'].forEach(id=>pintarColapsable(id,GENEROS_DEFINITIVOS,false));
  ['lapizEstilos','paginaEstilos','iaCrearEstilos'].forEach(id=>pintarColapsable(id,ESTILOS,true));
 }
-function renderIASlots(){
- const w=$('iaCrearSlots');if(!w)return;w.innerHTML='';
- paginas.forEach((p,i)=>{const d=document.createElement('div');d.className='page-dot filled';d.style.backgroundImage='url('+URL.createObjectURL(p.file)+')';d.onclick=()=>{if(confirm('¿Quitar página '+(i+1)+'?')){paginas.splice(i,1);renderIASlots()}};w.appendChild(d)});
- if(paginas.length<MAX_PAGS){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=()=>abrirIA('ia');w.appendChild(d)}
-}
 /* Copia los datos de la pantalla de crear activa a lo que usa publicar() y guardarBorrador() */
 function subtituloActual(){
  const m=window._modoCrear||'pagina',pf=CREAR_PFX[m]||'pagina';
@@ -4134,8 +4195,8 @@ async function publicarPDF(){
  window._modoCrear='pdf';
  await publicar();
 }
-function cargarBorrador(id){
- const d=JSON.parse(localStorage.getItem('borradores')||'[]').find(x=>x.id===id);
+async function cargarBorrador(id){
+ const d=(await bdTodos().catch(()=>[])).find(x=>x.id===id);
  if(!d)return;
  const modo=d.modo||'pagina';
  limpiarCrearUI(true);
@@ -4148,7 +4209,7 @@ function cargarBorrador(id){
  document.querySelectorAll('#'+pf+'Generos .chip').forEach(c=>c.classList.toggle('on',(d.generos||[]).includes(c.textContent)));
  document.querySelectorAll('#'+pf+'Estilos .chip').forEach(c=>c.classList.toggle('on',c.textContent===d.estilo));
  if(d.portada){try{portadaArchivo=dataURLtoFile(d.portada,'portada.jpg')}catch(e){}}
- paginas=(d.paginas||[]).map((du,i)=>({file:dataURLtoFile(du,'pagina-'+(i+1)+'.jpg')}));
+ paginas=(d.paginas||[]).map((du,i)=>({file:dataURLtoFile(du,'pagina-'+(i+1)+'.jpg'),thumb:du}));
  if(modo==='pagina')renderPaginaSlots();
  if(modo==='lapiz')renderLapizSlots();
  if(modo==='pdf'){renderPDFSlots();const pv=$('pdfPreview');if(pv&&d.pdfNombre){pv.innerHTML='<div class=\"pdf-info\">📄 '+esc(d.pdfNombre)+' · borrador cargado</div>';pv.classList.add('on')}}
@@ -5409,11 +5470,7 @@ function crCoverTap(pf){
   t.classList.toggle('acts');
 }
 function crCoverEditar(pf){const t=$(pf+'CoverTile');if(t)t.classList.remove('acts');const i=$(pf+'Portada');if(i)i.click()}
-document.addEventListener('change',function(e){
-  const t=e.target;if(!t||!t.id)return;
-  const m=/^(pagina|pdf|iaCrear)Portada$/.exec(t.id);
-  if(m&&t.files&&t.files[0]){portadaArchivo=t.files[0];crCoverRender(m[1])}
-});
+
 
 /* ---- Seguir con la historia: SOLO se agregan páginas/capítulos; título, portada, género y estilo quedan fijos ---- */
 window._continuar=null;
@@ -5432,7 +5489,7 @@ async function crearContinuar(id){
   if(!m){try{const {data}=await sb.from('mangas').select('*').eq('id',id).maybeSingle();m=data}catch(e){}}
   if(!m||m.user_id!==miPerfil.id){alert('No se encontró ese manga.');return}
   cerrarOv('mangadet');
-  const dr=JSON.parse(localStorage.getItem('borradores')||'[]').find(d=>d.continuar&&String(d.continuar.id)===String(m.id));
+  const dr=(await bdTodos().catch(()=>[])).find(d=>d.continuar&&String(d.continuar.id)===String(m.id));
   if(dr){cargarBorrador(dr.id);return}
   limpiarCrearUI(true);
   window._continuar={id:m.id,titulo:m.titulo,n:(Array.isArray(m.capitulos)?m.capitulos.length:0)+2};
@@ -5446,6 +5503,7 @@ async function renderCrearHome(){
   const r=$('crearResumen'),lst=$('crearMisMangas');if(!r||!lst)return;
   if(!miPerfil){r.innerHTML='<p style="font-size:12px;color:var(--text2)">Iniciá sesión para crear.</p>';lst.innerHTML='';return}
   let ceo=false;try{ceo=await esCeoReal()}catch(e){}
+  try{window._bdCache=await bdTodos()}catch(e){window._bdCache=[]}
   const q=cuotasCreacion(),lim=q.limite===Infinity?'∞':q.limite,rest=q.limite===Infinity?'sin límite':Math.max(0,q.limite-q.usados);
   const ia=(typeof window.iaResumenSaldo==='function')?window.iaResumenSaldo():null;
   const iaTxt=ia?(ia.ceo?'∞':(Number(ia.plan||0)+Number(ia.extra||0))):'—';
@@ -5461,7 +5519,7 @@ async function renderCrearHome(){
 function abrirMangaCreador(id){
   const m=MIS_MANGAS.find(x=>String(x.id)===String(id));if(!m)return;
   const q=String(m.id).replace(/'/g,''),caps=Array.isArray(m.capitulos)?m.capitulos:[],nc=caps.length+1;
-  const hayBor=JSON.parse(localStorage.getItem('borradores')||'[]').some(d=>d.continuar&&String(d.continuar.id)===String(m.id));
+  const hayBor=(window._bdCache||[]).some(d=>d.continuar&&String(d.continuar.id)===String(m.id));
   const pt=m.portada_url||((m.paginas_urls||[])[0])||'';
   const gens=(m.generos||[]).map(g=>'<span class="chip on" style="cursor:default">'+esc(g)+'</span>').join('');
   let h=(pt?'<img class="md-cover" src="'+esc(pt)+'" alt="Portada">':'')+'<h2 style="text-align:center;margin:0">'+esc(m.titulo)+'</h2>'+(m.subtitulo?'<div style="text-align:center;color:var(--text2);font-size:13px">'+esc(m.subtitulo)+'</div>':'')+'<p class="md-sino">'+esc(m.sinopsis||'Sin sinopsis')+'</p><div style="display:flex;gap:6px;flex-wrap:wrap">'+gens+(m.estilo?'<span class="chip on" style="cursor:default">🎨 '+esc(m.estilo)+'</span>':'')+'</div>';
@@ -5541,6 +5599,305 @@ async function edadConfirmar(){
     m.textContent=data==='fecha_invalida'?'La fecha no es válida.':'No se pudo verificar ('+data+').';
   }catch(e){m.textContent=/verificar_edad|schema|PGRST202/i.test(e.message||'')?'Falta correr generaciones_edad_moderacion.sql en Supabase.':'Error: '+(e.message||e)}
   b.disabled=false;
+}
+
+/* ===================== BORRADORES EN IndexedDB (antes en localStorage) =====================
+   localStorage tiene ~5 MB: con varios borradores de 16 páginas se llenaba y el navegador ya no podía guardar
+   la sesión de Google => te pedía iniciar sesión a cada rato. IndexedDB tiene muchísimo más lugar. */
+const _BD={db:null};
+function bdAbrir(){return new Promise((ok,ko)=>{if(_BD.db)return ok(_BD.db);if(!window.indexedDB)return ko(new Error('Este navegador no permite guardar borradores.'));const r=indexedDB.open('salamangas',1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('borradores'))r.result.createObjectStore('borradores',{keyPath:'id'})};r.onsuccess=()=>{_BD.db=r.result;ok(r.result)};r.onerror=()=>ko(r.error)})}
+async function bdTodos(){const db=await bdAbrir();return new Promise((ok,ko)=>{const q=db.transaction('borradores','readonly').objectStore('borradores').getAll();q.onsuccess=()=>ok((q.result||[]).sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha))));q.onerror=()=>ko(q.error)})}
+async function bdPut(d){const db=await bdAbrir();return new Promise((ok,ko)=>{const t=db.transaction('borradores','readwrite');t.objectStore('borradores').put(d);t.oncomplete=()=>ok();t.onerror=()=>ko(t.error);t.onabort=()=>ko(t.error||new Error('No se pudo guardar'))})}
+async function bdDel(id){const db=await bdAbrir();return new Promise((ok,ko)=>{const t=db.transaction('borradores','readwrite');t.objectStore('borradores').delete(id);t.oncomplete=()=>ok();t.onerror=()=>ko(t.error)})}
+/* Pasa los borradores viejos de localStorage a IndexedDB y libera el lugar */
+async function bdMigrar(){
+  try{
+    const raw=localStorage.getItem('borradores');if(!raw)return;
+    const lista=JSON.parse(raw)||[];
+    for(const d of lista){if(d&&d.id)await bdPut(d)}
+    localStorage.removeItem('borradores');
+  }catch(e){console.warn('Migración de borradores:',e&&e.message)}
+}
+
+/* ===================== IMÁGENES: se achican al elegirlas ===================== */
+/* Las fotos de la galería pesan 5-15 MB y el celular no puede mostrar 20 juntas (quedaban en blanco, la vista previa se rompía
+   y la subida era lentísima). Se pasan a JPG de máximo 1600 px y se les saca una miniatura. */
+async function prepararImagen(file,max){
+  max=max||1600;
+  try{
+    const bmp=await createImageBitmap(file);
+    const s=Math.min(1,max/Math.max(bmp.width,bmp.height));
+    const c=document.createElement('canvas');c.width=Math.max(1,Math.round(bmp.width*s));c.height=Math.max(1,Math.round(bmp.height*s));
+    const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(bmp,0,0,c.width,c.height);
+    if(bmp.close)bmp.close();
+    const blob=await new Promise(ok=>c.toBlob(ok,'image/jpeg',.88));
+    if(!blob)throw new Error('toBlob');
+    const ts=Math.min(1,200/Math.max(c.width,c.height)),t=document.createElement('canvas');t.width=Math.max(1,Math.round(c.width*ts));t.height=Math.max(1,Math.round(c.height*ts));
+    t.getContext('2d').drawImage(c,0,0,t.width,t.height);
+    return {file:new File([blob],String(file.name||'pagina').replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'}),thumb:t.toDataURL('image/jpeg',.7)};
+  }catch(e){console.warn('prepararImagen:',e&&e.message);return {file:file,thumb:null}}
+}
+const _urlDe=p=>p.thumb||(p._u||(p._u=URL.createObjectURL(p.file)));
+function _puntoPagina(p,i,onclick){
+  const d=document.createElement('div');d.className='page-dot filled';
+  d.style.backgroundImage='url('+_urlDe(p)+')';d.title='Página '+(i+1);
+  d.innerHTML='<span class="pg-n">'+(i+1)+'</span>';d.onclick=onclick;return d;
+}
+function _repintarSlots(){try{renderPaginaSlots()}catch(e){}try{renderIASlots()}catch(e){}try{renderLapizSlots()}catch(e){}}
+function agregarPaginaSlot(){
+  const libre=MAX_PAGS-paginas.length;
+  if(libre<=0){alert('Máximo '+MAX_PAGS+' páginas por capítulo (desde la 21, cada página cuesta '+COSTOS_SAKURAS.pagina+' Sakuras).');return}
+  const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.multiple=true;
+  inp.onchange=async e=>{
+    let fs=[...e.target.files];if(!fs.length)return;
+    fs.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'}));   // 1, 2, 3 ... 10 (orden natural)
+    if(fs.length>libre){alert('Elegiste '+fs.length+' imágenes pero solo entran '+libre+' más (máximo '+MAX_PAGS+'). Se agregan las primeras '+libre+'.');fs=fs.slice(0,libre)}
+    progresoMostrar('Preparando tus páginas...',0,'');
+    for(let i=0;i<fs.length;i++){
+      const r=await prepararImagen(fs[i],1600);
+      paginas.push({file:r.file,thumb:r.thumb});
+      progresoMostrar('Preparando tus páginas...',(i+1)/fs.length*100,'Imagen '+(i+1)+' de '+fs.length);
+    }
+    progresoOcultar();_repintarSlots();
+  };
+  inp.click();
+}
+function renderPaginaSlots(){
+  const w=$('paginaSlots');if(!w)return;w.innerHTML='';
+  paginas.forEach((p,i)=>w.appendChild(_puntoPagina(p,i,()=>abrirAccionPagina(i))));
+  if(paginas.length<MAX_PAGS){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=agregarPaginaSlot;w.appendChild(d)}
+}
+function renderIASlots(){
+  const w=$('iaCrearSlots');if(!w)return;w.innerHTML='';
+  paginas.forEach((p,i)=>w.appendChild(_puntoPagina(p,i,()=>abrirAccionPagina(i))));
+  if(paginas.length<MAX_PAGS){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=()=>abrirIA('ia');w.appendChild(d)}
+}
+function renderLapizSlots(){
+  const w=$('lapizSlots');if(!w)return;w.innerHTML='';
+  paginas.forEach((p,i)=>w.appendChild(_puntoPagina(p,i,()=>abrirAccionPagina(i))));
+  if(paginas.length<MAX_PAGS){const d=document.createElement('div');d.className='page-dot';d.textContent='+';d.onclick=agregarFilaLapiz;w.appendChild(d)}
+}
+/* Acciones sobre una página: editar, mover, quitar */
+let _pgAcc=-1;
+function abrirAccionPagina(i){
+  const p=paginas[i];if(!p)return;_pgAcc=i;
+  $('pgAccTit').textContent='Página '+(i+1)+' de '+paginas.length;
+  $('pgAccImg').src=_urlDe(p);
+  $('pg-acc-modal').classList.add('on');
+}
+function cerrarAccionPagina(){$('pg-acc-modal').classList.remove('on')}
+function accionPagina(a){
+  const i=_pgAcc;if(i<0||!paginas[i])return;
+  if(a==='quitar'){if(!confirm('¿Quitar la página '+(i+1)+'?'))return;paginas.splice(i,1);cerrarAccionPagina();_repintarSlots();return}
+  if(a==='antes'&&i>0){[paginas[i-1],paginas[i]]=[paginas[i],paginas[i-1]];_pgAcc=i-1;_repintarSlots();$('pgAccTit').textContent='Página '+(i)+' de '+paginas.length;return}
+  if(a==='despues'&&i<paginas.length-1){[paginas[i+1],paginas[i]]=[paginas[i],paginas[i+1]];_pgAcc=i+1;_repintarSlots();$('pgAccTit').textContent='Página '+(i+2)+' de '+paginas.length;return}
+  if(a==='editar'){
+    const p=paginas[i];cerrarAccionPagina();
+    abrirEditor(URL.createObjectURL(p.file),async blob=>{
+      const r=await prepararImagen(new File([blob],'pagina-'+(i+1)+'.jpg',{type:'image/jpeg'}),2000);
+      paginas[i]={file:r.file,thumb:r.thumb};_repintarSlots();
+    });
+  }
+}
+/* La portada que se elige también se achica */
+document.addEventListener('change',async function(e){
+  const t=e.target;if(!t||!t.id)return;
+  const m=/^(pagina|pdf|iaCrear)Portada$/.exec(t.id);
+  if(m&&t.files&&t.files[0]){const r=await prepararImagen(t.files[0],1400);portadaArchivo=r.file;crCoverRender(m[1])}
+},true);
+
+/* ===================== EDITOR DE PÁGINAS: globos, pensamientos, onomatopeyas, textos y extras ===================== */
+function edBurst(n,rIn,rOut,rot){let d='';rot=rot||0;for(let i=0;i<n*2;i++){const r=i%2?rIn:rOut,a=(Math.PI*i/n)+rot;d+=(i?'L':'M')+(50+r*Math.cos(a)).toFixed(1)+' '+(50+r*Math.sin(a)).toFixed(1)+' '}return d+'Z'}
+const ED_HABLA='M50 6 C80 6 96 22 96 42 C96 62 80 76 56 78 L40 94 L44 78 C20 74 4 60 4 42 C4 22 20 6 50 6 Z';
+const ED_GLOBOS=[
+ {k:'habla',n:'Habla',d:ED_HABLA,hr:.8,pad:[14,12,14,26]},
+ {k:'habla-r',n:'Habla cuadrado',d:'M14 8 H86 Q96 8 96 18 V58 Q96 68 86 68 H52 L38 92 L40 68 H14 Q4 68 4 58 V18 Q4 8 14 8 Z',hr:.8,pad:[10,12,10,34]},
+ {k:'pensar',n:'Pensamiento',d:'M25 58 C8 58 4 36 22 32 C20 14 44 6 54 20 C64 6 90 14 86 34 C100 38 98 60 80 60 C80 72 56 76 48 62 C38 72 20 70 25 58 Z M24 80 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 Z M10 92 a3.5 3.5 0 1 0 7 0 a3.5 3.5 0 1 0 -7 0 Z',hr:.85,pad:[16,16,14,34]},
+ {k:'grito',n:'Grito',d:edBurst(14,36,49),hr:.9,pad:[24,24,24,24]},
+ {k:'susurro',n:'Susurro',d:ED_HABLA,dash:true,hr:.8,pad:[14,12,14,26]},
+ {k:'narra',n:'Narración',d:'M3 12 H97 V88 H3 Z',fill:'#fff2a8',hr:.5,pad:[6,10,6,10]},
+ {k:'explosion',n:'Explosión',d:edBurst(9,26,49,.3),hr:.9,pad:[26,26,26,26]},
+ {k:'electrico',n:'Eléctrico',d:edBurst(26,41,49),hr:.9,pad:[22,22,22,22]},
+ {k:'corazon',n:'Corazón',d:'M50 90 C10 60 2 40 2 28 C2 12 14 4 28 4 C38 4 46 10 50 18 C54 10 62 4 72 4 C86 4 98 12 98 28 C98 40 90 60 50 90 Z',hr:.9,pad:[20,14,20,34]},
+ {k:'oscuro',n:'Oscuro',d:ED_HABLA,fill:'#141414',tc:'#ffffff',hr:.8,pad:[14,12,14,26]}
+];
+const ED_ONOM=[['¡BOOM!','#ffd400'],['¡PUM!','#ff3b3b'],['¡BAM!','#ff9f1a'],['¡CRASH!','#ffffff'],['WHOOSH','#7dd3ff'],['¡POW!','#ffe14d'],['ZAP','#fff04d'],['SPLASH','#4dd2ff'],['¡KYAAA!','#ff6bd6'],['DOKI DOKI','#ff4d6d'],['¡GOLPE!','#ff7a1a'],['¡SLAM!','#d9d9d9'],['¡BANG!','#ff3b3b'],['ZZZ','#a0c4ff'],['¡GRRR!','#ff5252'],['¡AAAH!','#ffffff']];
+const ED_EXTRAS=['💢','💧','✨','💕','💥','❗','❓','💦','💫','🔥','❄️','💤','⚡','😳','🌸','🎵'];
+const ED_COLORES=['#ffffff','#fff2a8','#ffd400','#ff6bd6','#7dd3ff','#ff3b3b','#141414'];
+let _ed={els:[],sel:null,img:null,onSave:null,stageW:360,id:0,tab:'g'};
+
+function edLineas(){let d='';for(let i=0;i<44;i++){const a=i*Math.PI*2/44,r1=14+(i%3)*4,r2=48;d+='M'+(50+r1*Math.cos(a)).toFixed(1)+' '+(50+r1*Math.sin(a)).toFixed(1)+' L'+(50+r2*Math.cos(a)).toFixed(1)+' '+(50+r2*Math.sin(a)).toFixed(1)+' '}return d}
+function abrirEditor(src,onSave){
+  _ed={els:[],sel:null,img:null,onSave:onSave,stageW:360,id:0,tab:'g'};
+  const im=$('edImg');$('edLayer').innerHTML='';$('edSelBar').style.display='none';
+  im.onload=()=>{
+    _ed.img=im;
+    const maxW=Math.min(window.innerWidth-24,560);
+    $('edStage').style.width=maxW+'px';_ed.stageW=maxW;
+    edTab('g');
+  };
+  im.onerror=()=>{alert('No se pudo abrir la imagen para editarla.');$('editor-ov').classList.remove('on')};
+  im.crossOrigin='anonymous';im.src=src;
+  $('editor-ov').classList.add('on');
+}
+function edTab(t){
+  _ed.tab=t;['g','o','x','s'].forEach(k=>{const b=$('edTab'+k);if(b)b.classList.toggle('on',k===t)});
+  const p=$('edPanel');
+  if(t==='g')p.innerHTML='<div class="ed-grid">'+ED_GLOBOS.map(g=>'<button class="ed-gbtn" onclick="edAdd(\'g\',\''+g.k+'\')"><svg viewBox="0 0 100 100" width="44" height="40" preserveAspectRatio="none"><path d="'+g.d+'" fill="'+(g.fill||'#fff')+'" stroke="#111" stroke-width="3" '+(g.dash?'stroke-dasharray="7 5"':'')+'/></svg>'+g.n+'</button>').join('')+'</div>';
+  else if(t==='o')p.innerHTML='<div class="ed-grid">'+ED_ONOM.map((o,i)=>'<button class="ed-gbtn" onclick="edAdd(\'o\','+i+')"><span style="font-family:Bangers,Impact,sans-serif;font-size:15px;color:'+o[1]+';-webkit-text-stroke:1px #000">'+esc(o[0])+'</span></button>').join('')+'</div>';
+  else if(t==='x')p.innerHTML='<div class="ed-grid" style="grid-template-columns:1fr 1fr"><button class="ed-gbtn" onclick="edAdd(\'x\',\'dialogo\')"><b style="font-family:\'Comic Neue\',sans-serif;font-size:14px">Texto de cómic</b></button><button class="ed-gbtn" onclick="edAdd(\'x\',\'titulo\')"><b style="font-family:Bangers,sans-serif;font-size:16px">TÍTULO GRANDE</b></button></div><p style="font-size:11px;color:#bbb;margin:8px 0 0">Texto suelto sin globo: cartelitos, títulos, notas. Después tocalo para escribir lo que quieras.</p>';
+  else p.innerHTML='<div class="ed-grid">'+ED_EXTRAS.map((e,i)=>'<button class="ed-gbtn" onclick="edAdd(\'s\','+i+')"><span style="font-size:24px">'+e+'</span></button>').join('')+'<button class="ed-gbtn" onclick="edAdd(\'l\')"><svg viewBox="0 0 100 100" width="40" height="40"><path d="'+edLineas()+'" stroke="#fff" stroke-width="2" fill="none"/></svg>Líneas de velocidad</button></div>';
+}
+function edAdd(t,k){
+  const id=++_ed.id;let e;
+  if(t==='g'){const G=ED_GLOBOS.find(x=>x.k===k);e={id:id,t:'g',k:k,x:.5,y:.3,w:.4,hr:G.hr,rot:0,text:'Escribí acá',fill:G.fill||'#ffffff',tc:G.tc||'#111111',fs:.034,flip:false}}
+  else if(t==='o'){const o=ED_ONOM[k];e={id:id,t:'o',x:.5,y:.5,rot:-8,text:o[0],fill:o[1],fs:.1}}
+  else if(t==='x')e=k==='titulo'?{id:id,t:'x',x:.5,y:.12,rot:0,text:'TÍTULO',fill:'#ffffff',fs:.09,fam:'b'}:{id:id,t:'x',x:.5,y:.85,rot:0,text:'Tu texto',fill:'#141414',fs:.04,fam:'c'};
+  else if(t==='s')e={id:id,t:'s',x:.5,y:.5,rot:0,text:ED_EXTRAS[k],fs:.1};
+  else e={id:id,t:'l',x:.5,y:.5,rot:0,w:.8,hr:1,fill:'#141414',flip:false};
+  _ed.els.push(e);_ed.sel=id;edPintar();edSelBar();
+}
+function edPintar(){
+  const L=$('edLayer'),W=_ed.stageW;L.innerHTML='';
+  _ed.els.forEach(e=>{
+    const d=document.createElement('div');d.className='ed-el'+(e.id===_ed.sel?' sel':'');d.dataset.id=e.id;
+    d.style.left=(e.x*100)+'%';d.style.top=(e.y*100)+'%';
+    let inner='';
+    if(e.t==='g'){
+      const G=ED_GLOBOS.find(x=>x.k===e.k);d.style.width=(e.w*100)+'%';d.style.aspectRatio='1 / '+e.hr;
+      d.style.transform='translate(-50%,-50%) rotate('+e.rot+'deg)';
+      inner='<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;'+(e.flip?'transform:scaleX(-1);':'')+'"><path d="'+G.d+'" fill="'+e.fill+'" stroke="#111" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linejoin="round" '+(G.dash?'stroke-dasharray="7 5"':'')+'/></svg><div class="ed-txt" style="left:'+G.pad[0]+'%;top:'+G.pad[1]+'%;right:'+G.pad[2]+'%;bottom:'+G.pad[3]+'%;color:'+e.tc+';font-size:'+(e.fs*W)+'px">'+esc(e.text)+'</div>';
+    }else if(e.t==='o'){
+      d.style.transform='translate(-50%,-50%) rotate('+e.rot+'deg)';
+      inner='<div class="ed-onom" style="font-size:'+(e.fs*W)+'px;color:'+e.fill+';-webkit-text-stroke:'+Math.max(2,e.fs*W*.14)+'px #111;text-shadow:3px 3px 0 #111">'+esc(e.text)+'</div>';
+    }else if(e.t==='x'){
+      d.style.transform='translate(-50%,-50%) rotate('+e.rot+'deg)';
+      inner='<div style="font-size:'+(e.fs*W)+'px;color:'+e.fill+';white-space:nowrap;line-height:1.1;font-weight:700;font-family:'+(e.fam==='b'?'Bangers,Impact,sans-serif':'\'Comic Neue\',\'Comic Sans MS\',sans-serif')+';-webkit-text-stroke:'+(e.fam==='b'?Math.max(2,e.fs*W*.1):0)+'px #111;paint-order:stroke fill">'+esc(e.text)+'</div>';
+    }else if(e.t==='s'){
+      d.style.transform='translate(-50%,-50%) rotate('+e.rot+'deg)';
+      inner='<div style="font-size:'+(e.fs*W)+'px;line-height:1">'+e.text+'</div>';
+    }else{
+      d.style.width=(e.w*100)+'%';d.style.aspectRatio='1 / 1';d.style.transform='translate(-50%,-50%) rotate('+e.rot+'deg)';
+      inner='<svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%"><path d="'+edLineas()+'" stroke="'+e.fill+'" stroke-width="1.6" fill="none"/></svg>';
+    }
+    d.innerHTML=inner;
+    d.addEventListener('pointerdown',ev=>edInicioArrastre(ev,e));
+    L.appendChild(d);
+  });
+}
+function edInicioArrastre(ev,e){
+  ev.preventDefault();ev.stopPropagation();
+  const cambio=_ed.sel!==e.id;_ed.sel=e.id;
+  const st=$('edStage').getBoundingClientRect(),x0=ev.clientX,y0=ev.clientY,ex=e.x,ey=e.y;let movio=false;
+  const mv=m=>{const dx=(m.clientX-x0)/st.width,dy=(m.clientY-y0)/st.height;if(Math.abs(dx)+Math.abs(dy)>.004)movio=true;e.x=Math.max(0,Math.min(1,ex+dx));e.y=Math.max(0,Math.min(1,ey+dy));const el=$('edLayer').querySelector('[data-id="'+e.id+'"]');if(el){el.style.left=(e.x*100)+'%';el.style.top=(e.y*100)+'%'}};
+  const up=()=>{window.removeEventListener('pointermove',mv);window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',up);edPintar();edSelBar()};
+  window.addEventListener('pointermove',mv);window.addEventListener('pointerup',up);window.addEventListener('pointercancel',up);
+  edPintar();if(cambio)edSelBar();
+}
+function edSel(){return _ed.els.find(x=>x.id===_ed.sel)||null}
+function edSelBar(){
+  const b=$('edSelBar'),e=edSel();if(!e){b.style.display='none';return}
+  b.style.display='flex';
+  const conTexto=e.t!=='l'&&e.t!=='s';
+  const esTam=e.t==='g'||e.t==='l';
+  const colores=(e.t==='g'||e.t==='o'||e.t==='x'||e.t==='l')?'<div class="ed-sw"><span style="font-size:11px;color:#bbb">'+(e.t==='g'?'Fondo':'Color')+':</span>'+ED_COLORES.map(c=>'<i style="background:'+c+'" onclick="edColor(\''+c+'\')"></i>').join('')+(e.t==='g'?'<span style="font-size:11px;color:#bbb;margin-left:6px">Letra:</span><i style="background:#141414" onclick="edColorTxt(\'#141414\')"></i><i style="background:#ffffff" onclick="edColorTxt(\'#ffffff\')"></i><i style="background:#c1121f" onclick="edColorTxt(\'#c1121f\')"></i>':'')+'</div>':'';
+  b.innerHTML=(conTexto?'<input id="edTxt" class="input" maxlength="140" value="'+esc(e.text)+'" oninput="edTexto(this.value)" placeholder="Escribí el texto">':'')
+   +'<div class="ed-row"><span style="min-width:54px">Tamaño</span><input type="range" min="'+(esTam?10:15)+'" max="'+(esTam?95:260)+'" value="'+Math.round((esTam?e.w:e.fs)*(esTam?100:1000))+'" oninput="edTam(this.value)"></div>'
+   +'<div class="ed-row"><span style="min-width:54px">Girar</span><input type="range" min="-180" max="180" value="'+e.rot+'" oninput="edGiro(this.value)"></div>'
+   +(e.t==='g'?'<div class="ed-row"><span style="min-width:54px">Letra</span><input type="range" min="14" max="90" value="'+Math.round(e.fs*1000)+'" oninput="edLetra(this.value)"></div>':'')
+   +colores
+   +'<div class="ed-row" style="gap:8px">'+((e.t==='g'||e.t==='l')?'<button class="btn" style="padding:6px 10px" onclick="edFlip()">↔ Espejo</button>':'')+'<button class="btn" style="padding:6px 10px" onclick="edDup()">📋 Duplicar</button><button class="btn" style="padding:6px 10px;border-color:#ff6b81;color:#ff6b81" onclick="edBorrar()">🗑️ Borrar</button></div>';
+}
+function edTexto(v){const e=edSel();if(!e)return;e.text=v;edPintar()}
+function edTam(v){const e=edSel();if(!e)return;if(e.t==='g'||e.t==='l')e.w=Number(v)/100;else e.fs=Number(v)/1000;edPintar()}
+function edLetra(v){const e=edSel();if(!e)return;e.fs=Number(v)/1000;edPintar()}
+function edGiro(v){const e=edSel();if(!e)return;e.rot=Number(v);edPintar()}
+function edColor(c){const e=edSel();if(!e)return;e.fill=c;if(e.t==='g'){e.tc=(c==='#141414')?'#ffffff':(e.tc==='#ffffff'&&c!=='#141414'?'#141414':e.tc)}edPintar()}
+function edColorTxt(c){const e=edSel();if(!e)return;e.tc=c;edPintar()}
+function edFlip(){const e=edSel();if(!e)return;e.flip=!e.flip;edPintar()}
+function edDup(){const e=edSel();if(!e)return;const c=Object.assign({},e,{id:++_ed.id,x:Math.min(.95,e.x+.05),y:Math.min(.95,e.y+.05)});_ed.els.push(c);_ed.sel=c.id;edPintar();edSelBar()}
+function edBorrar(){_ed.els=_ed.els.filter(x=>x.id!==_ed.sel);_ed.sel=null;edPintar();edSelBar()}
+document.addEventListener('pointerdown',ev=>{if(!$('editor-ov')||!$('editor-ov').classList.contains('on'))return;if(ev.target&&ev.target.id==='edImg'||ev.target.id==='edLayer'){_ed.sel=null;edPintar();edSelBar()}});
+function edCancelar(){if(_ed.els.length&&!confirm('Hay cambios sin guardar. ¿Salir igual?'))return;$('editor-ov').classList.remove('on')}
+
+/* Dibuja todo sobre la imagen en su tamaño real */
+function edEnvolver(ctx,txt,maxW){
+  const palabras=String(txt).split(/\s+/),lineas=[];let l='';
+  palabras.forEach(w=>{const t=l?l+' '+w:w;if(ctx.measureText(t).width>maxW&&l){lineas.push(l);l=w}else l=t});
+  if(l)lineas.push(l);return lineas;
+}
+async function edExportar(){
+  const img=_ed.img,W=img.naturalWidth,H=img.naturalHeight;
+  try{await document.fonts.load('700 40px "Comic Neue"');await document.fonts.load('40px Bangers')}catch(e){}
+  const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.drawImage(img,0,0,W,H);
+  for(const e of _ed.els){
+    const px=e.x*W,py=e.y*H,rad=e.rot*Math.PI/180;
+    x.save();x.translate(px,py);x.rotate(rad);
+    if(e.t==='g'){
+      const G=ED_GLOBOS.find(g=>g.k===e.k),w=e.w*W,h=e.w*e.hr*W;
+      x.save();if(e.flip)x.scale(-1,1);x.translate(-w/2,-h/2);x.scale(w/100,h/100);
+      const lw=Math.max(2,W*.0075)/((w/100+h/100)/2);x.lineWidth=lw;x.lineJoin='round';x.fillStyle=e.fill;x.strokeStyle='#111';
+      if(G.dash)x.setLineDash([7,5]);
+      const p=new Path2D(G.d);x.fill(p);x.stroke(p);x.restore();
+      const fs=e.fs*W,iL=-w/2+G.pad[0]*w/100,iT=-h/2+G.pad[1]*h/100,iW=w*(1-(G.pad[0]+G.pad[2])/100),iH=h*(1-(G.pad[1]+G.pad[3])/100);
+      x.font='700 '+fs+'px "Comic Neue","Comic Sans MS",sans-serif';x.fillStyle=e.tc;x.textAlign='center';x.textBaseline='middle';
+      const ls=edEnvolver(x,e.text,iW),alto=ls.length*fs*1.12;
+      ls.forEach((ln,i)=>x.fillText(ln,iL+iW/2,iT+iH/2-alto/2+fs*1.12*(i+.5),iW));
+    }else if(e.t==='o'){
+      const fs=e.fs*W;x.font=fs+'px Bangers,Impact,"Arial Black",sans-serif';x.textAlign='center';x.textBaseline='middle';x.lineJoin='round';
+      x.lineWidth=fs*.28;x.strokeStyle='#111';x.strokeText(e.text,fs*.04,fs*.04);x.strokeText(e.text,0,0);x.fillStyle=e.fill;x.fillText(e.text,0,0);
+    }else if(e.t==='x'){
+      const fs=e.fs*W;x.font=(e.fam==='b'?'':'700 ')+fs+'px '+(e.fam==='b'?'Bangers,Impact,sans-serif':'"Comic Neue","Comic Sans MS",sans-serif');x.textAlign='center';x.textBaseline='middle';x.lineJoin='round';
+      if(e.fam==='b'){x.lineWidth=fs*.2;x.strokeStyle='#111';x.strokeText(e.text,0,0)}
+      x.fillStyle=e.fill;x.fillText(e.text,0,0);
+    }else if(e.t==='s'){
+      const fs=e.fs*W;x.font=fs+'px "Apple Color Emoji","Noto Color Emoji","Segoe UI Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(e.text,0,0);
+    }else{
+      const w=e.w*W;x.scale(e.flip?-1:1,1);x.translate(-w/2,-w/2);x.scale(w/100,w/100);x.strokeStyle=e.fill;x.lineWidth=1.6;x.stroke(new Path2D(edLineas()));
+    }
+    x.restore();
+  }
+  return new Promise(ok=>c.toBlob(ok,'image/jpeg',.92));
+}
+async function edGuardar(){
+  if(!_ed.img)return;
+  try{
+    progresoMostrar('Guardando tu edición...',50,'');
+    const blob=await edExportar();
+    progresoOcultar();
+    if(!blob)throw new Error('No se pudo armar la imagen');
+    const cb=_ed.onSave;$('editor-ov').classList.remove('on');
+    if(cb)await cb(blob);
+  }catch(e){progresoOcultar();alert('No se pudo guardar la edición: '+(e.message||e))}
+}
+/* Editar la imagen que acaba de generar la IA (antes de elegirla como portada o página) */
+function iaEditarResultado(){
+  const u=iaLoteUrls[0];if(!u)return;
+  abrirEditor(u,async blob=>{
+    const du=await new Promise((ok,ko)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=()=>ko(new Error('lectura'));fr.readAsDataURL(blob)});
+    iaLoteUrls[0]=du;$('iaMarcoImg').innerHTML='<img src="'+du+'" alt="Imagen editada">';
+  });
+}
+
+/* Arma la página con el diseño de viñetas elegido: cada imagen va recortada dentro de su viñeta, con borde negro */
+async function iaComponer(lay,urls){
+  const W=832,H=1248,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  x.fillStyle='#ffffff';x.fillRect(0,0,W,H);
+  const sx=W/60,sy=H/80;
+  const ims=await Promise.all(urls.map(u=>new Promise(ok=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>ok(im);im.onerror=()=>ok(null);im.src=u})));
+  lay.sv.forEach((sh,i)=>{
+    const poly=typeof sh==='string'?sh.split(' ').map(p=>p.split(',').map(Number)):[[sh[0],sh[1]],[sh[0]+sh[2],sh[1]],[sh[0]+sh[2],sh[1]+sh[3]],[sh[0],sh[1]+sh[3]]];
+    const pts=poly.map(p=>[p[0]*sx,p[1]*sy]),xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+    const bx=Math.min(...xs),by=Math.min(...ys),bw=Math.max(...xs)-bx,bh=Math.max(...ys)-by;
+    const trazar=()=>{x.beginPath();pts.forEach((p,k)=>k?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]));x.closePath()};
+    x.save();trazar();x.clip();
+    const im=ims[i];
+    if(im){const r=Math.max(bw/im.width,bh/im.height),w=im.width*r,h=im.height*r;x.drawImage(im,bx+(bw-w)/2,by+(bh-h)/2,w,h)}
+    else{x.fillStyle='#dddddd';x.fillRect(bx,by,bw,bh)}
+    x.restore();
+    trazar();x.lineWidth=6;x.lineJoin='miter';x.strokeStyle='#000000';x.stroke();
+  });
+  return c.toDataURL('image/jpeg',.92);
 }
 </script>
 </body>
