@@ -41,8 +41,12 @@ export async function iaActiva(env) { return (await leerConfig(env, 'ia_activa')
 // Modelo elegido por el CEO para TODA la app (config.ia_modelo): 'phoenix' (por defecto) o 'flux-schnell'
 export async function modeloIA(env) { return (await leerConfig(env, 'ia_modelo')) === 'flux-schnell' ? 'flux-schnell' : 'phoenix'; }
 
-// Modelo de SalaMangaS IA (DeepInfra) elegido por el CEO: 'qwen' (por defecto) o 'kontext'
-export async function modeloEscena(env) { return (await leerConfig(env, 'ia_modelo_escena')) === 'kontext' ? 'kontext' : 'qwen'; }
+// Modelos elegidos por el CEO en el panel (config ia_modelo_<función>) y funciones encendidas/apagadas (ia_activa_<función>)
+const ESCENAS_OK = ['qwen', 'flux2-flash', 'flux2-dev', 'flux2-flex', 'flux2-pro'];
+export async function modeloEscena(env) { const v = String((await leerConfig(env, 'ia_modelo_escena')) || ''); return ESCENAS_OK.includes(v) ? v : 'qwen'; }
+export async function modeloLapizCfg(env) { return (await leerConfig(env, 'ia_modelo_lapiz')) === 'flux-kontext' ? 'flux-kontext' : 'qwen'; }
+export async function modeloPersonajeCfg(env) { const v = String((await leerConfig(env, 'ia_modelo_personaje')) || ''); return (v === 'leonardo' || ESCENAS_OK.includes(v)) ? v : 'qwen'; }
+export async function funcionActiva(env, f) { const v = await leerConfig(env, 'ia_activa_' + f); return String(v == null ? '1' : v) !== '0'; }
 
 // Llama una función de Supabase COMO el usuario (así auth.uid() es él, no se puede falsear)
 export async function rpcUsuario(env, token, fn, body) {
