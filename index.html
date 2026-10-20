@@ -814,6 +814,17 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .pv-cab{padding:14px;text-align:center;color:#fff}.pv-cab b{font-size:18px;display:block}.pv-cab small{display:block;color:#bbb;margin-top:4px}
 .pv-cover{width:100%;display:block}
 
+.as-row{display:flex!important;gap:8px;align-items:stretch;margin-top:10px}
+.as-row #asIn{flex:1 1 auto!important;min-width:0!important;width:auto!important;min-height:46px;background:#0b0820!important;border:1px solid rgba(212,175,55,.55)!important;color:#fff!important;padding:0 12px}
+.as-row .btn-main{flex:0 0 auto!important;width:auto!important;margin:0!important;padding:0 16px!important;min-height:46px}
+#previewCreacionBody{display:block;line-height:0;font-size:0;background:#000}
+#previewCreacionBody .pv-cab{line-height:1.3;font-size:14px;background:#0b0820}
+#previewCreacionBody .pv-item{position:relative;display:block;line-height:0;font-size:0;margin:0;padding:0}
+#previewCreacionBody img{display:block;width:100%;margin:0;padding:0;border:0}
+.pv-btns{position:absolute;right:8px;top:8px;z-index:3;display:flex;gap:6px}
+.pv-btns button,.pv-union{border:0;border-radius:999px;background:rgba(0,0,0,.72);color:#ffd45c;font-size:12px;line-height:1.2;padding:7px 11px;font-weight:700}
+.pv-union{position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);z-index:4;border:1px solid rgba(255,212,92,.6);white-space:nowrap}
+
 .manga-18 .mcover{filter:blur(18px) brightness(.65)}
 .manga-18::after{content:"🔞 +18 · verificá tu edad";position:absolute;left:50%;top:42%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#ffd45c;font-size:11px;font-weight:700;padding:6px 10px;border-radius:10px;text-align:center;pointer-events:none;z-index:2;width:78%}
 
@@ -1868,6 +1879,10 @@ const IA_ESTILOS=[
  {k:'mecha',g:'manga',n:'Mecha / Sci-Fi',e:'🤖',p:'Mecha sci-fi manga like Ghost in the Shell, detailed mechanical armor, futuristic details'},
  {k:'sports',g:'manga',n:'Sports',e:'🏀',p:'Sports manga like Slam Dunk, dynamic muscle movement, motion blur, energetic action'},
  {k:'ecchi-adulto',g:'manga',n:'Ecchi adulto',e:'🔥',p:'Adult seinen ecchi manga style. ALL characters are mature adults over 18 with adult faces and adult bodies, voluptuous proportions, tight clothing, sensual but not pornographic'},
+ {k:'webtoon-romance',g:'kr',n:'Webtoon Romance',e:'💗',p:'Korean webtoon romance style, full color, soft pastel gradients, glowing skin, delicate clean lineart, elegant fashionable characters, dreamy bokeh background, vertical scroll composition'},
+ {k:'webtoon-accion',g:'kr',n:'Webtoon Acción',e:'⚡',p:'Korean webtoon action style, full color, dynamic dramatic angles, sharp digital rendering, motion blur, glowing energy effects, intense expressions, high contrast cinematic lighting'},
+ {k:'webtoon-noir',g:'kr',n:'Webtoon Noir',e:'🌃',p:'Korean webtoon noir thriller style, full color with a dark moody palette, deep shadows, rain and neon reflections, sharp digital rendering, cinematic mystery atmosphere'},
+ {k:'manhwa-clasico',g:'kr',n:'Manhwa Clásico',e:'📜',p:'Classic Korean manhwa style from the 90s and 2000s, detailed painterly lineart, expressive large-eyed characters, rich hand-colored look, ornate backgrounds, dramatic romance and fantasy mood'},
  {k:'marvel',g:'comic',n:'Marvel Heroico',e:'🦸',p:'Classic superhero comic book style by Jim Lee, heroic dynamic poses, bold inks, detailed muscular anatomy, vibrant colors, dramatic lighting'},
  {k:'dc-oscuro',g:'comic',n:'DC Oscuro',e:'🦇',p:'Dark gritty superhero comic style by Greg Capullo, heavy shadows, dramatic noir atmosphere, detailed textures'},
  {k:'indie',g:'comic',n:'Indie (Saga)',e:'🚀',p:'Indie comic book style like Saga from Image Comics, painterly digital colors, expressive characters, rich color palette'},
@@ -3294,15 +3309,19 @@ async function pjIAGenerar(){
   $('pjIAAcc').style.display='none';$('pjIARes').innerHTML='<div>🎨 Creando la hoja de tu personaje...<br><small>puede tardar entre 30 y 60 segundos</small></div>';
   try{
     const tk=await iaToken();
-    const r=await fetch('/api/ia-personaje',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({nombre:nombre,descripcion:desc,estilo:_pjIA.estilo,estilo_txt:((IA_ESTILOS.find(x=>x.n===_pjIA.estilo)||{}).p||''),genero:($('pjfGenero')||{}).value||''})});
+    const r=await fetch('/api/ia-personaje',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({nombre:nombre,descripcion:desc,estilo:_pjIA.estilo,estilo_txt:((IA_ESTILOS.find(x=>x.n===_pjIA.estilo)||{}).p||''),genero:($('pjfGenero')||{}).value||'',edad:Number(($('pjfEdad')||{}).value||0)})});
     const j=await r.json().catch(()=>({}));
     if(!r.ok){if(j.codigo==='sin_credito')abrirSakuras('ia');if(j.codigo==='edad')exigirMayor18();throw new Error(j.error||'Error del servidor')}
-    if(!j.id)throw new Error('La IA no devolvió el número de trabajo. Probá de nuevo.');
-    const urls=await iaEsperar(j.id,tk);
-    const u=(urls||[])[0];if(!u)throw new Error('La IA no devolvió la imagen. Probá de nuevo.');
-    const rr=await fetch('/api/ia-imagen?u='+encodeURIComponent(u));if(!rr.ok)throw new Error('No se pudo descargar la imagen ('+rr.status+')');
-    const blob=await rr.blob();
-    const dataUrl=await new Promise((ok,ko)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=()=>ko(new Error('No se pudo leer la imagen'));fr.readAsDataURL(blob)});
+    let dataUrl;
+    if(j.imagen){dataUrl=j.imagen}      /* Fal: la imagen llega directo */
+    else{                               /* Leonardo: hay que esperar el resultado */
+      if(!j.id)throw new Error('La IA no devolvió la imagen. Probá de nuevo.');
+      const urls=await iaEsperar(j.id,tk);
+      const u=(urls||[])[0];if(!u)throw new Error('La IA no devolvió la imagen. Probá de nuevo.');
+      const rr=await fetch('/api/ia-imagen?u='+encodeURIComponent(u));if(!rr.ok)throw new Error('No se pudo descargar la imagen ('+rr.status+')');
+      const blob=await rr.blob();
+      dataUrl=await new Promise((ok,ko)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=()=>ko(new Error('No se pudo leer la imagen'));fr.readAsDataURL(blob)});
+    }
     _pjIA.img=dataUrl;
     $('pjIARes').innerHTML='<img src="'+esc(dataUrl)+'" alt="Hoja del personaje" style="max-width:100%;max-height:100%;object-fit:contain">';$('pjIAAcc').style.display='flex';
   }catch(e){$('pjIARes').innerHTML='<div style="color:#ff6b81">⚠️ '+esc(e.message||String(e))+'</div>'}
@@ -3516,7 +3535,7 @@ async function abrirIA(modo,file){
   $('iaDibujoBox').style.display=modo==='lapiz'?'block':'none';
   if(file){iaBlob=file;const u=URL.createObjectURL(file);$('iaDibujo').src=u}
   /* Estilos: manga y cómic, 4 a la vista + "＋ Ver más" */
-  const grupos=[['manga','Manga asiático'],['comic','Cómic americano']];
+  const grupos=[['manga','Manga asiático'],['kr','Coreano · Webtoon'],['comic','Cómic americano']];
   $('iaEstilos').innerHTML=grupos.map(g=>'<div class="ia-gtit">'+g[1]+'</div><div class="ia-chips" id="iaEst_'+g[0]+'">'+IA_ESTILOS.filter(x=>x.g===g[0]).map(x=>'<button type="button" class="chip style-choice sty-chip" data-k="'+x.k+'"><span class="sty-th">'+x.e+'<img src="/estilos/'+x.k+'.jpg" alt="" onerror="this.remove()"></span><span>'+esc(x.n)+'</span></button>').join('')+'</div>').join('');
   document.querySelectorAll('#iaEstilos .style-choice').forEach(c=>c.onclick=()=>{const ya=c.classList.contains('on');if(!ya&&c.dataset.k==='ecchi-adulto'&&!esMayor18()){exigirMayor18();return}document.querySelectorAll('#iaEstilos .style-choice').forEach(x=>x.classList.remove('on'));if(ya){iaEstilo=null;iaEstiloKey='';return}c.classList.add('on');iaEstiloKey=c.dataset.k;iaEstilo=(IA_ESTILOS.find(x=>x.k===iaEstiloKey)||{}).n||''});
   grupos.forEach(g=>iaPlegable($('iaEst_'+g[0]),4));
@@ -3563,13 +3582,15 @@ async function iaGenerar(){
     if(iaModo==='lapiz'&&!iaBlob)throw new Error('Falta el dibujo a lápiz');
     if(iaPjSel.length>IA_MAX_PJ)throw new Error('Elegí como máximo '+IA_MAX_PJ+' personajes');
     const pj=PERSONAJES.filter(p=>iaPjSel.includes(String(p.id)));
+    /* Anclaje de edad: si todos los personajes son adultos (según su ficha) se fuerzan proporciones y cara adultas */
+    const adultos=pj.length>0&&pj.every(pjEsAdulto)&&!/chibi/i.test(iaEstilo||'');
     /* PROMPT FINAL, en este orden: ESTILO + PERSONAJES + LUGAR + OUTFIT + VIÑETAS (diseño) + TEXTO DEL USUARIO + VIÑETAS NUMERADAS */
     const est=IA_ESTILOS.find(x=>x.k===iaEstiloKey),lay=IA_LAYOUTS_D.find(x=>x.k===iaLay);
     const userTxt=$('iaTxt').value.trim();
     const paneles=[...document.querySelectorAll('#iaPaneles .ia-panel-in')].map((e,i)=>e.value.trim()?'Panel '+(i+1)+': '+e.value.trim():'').filter(Boolean);
     const enc=$('iaEncuadre')?.value.trim(),ang=$('iaAngulo')?.value.trim(),emo=$('iaEmocion')?.value.trim();
     const conVin=$('iaVinetasBox')&&$('iaVinetasBox').style.display!=='none';
-    const pjTxt=pj.map((p,i)=>(i+1)+') '+p.nombre+': '+p.descripcion).join(' | ');
+    const pjTxt=pj.map((p,i)=>(i+1)+') '+p.nombre+': '+p.descripcion+pjEdadTxt(p)).join(' | ');
     const partes=[est?est.p:'manga illustration, clean ink lines'];
     if(pj.length)partes.push('CHARACTERS (respect each one exactly): '+pjTxt);
     if(iaLugar)partes.push('LOCATION: '+iaLugar.txt);
@@ -3584,29 +3605,33 @@ async function iaGenerar(){
     /* Para el filtro se mandan SOLO las palabras del usuario (no los textos de estilo de la app) */
     const texto=[userTxt,paneles.join(' '),pjTxt,iaLugar?iaLugar.txt:'',iaOutfit?iaOutfit.txt:'',enc||'',ang||'',emo||''].join(' . ');
     const fd=new FormData();
-    fd.append('prompt',prompt);fd.append('texto',texto);fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey||'clasico');fd.append('color_modo',iaColorModo||'auto');fd.append('num_images','1');fd.append('cantidad','1');
+    fd.append('prompt',prompt);fd.append('texto',texto);fd.append('adultos',adultos?'1':'0');fd.append('modo',iaModo==='lapiz'?'lapiz':'ia');fd.append('estilo',iaEstiloKey||'clasico');fd.append('color_modo',iaColorModo||'auto');fd.append('num_images','1');fd.append('cantidad','1');
     if(iaBlob)fd.append('dibujo',await iaRedimBlob(iaBlob,1280,'contrast(1.15)'),'dibujo.jpg');
     /* Referencias (solo SalaMangaS IA): fotos de los personajes + outfit + lugar + las que subió el usuario. Máximo 4. */
     if(iaModo!=='lapiz'){
       const refs=[];
-      pj.filter(p=>p.foto_url).forEach(p=>refs.push({src:p.foto_url,nota:'character "'+p.nombre+'"'}));
+      /* Cada personaje entra como UNA figura limpia (no la hoja con varias vistas): así la IA no copia la hoja */
+      for(const p of pj.filter(p=>p.foto_url)){
+        $('iaMarcoImg').innerHTML='<span>🧑 Preparando a '+esc(p.nombre)+'...</span>';
+        const u=await pjRefLimpia(p);
+        if(u)refs.push({src:u,nota:'character "'+p.nombre+'" (one single clean figure)'});
+      }
+      $('iaMarcoImg').innerHTML='<span>🎨 Dibujando...</span>';
       if(iaOutfit&&iaOutfit.img)refs.push({src:iaOutfit.img,nota:'outfit reference'});
       if(iaLugar&&iaLugar.img)refs.push({src:iaLugar.img,nota:'location reference'});
       iaRefFiles.forEach(f=>refs.push({src:f,nota:'extra reference'}));
       const usadas=[];
-      for(const r of refs){if(usadas.length>=4)break;try{const b=await iaRedimBlob(r.src,1000);fd.append('ref',b,'ref'+usadas.length+'.jpg');usadas.push(r.nota)}catch(e){console.warn('Referencia omitida:',e.message)}}
+      for(const r of refs){if(usadas.length>=6)break;try{const b=await iaRedimBlob(r.src,1000);fd.append('ref',b,'ref'+usadas.length+'.jpg');usadas.push(r.nota)}catch(e){console.warn('Referencia omitida:',e.message)}}
       if(usadas.length)fd.append('ref_notas',usadas.map((n,i)=>'Image '+(i+1)+': '+n).join('; '));
     }
     const tk=await iaToken();
-    /* Con viñetas elegidas: se dibuja UNA imagen por viñeta (con sus personajes y su texto) y la página se arma con el diseño exacto */
+    /* Con viñetas elegidas: UNA sola llamada. El servidor dibuja una imagen por viñeta (1 generación hasta 3 viñetas, 2 de 4 a 6) y acá se arma la página con el diseño exacto */
     if(iaModo!=='lapiz'&&lay&&lay.k!=='full'&&lay.sv.length>1){
-      const nP=lay.sv.length;
-      if(!esCeoSync()&&!confirm('Esta página tiene '+nP+' viñetas: se dibujan '+nP+' imágenes y se gastan '+nP+' generaciones (una por viñeta).\n\n¿Seguir?')){const c0=new Error('cancelado');c0.cancelado=true;throw c0}
+      const nP=lay.sv.length,costo=nP<=3?1:2;
+      if(!esCeoSync()&&!confirm('Esta página tiene '+nP+' viñetas y cuesta '+costo+' generación'+(costo>1?'es':'')+' en total (no una por viñeta).\n\n¿Seguir?')){const c0=new Error('cancelado');c0.cancelado=true;throw c0}
       const textosP=[...document.querySelectorAll('#iaPaneles .ia-panel-in')].map(e=>e.value.trim());
-      const imgsP=[];
+      const prompts=[];
       for(let i=0;i<nP;i++){
-        $('iaMarcoImg').innerHTML='<span>🎨 Dibujando viñeta '+(i+1)+' de '+nP+'...</span>';
-        $('iaRes').innerHTML=vacio('🎨 Viñeta '+(i+1)+' de '+nP+'... puede tardar. No cierres esta pantalla.');
         const t=textosP[i]||'';
         const pp=[est?est.p:'manga illustration, clean ink lines'];
         if(pj.length)pp.push('CHARACTERS (draw only the ones that appear in this panel, respect each one exactly): '+pjTxt);
@@ -3615,22 +3640,25 @@ async function iaGenerar(){
         pp.push('This is ONE SINGLE PANEL ('+(i+1)+' of '+nP+', '+lay.labs[i]+') of a manga page. Draw ONLY this moment: '+(t||userTxt||'the next moment of the scene'));
         if(userTxt&&t)pp.push('Story context: '+userTxt);
         pp.push('Single full-frame illustration, NO panel borders, NO page layout, NO text, NO speech bubbles');
-        const f2=new FormData();
-        f2.append('prompt',pp.join('. ')+'.');f2.append('texto',[t,userTxt,pjTxt,iaLugar?iaLugar.txt:'',iaOutfit?iaOutfit.txt:''].join(' . '));
-        f2.append('modo','ia');f2.append('estilo',iaEstiloKey||'clasico');f2.append('color_modo',iaColorModo||'auto');f2.append('num_images','1');f2.append('cantidad','1');
-        fd.getAll('ref').forEach((b,k)=>f2.append('ref',b,'ref'+k+'.jpg'));
-        if(fd.get('ref_notas'))f2.append('ref_notas',fd.get('ref_notas'));
-        const rr=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:f2});
-        const jj=await rr.json().catch(()=>({}));
-        if(!rr.ok){
-          if(jj.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}if(jj.codigo==='edad')exigirMayor18();
-          throw new Error((i?('Se dibujaron '+i+' de '+nP+' viñetas. '):'')+(jj.error||'Error del servidor'));
-        }
-        imgsP.push((jj.imagenes||[])[0]);
+        prompts.push(pp.join('. ')+'.');
+      }
+      const f2=new FormData();
+      f2.append('modo','paneles');f2.append('paneles',JSON.stringify(prompts));f2.append('prompt',prompts[0]);
+      f2.append('texto',[userTxt,textosP.join(' '),pjTxt,iaLugar?iaLugar.txt:'',iaOutfit?iaOutfit.txt:''].join(' . '));
+      f2.append('estilo',iaEstiloKey||'clasico');f2.append('color_modo',iaColorModo||'auto');f2.append('adultos',adultos?'1':'0');
+      fd.getAll('ref').forEach((bl,k)=>f2.append('ref',bl,'ref'+k+'.jpg'));
+      if(fd.get('ref_notas'))f2.append('ref_notas',fd.get('ref_notas'));
+      $('iaMarcoImg').innerHTML='<span>🎨 Dibujando '+nP+' viñetas...<br><small>puede tardar un minuto</small></span>';
+      $('iaRes').innerHTML=vacio('🎨 Dibujando las '+nP+' viñetas... No cierres esta pantalla.');
+      const rr=await fetch('/api/ia-generar',{method:'POST',headers:{Authorization:'Bearer '+tk},body:f2});
+      const jj=await rr.json().catch(()=>({}));
+      if(!rr.ok){
+        if(jj.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}if(jj.codigo==='edad')exigirMayor18();
+        throw new Error(jj.error||'Error del servidor');
       }
       try{await refrescarPerfil()}catch(e){}
       $('iaMarcoImg').innerHTML='<span>🧩 Armando la página...</span>';
-      iaMostrar([await iaComponer(lay,imgsP)]);
+      iaMostrar([await iaComponer(lay,jj.imagenes||[])]);
       btn.disabled=false;btn.innerText='✨ Generar';
       return;
     }
@@ -4068,13 +4096,77 @@ function abrirVistaPreviaCreacion(){
  const c=window._continuar||null;
  const tit=c?('«'+c.titulo+'» — Capítulo '+c.n):($('titulo').value.trim()||'Sin título');
  const sub=c?'':(subtituloActual()||'');
- const poner=(parent,file,alt)=>{const im=document.createElement('img');im.className='pv-cover';im.alt=alt;im.decoding='async';im.onerror=()=>{if(!im._r){im._r=1;const fr=new FileReader();fr.onload=()=>{im.src=fr.result};fr.readAsDataURL(file)}};im.src=URL.createObjectURL(file);parent.appendChild(im)};
- if(portadaArchivo&&!c)poner(w,portadaArchivo,'Portada');
- const cab=document.createElement('div');cab.className='pv-cab';cab.innerHTML='<b>'+esc(tit)+'</b>'+(sub?'<small>'+esc(sub)+'</small>':'')+(!c&&$('sinopsis').value.trim()?'<small>'+esc($('sinopsis').value.trim())+'</small>':'')+'<small>'+paginas.length+' página(s)</small>';
+ const poner=(parent,file,alt)=>{const im=document.createElement('img');im.alt=alt;im.decoding='async';im.onerror=()=>{if(!im._r){im._r=1;const fr=new FileReader();fr.onload=()=>{im.src=fr.result};fr.readAsDataURL(file)}};im.src=URL.createObjectURL(file);parent.appendChild(im)};
+ if(portadaArchivo&&!c){const it=document.createElement('div');it.className='pv-item';poner(it,portadaArchivo,'Portada');w.appendChild(it)}
+ const cab=document.createElement('div');cab.className='pv-cab';cab.innerHTML='<b>'+esc(tit)+'</b>'+(sub?'<small>'+esc(sub)+'</small>':'')+(!c&&$('sinopsis').value.trim()?'<small>'+esc($('sinopsis').value.trim())+'</small>':'')+'<small>'+paginas.length+' página(s) · tocá ✏️ para poner globos, también entre dos páginas</small>';
  w.appendChild(cab);
- paginas.forEach((p,i)=>poner(w,p.file,'Página '+(i+1)));
+ /* Todo seguido, como una tira de Webtoon: sin espacios entre páginas */
+ paginas.forEach((p,i)=>{
+   const it=document.createElement('div');it.className='pv-item';
+   poner(it,p.file,'Página '+(i+1));
+   const bt=document.createElement('div');bt.className='pv-btns';bt.innerHTML='<button type="button" onclick="pvEditarPagina('+i+')">✏️ Editar</button>';it.appendChild(bt);
+   if(i<paginas.length-1){const u=document.createElement('button');u.type='button';u.className='pv-union';u.textContent='💬 Editar unión con la siguiente';u.onclick=()=>pvEditarUnion(i);it.appendChild(u)}
+   w.appendChild(it);
+ });
  $('preview-creacion').classList.add('on')
 }
+async function _imgDeArchivo(f){
+  try{return await createImageBitmap(f)}catch(e){
+    return await new Promise((ok,ko)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=()=>ko(new Error('No se pudo abrir la imagen'));im.src=URL.createObjectURL(f)});
+  }
+}
+function pvEditarPagina(i){
+  const p=paginas[i];if(!p)return;
+  abrirEditor(URL.createObjectURL(p.file),async blob=>{
+    const r=await prepararImagen(new File([blob],'pagina-'+(i+1)+'.jpg',{type:'image/jpeg'}),2000);
+    paginas[i]={file:r.file,thumb:r.thumb};_repintarSlots();abrirVistaPreviaCreacion();
+  });
+}
+/* Une la página i con la i+1 en una sola tira para poder poner un globo que cruce de una a la otra; al guardar se vuelve a cortar */
+async function pvEditarUnion(i){
+  const A=paginas[i],B=paginas[i+1];if(!A||!B)return;
+  try{
+    progresoMostrar('Uniendo las dos páginas...',30,'');
+    const a=await _imgDeArchivo(A.file),b=await _imgDeArchivo(B.file);
+    const W=1000,ha=Math.round(a.height*W/a.width),hb=Math.round(b.height*W/b.width);
+    const c=document.createElement('canvas');c.width=W;c.height=ha+hb;const x=c.getContext('2d');
+    x.fillStyle='#fff';x.fillRect(0,0,W,ha+hb);x.drawImage(a,0,0,W,ha);x.drawImage(b,0,ha,W,hb);
+    const blob=await new Promise(ok=>c.toBlob(ok,'image/jpeg',.9));
+    progresoOcultar();
+    abrirEditor(URL.createObjectURL(blob),async res=>{
+      const big=await _imgDeArchivo(new File([res],'tira.jpg',{type:'image/jpeg'}));
+      const cortar=async(y,h,n)=>{const k=document.createElement('canvas');k.width=W;k.height=h;k.getContext('2d').drawImage(big,0,y,W,h,0,0,W,h);const bl=await new Promise(ok=>k.toBlob(ok,'image/jpeg',.9));return prepararImagen(new File([bl],'pagina-'+n+'.jpg',{type:'image/jpeg'}),2000)};
+      const r1=await cortar(0,ha,i+1),r2=await cortar(ha,hb,i+2);
+      paginas[i]={file:r1.file,thumb:r1.thumb};paginas[i+1]={file:r2.file,thumb:r2.thumb};
+      _repintarSlots();abrirVistaPreviaCreacion();
+    });
+  }catch(e){progresoOcultar();alert('No se pudo unir las páginas: '+(e.message||e))}
+}
+/* Referencia limpia de un personaje: UNA figura (no la hoja entera). Se pide una sola vez y se guarda. */
+const _refCache={};
+async function pjRefLimpia(p){
+  if(!p||!p.foto_url)return null;
+  if(p.foto_limpia)return p.foto_limpia;
+  if(_refCache[p.id])return _refCache[p.id];
+  try{
+    const tk=await iaToken();
+    const r=await fetch('/api/ia-referencia',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({url:p.foto_url})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||!j.imagen)throw new Error(j.error||'sin imagen');
+    let url=j.imagen;
+    try{const bl=await (await fetch(j.imagen)).blob();url=await subirACloudinary(new File([bl],'ref-'+p.id+'.jpg',{type:'image/jpeg'}))}catch(e){}
+    p.foto_limpia=url;_refCache[p.id]=url;
+    try{await sb.from('personajes').update({foto_limpia:url}).eq('id',p.id)}catch(e){}
+    return url;
+  }catch(e){console.warn('Referencia limpia de '+(p&&p.nombre)+':',e.message);return null}
+}
+function pjEdadDe(p){const m=/Edad:\s*(\d{1,2})/i.exec((p&&p.descripcion)||'');return m?Number(m[1]):0}
+function pjEsAdulto(p){
+  const e=pjEdadDe(p),d=String((p&&p.descripcion)||'').toLowerCase();
+  if(e&&e<18)return false;
+  return !/\b(niñ[oa]s?|menor(es)?|adolescente|colegial[a]?|infantil|pibe|piba)\b/.test(d);
+}
+function pjEdadTxt(p){const e=pjEdadDe(p);return (e>=18&&pjEsAdulto(p))?(' ['+e+' years old, adult body proportions, mature face]'):(e?(' ['+e+' years old]'):'')}
 function cerrarVistaPreviaCreacion(){$('preview-creacion').classList.remove('on')}
 /* Página por página: usar los slots definitivos y límite 20 */
 /* PDF según plan */

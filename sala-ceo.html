@@ -4857,14 +4857,29 @@ iniciarApp=function(){
     const _sisBaseModelos=CEO_R.sistema;
     CEO_R.sistema=async function(b){
       await _sisBaseModelos(b);
-      const modelos=[['leonardo','Leonardo'],['flux-dev','FLUX Dev'],['flux-klein','FLUX Klein'],['flux-kontext','FLUX Kontext']];
-      const funciones=[['lapiz','Dibujo a lápiz','ia_modelo'],['escena','SalaMangaS IA','ia_modelo_escena'],['personaje','Personajes con IA','ia_modelo_personaje'],['portada','Portadas con IA','ia_modelo_portada']];
-      const modeloDe=k=>String((CONFIG||{})['ia_modelo_'+k]||((k==='lapiz')?'leonardo':'flux-kontext'));
+      /* Herramientas de IA por función (se acaban de limpiar: ya no están FLUX Dev viejo ni FLUX Klein) */
+      const ESC=[['qwen','Qwen Image'],['flux2-flash','FLUX.2 Flash'],['flux2-dev','FLUX.2 Dev'],['flux2-flex','FLUX.2 Flex · hasta 10 referencias'],['flux2-pro','FLUX.2 Pro']];
+      const MODELOS={lapiz:[['qwen','Qwen Edit'],['flux-kontext','FLUX Kontext']],escena:ESC,personaje:[ESC[0],['leonardo','Leonardo']].concat(ESC.slice(1))};
+      const funciones=[['lapiz','Dibujo a lápiz','Solo el Lápiz puede usar FLUX Kontext.'],['escena','SalaMangaS IA','Con referencias (personajes, lugar, outfit) usa la versión "edit" del mismo modelo.'],['personaje','Personajes con IA','Hoja de personaje con varias posturas.'],['portada','Portadas con IA','Usa el mismo modelo que SalaMangaS IA.']];
+      const modeloDe=k=>{const lista=(MODELOS[k]||[]).map(x=>x[0]);const v=String((CONFIG||{})['ia_modelo_'+k]||'');return lista.includes(v)?v:'qwen'};
       const activo=k=>String((CONFIG||{})['ia_activa_'+k]??'1')!=='0';
-      b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:12px"><b>🧠 Herramientas de IA</b><p style="font-size:11px;color:var(--text2);margin:5px 0 10px">Elegí un modelo y activá o desactivá cada función. La conexión real depende de que el endpoint del servidor admita el modelo seleccionado.</p>'+funciones.map(([k,t])=>'<div style="border-top:1px solid rgba(212,175,55,.18);padding:9px 0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font-size:13px">'+t+'</b><label style="display:flex;align-items:center;gap:5px;font-size:11px"><input type="checkbox" '+(activo(k)?'checked':'')+' onchange="ceoToggleFuncionIA(\''+k+'\',this.checked)"> Activada</label></div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:7px">'+modelos.map(([v,n])=>'<button type="button" class="'+(modeloDe(k)===v?'btn-main':'btn')+'" style="flex:1;min-width:105px;margin:0;padding:7px 5px;font-size:11px" onclick="ceoElegirModeloIA(\''+k+'\',\''+v+'\')">'+n+'</button>').join('')+'</div></div>').join('')+'</div>');
+      b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:12px"><b>🧠 Herramientas de IA</b><p style="font-size:11px;color:var(--text2);margin:5px 0 10px">Elegí un modelo y activá o desactivá cada función. Los cambios se aplican enseguida.</p>'+funciones.map(([k,t,nota])=>'<div style="border-top:1px solid rgba(212,175,55,.18);padding:9px 0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font-size:13px">'+t+'</b><label style="display:flex;align-items:center;gap:5px;font-size:11px"><input type="checkbox" '+(activo(k)?'checked':'')+' onchange="ceoToggleFuncionIA(\''+k+'\',this.checked)"> Activada</label></div><div style="font-size:10px;color:var(--text2);margin-top:3px">'+nota+'</div>'+(MODELOS[k]?'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:7px">'+MODELOS[k].map(([v,n])=>'<button type="button" class="'+(modeloDe(k)===v?'btn-main':'btn')+'" style="flex:1;min-width:105px;margin:0;padding:7px 5px;font-size:11px" onclick="ceoElegirModeloIA(\''+k+'\',\''+v+'\')">'+n+'</button>').join('')+'</div>':'')+'</div>').join('')+'</div>');
+      /* Contador de saldo de Fal.ai */
+      b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:12px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>💳 Saldo de Fal.ai</b><button type="button" class="btn" style="margin:0;padding:6px 10px;font-size:12px" onclick="ceoFalSaldo()">🔄 Actualizar</button></div><div id="falSaldoBox" style="margin-top:8px;font-size:13px;color:var(--text2)">Consultando...</div></div>');
+      setTimeout(()=>{try{ceoFalSaldo()}catch(e){}},0);
+    };
+    window.ceoFalSaldo=async function(){
+      const box=document.getElementById('falSaldoBox');if(!box)return;
+      box.textContent='Consultando...';
+      try{
+        const j=await netlifyPost('fal-saldo',{});
+        if(j&&j.ok){const n=Number(j.saldo),bajo=n<5;box.innerHTML='<span style="font-size:24px;font-weight:700;color:'+(bajo?'#ff6b81':'var(--gold3)')+'">'+(j.moneda==='USD'?'US$ ':'')+n.toFixed(2)+'</span>'+(j.moneda!=='USD'?' '+esc(j.moneda):'')+(bajo?'<div style="color:#ff6b81;font-size:12px;margin-top:4px">⚠️ Saldo bajo: cargá más en fal.ai/dashboard/billing</div>':'<div style="font-size:11px;margin-top:4px">Cuenta: '+esc(j.cuenta||'Fal.ai')+'</div>')}
+        else box.innerHTML='<span style="color:#ff6b81">No se pudo leer el saldo.</span><div style="font-size:11px;margin-top:4px">'+esc((j&&j.error)||'Error desconocido')+'</div>';
+      }catch(e){box.innerHTML='<span style="color:#ff6b81">Error: '+esc(e.message||e)+'</span>'}
     };
     window.ceoElegirModeloIA=async function(funcion,modelo){
-      if(!['lapiz','escena','personaje','portada'].includes(funcion)||!['leonardo','flux-dev','flux-klein','flux-kontext'].includes(modelo))return;
+      const _ok={lapiz:['qwen','flux-kontext'],escena:['qwen','flux2-flash','flux2-dev','flux2-flex','flux2-pro'],personaje:['qwen','leonardo','flux2-flash','flux2-dev','flux2-flex','flux2-pro']};
+      if(!(_ok[funcion]||[]).includes(modelo))return;
       await ceoAccion(async()=>{const ok=await setConfig('ia_modelo_'+funcion,modelo);if(ok){CONFIG['ia_modelo_'+funcion]=modelo;ceoTab('sistema')}});
     };
     window.ceoToggleFuncionIA=async function(funcion,activo){
