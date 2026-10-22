@@ -275,7 +275,7 @@ body.light-mode .mainnav-bottom{background:rgba(255,255,255,.92)}
 .create-head-ico{font-size:30px;line-height:1}
 .create-head-txt{font-family:'Cinzel',serif;font-weight:800;font-size:18px;color:var(--gold);letter-spacing:.5px}
 .step-nav{display:flex;gap:8px;align-items:center;margin-top:16px}.step-nav>*{flex:1}
-.reference-box{position:relative;min-height:220px;border:1px dashed rgba(255,209,102,.35);border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:rgba(0,0,0,.25);color:var(--text2)}
+.reference-box{min-height:220px;border:1px dashed rgba(255,209,102,.35);border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:rgba(0,0,0,.25);color:var(--text2)}
 .reference-box img{width:100%;max-height:300px;object-fit:contain}
 .preview-full{display:none;position:fixed;inset:0;background:#000;z-index:500;overflow:auto;padding:18px 8px}
 .preview-full.on{display:block}.preview-full img{display:block;width:100%;margin:0 auto 8px}.preview-x{position:fixed;top:12px;right:12px;z-index:501;width:40px;height:40px;border-radius:50%;border:1px solid var(--gold);background:rgba(0,0,0,.7);color:var(--gold);font-size:20px}
@@ -609,7 +609,6 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .lz-pane-t{font-size:12px;font-weight:700;color:var(--gold3);margin-bottom:4px;text-align:center}
 .lz-box{min-height:0!important;aspect-ratio:2/3;cursor:pointer;text-align:center;padding:6px;font-size:12px}
 .lz-box img{width:100%;height:100%;max-height:none!important;object-fit:contain}
-.ia-marco-img:has(>img)::after,.lz-box:has(>img)::after{content:"";position:absolute;right:7px;bottom:7px;width:9%;min-width:24px;max-width:46px;aspect-ratio:1;background:url("/logo.jpg") center/cover no-repeat;border-radius:50%;opacity:.24;pointer-events:none;z-index:5;filter:drop-shadow(0 1px 3px rgba(0,0,0,.45))}
 .lz-row{display:flex;gap:8px;margin-top:12px}.lz-row>*{flex:1;margin:0!important}
 
 /* ===== TANDA FINAL: asistentes IA + crear personaje ===== */
@@ -821,11 +820,14 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 #previewCreacionBody{display:block;line-height:0;font-size:0;background:#000}
 #previewCreacionBody .pv-cab{line-height:1.3;font-size:14px;background:#0b0820}
 #previewCreacionBody .pv-item{position:relative;display:block;line-height:0;font-size:0;margin:0;padding:0}
-#previewCreacionBody .pv-item > img.pv-watermark{position:absolute;right:2.2%;bottom:2.2%;width:7.5%;max-width:58px;min-width:26px;height:auto;aspect-ratio:1;object-fit:cover;border-radius:50%;opacity:.24;pointer-events:none;z-index:2;filter:drop-shadow(0 1px 3px rgba(0,0,0,.45))}
 #previewCreacionBody img{display:block;width:100%;margin:0;padding:0;border:0}
 .pv-btns{position:absolute;right:8px;top:8px;z-index:3;display:flex;gap:6px}
 .pv-btns button,.pv-union{border:0;border-radius:999px;background:rgba(0,0,0,.72);color:#ffd45c;font-size:12px;line-height:1.2;padding:7px 11px;font-weight:700}
 .pv-union{position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);z-index:4;border:1px solid rgba(255,212,92,.6);white-space:nowrap}
+
+.pv-junc{position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);z-index:4;display:flex;gap:6px}
+.pv-junc .pv-union{position:static;transform:none}
+#previewCreacionBody.marca .pv-pag::after{content:"";position:absolute;right:2%;bottom:1.4%;width:11%;aspect-ratio:1/1;background:url(/logo.jpg) center/cover;border-radius:50%;opacity:.4;pointer-events:none}
 
 .manga-18 .mcover{filter:blur(18px) brightness(.65)}
 .manga-18::after{content:"🔞 +18 · verificá tu edad";position:absolute;left:50%;top:42%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#ffd45c;font-size:11px;font-weight:700;padding:6px 10px;border-radius:10px;text-align:center;pointer-events:none;z-index:2;width:78%}
@@ -1011,7 +1013,15 @@ Entrar con Google
 <div id="screen-crear-lapiz-1" class="screen">
 <div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">✏️</span><span class="create-head-txt">Subir dibujos a lápiz</span></div></div>
 <div class="card">
-
+<div class="ai-coming-soon">
+<div class="ai-coming-icon">✏️✨</div>
+<h2>✨ SalaMangaS IA — PRÓXIMAMENTE</h2>
+<p>Esta función estará disponible solo para suscriptores pagos.<br>Con la ayuda de los suscriptores y donaciones, la implementaremos lo antes posible. ¡Gracias por bancar el proyecto! 🌸</p>
+<div class="ai-coming-actions">
+<button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button>
+<button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button>
+</div>
+</div>
 <div id="lapiz-legacy-ui-1" style="display:none" aria-hidden="true">
 <div class="lz-titulo"><input id="lapizTitulo" class="input" placeholder="Título del manga (obligatorio)" maxlength="120"><input id="lapizSubtitulo" class="input" placeholder="Subtítulo (opcional)" maxlength="160"></div>
 <div class="lz-grid">
@@ -1027,7 +1037,15 @@ Entrar con Google
 <div id="screen-crear-lapiz-2" class="screen">
 <div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">✏️</span><span class="create-head-txt">Renacer</span></div></div>
 <div class="card">
-
+<div class="ai-coming-soon">
+<div class="ai-coming-icon">✏️✨</div>
+<h2>✨ SalaMangaS IA — PRÓXIMAMENTE</h2>
+<p>Esta función estará disponible solo para suscriptores pagos.<br>Con la ayuda de los suscriptores y donaciones, la implementaremos lo antes posible. ¡Gracias por bancar el proyecto! 🌸</p>
+<div class="ai-coming-actions">
+<button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button>
+<button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button>
+</div>
+</div>
 <div id="lapiz-legacy-ui-2" style="display:none" aria-hidden="true">
 <div class="lz-pair">
 <div><div class="lz-pane-t">✏️ Tu dibujo</div><div id="lapizVistaBox" class="reference-box lz-box" onclick="lapizPedirDibujo()"><div>Tocá para subir tu dibujo</div></div></div>
@@ -1042,7 +1060,7 @@ Entrar con Google
 <button class="btn-main" id="btnRenacer" data-ia-btn="lapiz" data-label="🎨 Crear manga" onclick="renacerLapiz()">🎨 Crear manga</button>
 <button class="btn" data-ia-recarga="btnRenacer" style="display:none;width:100%;margin-top:8px" onclick="abrirRecargaIA()">🎨 Recarga IA</button>
 <h3 class="section">📄 Páginas <span style="font-size:11px;color:var(--text2)">(20 incluidas · hasta 30)</span></h3>
-<div id="lapizSlots" class="pages-dots"></div><button type="button" class="btn" style="width:100%;margin-top:8px" onclick="agregarPaginaSlot()">📷 Agregar imagen de la galería a las páginas</button>
+<div id="lapizSlots" class="pages-dots"></div><button class="btn" style="width:100%;margin-top:8px" onclick="agregarPaginaSlot()">🖼️ Agregar imágenes de la galería</button>
 <div class="lz-row"><button class="btn-ghost" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-ghost" onclick="abrirVistaPreviaCreacion()">👁️ Vista previa</button></div>
 <button class="btn-main" style="width:100%;margin-top:12px" onclick="publicar()">Publicar</button>
 <div class="step-nav"><button class="btn" onclick="abrirCrearPantalla('lapiz')">← Atrás</button><button class="btn-main" onclick="lapizSiguiente()">Siguiente →</button></div>
@@ -1059,7 +1077,7 @@ Entrar con Google
 <label class="lbl">Géneros</label><div id="paginaGeneros"></div>
 </div>
 <h3 class="section">📄 Páginas (20 incluidas · hasta 30)</h3><div id="paginaSlots" class="pages-dots"></div>
-<button class="btn" style="width:100%;margin-top:8px" onclick="agregarPaginaSlot()">＋ Agregar página</button><button type="button" class="btn" style="width:100%;margin-top:8px" onclick="agregarPaginaSlot()">📷 Agregar imagen de la galería a las páginas</button>
+<button class="btn" style="width:100%;margin-top:8px" onclick="agregarPaginaSlot()">＋ Agregar página</button>
 <div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
 <div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button><button class="btn" onclick="abrirVistaPreviaCreacion()">Vista previa</button></div>
 </div>
@@ -1079,7 +1097,15 @@ Entrar con Google
 <div id="screen-crear-ia" class="screen">
 <div class="create-head create-head-v"><button class="chatfs-back" onclick="volverCrear()">←</button><div class="create-head-title"><span class="create-head-ico">🤖</span><span class="create-head-txt">SalaMangaS IA</span></div></div>
 <div class="card">
-
+<div class="ai-coming-soon">
+<div class="ai-coming-icon">🤖✨</div>
+<h2>✨ SalaMangaS IA — PRÓXIMAMENTE</h2>
+<p>Esta función estará disponible solo para suscriptores pagos.<br>Con la ayuda de los suscriptores y donaciones, la implementaremos lo antes posible. ¡Gracias por bancar el proyecto! 🌸</p>
+<div class="ai-coming-actions">
+<button class="btn-main" style="margin-top:0" onclick="abrirSuscripciones()">⭐ Ver planes</button>
+<button class="btn-ghost" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button>
+</div>
+</div>
 <div id="ia-legacy-ui" style="display:none" aria-hidden="true">
 <p class="subtitle" style="margin-bottom:16px">Podés empezar de cero o subir imágenes de referencia.</p>
 <button class="btn-main" style="margin-top:0;margin-bottom:12px" onclick="abrirIA('ia')">✨ Abrir SalaMangaS IA</button>
@@ -1088,7 +1114,7 @@ Entrar con Google
 
 <label class="lbl">Géneros</label><div id="iaCrearGeneros"></div>
 <label class="lbl">Estilo visual</label><div id="iaCrearEstilos"></div>
-<h3 class="section">📄 Páginas (20 incluidas · hasta 30)</h3><div id="iaCrearSlots" class="pages-dots"></div><button type="button" class="btn" style="width:100%;margin-top:8px" onclick="agregarPaginaSlot()">📷 Agregar imagen de la galería a las páginas</button><button class="btn" style="width:100%;margin-top:8px" onclick="abrirVistaPreviaCreacion()">👁️ Vista previa</button>
+<h3 class="section">📄 Páginas (20 incluidas · hasta 30)</h3><div id="iaCrearSlots" class="pages-dots"></div><button class="btn" style="width:100%;margin-top:8px" onclick="agregarPaginaSlot()">🖼️ Agregar imágenes de la galería</button><button class="btn" style="width:100%;margin-top:8px" onclick="abrirVistaPreviaCreacion()">👁️ Vista previa</button>
 <div style="display:flex;gap:8px;margin-top:12px"><button class="btn-ghost" style="flex:1" onclick="guardarBorrador()">💾 Guardar borrador</button><button class="btn-main" style="flex:1" onclick="publicar()">Publicar</button></div>
 </div>
 <div class="step-nav"><button class="btn" onclick="volverCrear()">← Atrás</button></div>
@@ -1110,15 +1136,18 @@ Entrar con Google
 <div style="display:flex;gap:8px"><button class="btn acc-btn" style="flex:1" onclick="accionPagina('antes')">◀ Mover antes</button><button class="btn acc-btn" style="flex:1" onclick="accionPagina('despues')">Mover después ▶</button></div>
 <button class="btn acc-btn" style="border-color:#ff6b81;color:#ff6b81" onclick="accionPagina('quitar')">🗑️ Quitar esta página</button>
 </div></div>
-<div id="edad-modal" class="modal-overlay"><div class="modal-box" style="max-width:420px"><button class="modal-close" onclick="cerrarEdad()">✕</button>
-<h2 style="font-family:'Cinzel',serif;color:var(--gold);text-align:center">🔞 Contenido +18</h2>
-<p style="font-size:13px;color:var(--text2);line-height:1.5">Para crear o ver contenido +18 (géneros +18, estilo Ecchi adulto, personajes y escenas sensuales) tenés que confirmar que sos mayor de edad.</p>
+<div id="edad-modal" class="modal-overlay"><div class="modal-box" style="max-width:420px"><button id="edadCerrar" class="modal-close" onclick="cerrarEdad()">✕</button>
+<h2 id="edadTit" style="font-family:'Cinzel',serif;color:var(--gold);text-align:center">🔞 Contenido +18</h2>
+<p id="edadTxt" style="font-size:13px;color:var(--text2);line-height:1.5">Para crear o ver contenido +18 tenés que confirmar que sos mayor de edad.</p>
+<div id="edadForm">
 <label class="lbl">Tu fecha de nacimiento</label><input id="edadFecha" class="input" type="date">
-<label style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--text2);margin:10px 0"><input id="edadOk" type="checkbox" style="margin-top:3px"><span>Declaro que tengo <b>18 años o más</b> y que la fecha es real. Si declaro ser menor, no voy a poder acceder a este contenido.</span></label>
-<div class="warn-mini" style="margin-bottom:10px">Reglas: se permite contenido sensual suave (ropa escotada, corta o ajustada, ropa interior, playa, pileta). <b>No</b> se permite desnudo explícito ni sexo. Todo lo que se sube pasa por revisión. Contenido sexual con menores: prohibido y bloqueado siempre.</div>
+<label style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--text2);margin:10px 0"><input id="edadOk" type="checkbox" style="margin-top:3px"><span>Declaro que tengo <b>18 años o más</b> y que la fecha es real. Si declaro ser menor, no voy a poder usar la app.</span></label>
+<div class="warn-mini" style="margin-bottom:10px">SalaMangaS es una app para <b>adultos</b>: se permite contenido sensual (escotes, ropa corta o ajustada, ropa interior, playa y pileta). <b>No</b> se permite desnudo explícito ni sexo. Todo lo que se publica pasa por revisión. Contenido sexual con menores: prohibido y bloqueado siempre.</div>
 <small id="edadMsg" style="color:#ff6b81;display:block;min-height:16px;margin-bottom:6px"></small>
 <button id="edadBtn" class="btn-main" style="width:100%" onclick="edadConfirmar()">Verificar mi edad</button>
 <p style="font-size:10px;color:var(--text2);margin-top:8px">No guardamos tu fecha de nacimiento: solo si sos mayor o no.</p>
+</div>
+<button id="edadSalir" class="btn" style="width:100%;display:none;margin-top:10px" onclick="edadSalir()">Cerrar sesión</button>
 </div></div>
 <div id="progreso-ov" class="progreso-ov"><div class="progreso-box"><div style="font-size:30px">📤</div><b id="progTit" style="font-size:16px;color:var(--gold3)">Subiendo tu manga...</b><div class="prog-bar"><i id="progFill"></i></div><div id="progPct" style="font-size:22px;font-weight:700;color:var(--gold3)">0%</div><small id="progTxt" style="color:var(--text2)"></small><p style="font-size:11px;color:var(--text2);margin-top:10px">No cierres esta pantalla hasta que termine.</p></div></div>
 <div id="mangadet" class="ov"><div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('mangadet')">←</div><h2>📚 Mi manga</h2></div><div class="ov-body" id="mdBody"></div></div>
@@ -1300,7 +1329,7 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 </div>
 <button type="button" class="btn-ghost" style="font-size:12px;padding:6px 11px" onclick="abrirAsistente('historia',{campo:'iaTxt'})">📖 Ayudame con la historia</button>
 <details id="iaAyuda" class="ia-ayuda"><summary>💡 Ayuda para escribir mejor</summary>
-<div class="ia-aviso">⚠️ <b>Antes de generar:</b> en <b>Dibujo a lápiz</b> la IA crea <b>1 imagen</b> y en <b>SalaMangaS IA</b> crea <b>1 sola imagen</b>. Cada vez que tocás Generar se gasta <b>1 generación</b> (de tu plan o 1 Sakura IA), y si tocás Regenerar se gasta otra. Si la IA falla, la generación se te devuelve sola. No pidas <b>texto o letras</b> dentro de la imagen (la IA suele deformarlas), ni <b>personajes con derechos de autor</b>. La ropa interior o lencería está permitida para personajes adultos con edad verificada; no se permite contenido sexual explícito, menores ni violencia extrema.</div>
+<div class="ia-aviso">⚠️ <b>Antes de generar:</b> en <b>Dibujo a lápiz</b> la IA crea <b>1 imagen</b> y en <b>SalaMangaS IA</b> crea <b>1 sola imagen</b>. Cada vez que tocás Generar se gasta <b>1 generación</b> (de tu plan o 1 Sakura IA), y si tocás Regenerar se gasta otra. Si la IA falla, la generación se te devuelve sola. No pidas <b>texto o letras</b> dentro de la imagen (la IA suele deformarlas), ni <b>personajes con derechos de autor</b>, ni contenido sexual o violento extremo: la IA lo bloquea.</div>
 <div class="ia-ayuda-t">Ejemplos (tocá uno para usarlo)</div><div id="iaEjemplos"></div>
 <div class="ia-ayuda-t">Sumá detalles (tocá para agregar)</div><div id="iaSugerencias"></div>
 <ul class="ia-tips"><li>Contá <b>quién</b> es, <b>qué hace</b>, <b>dónde</b> está y cómo se ve (encuadre y ambiente).</li><li>Una sola escena por imagen: es más fácil que salga bien.</li><li>Si querés un personaje tuyo, elegilo abajo en 👥 Personajes y la IA usa su foto.</li><li>En modo Lápiz la IA respeta tu dibujo: contale qué querés cambiar o agregar.</li></ul></details>
@@ -1952,21 +1981,6 @@ if(!r.ok||!data.secure_url)throw new Error((data&&data.error&&data.error.message
 return data.secure_url;
 }
 /* guardarBorrador() real: más abajo, en la sección TANDA C (guarda también páginas y portada) */
-async function prepararPaginaConMarca(file){
-  try{
-    const cargar=(src)=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(new Error('No se pudo cargar el logo'));im.src=src});
-    const pagina=await cargar(URL.createObjectURL(file));
-    const logo=await cargar('/logo.jpg');
-    const canvas=document.createElement('canvas');canvas.width=pagina.naturalWidth||pagina.width;canvas.height=pagina.naturalHeight||pagina.height;
-    const ctx=canvas.getContext('2d');if(!ctx)return file;
-    ctx.drawImage(pagina,0,0,canvas.width,canvas.height);
-    const lado=Math.max(30,Math.round(canvas.width*.075)),margen=Math.max(12,Math.round(canvas.width*.022));
-    const x=canvas.width-lado-margen,y=canvas.height-lado-margen;
-    ctx.save();ctx.globalAlpha=.24;ctx.beginPath();ctx.arc(x+lado/2,y+lado/2,lado/2,0,Math.PI*2);ctx.clip();ctx.drawImage(logo,x,y,lado,lado);ctx.restore();
-    const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('No se pudo preparar la marca de agua')),'image/jpeg',.92));
-    return new File([blob],(file.name||'pagina').replace(/\.[^.]+$/,'')+'-salamangas.jpg',{type:'image/jpeg'});
-  }catch(e){console.warn('Marca de agua omitida; se sube la página original:',e.message);return file}
-}
 async function publicar(){
 if(!miPerfil){alert('Creá una cuenta para publicar');return false;}
 const cont=window._continuar||null;
@@ -1990,7 +2004,7 @@ const tit=cont?('Subiendo el capítulo '+cont.n+'...'):'Subiendo tu manga...';
 progresoMostrar(tit,0,'Preparando...');
 const urlsPaginas=[];
 for(let i=0;i<nTot;i++){
-  try{const archivoPublicado=await prepararPaginaConMarca(paginas[i].file);urlsPaginas.push(await subirACloudinary(archivoPublicado));}catch(err){progresoOcultar();alert('Error en la página '+(i+1)+': '+err.message);return false;}
+  try{urlsPaginas.push(await subirACloudinary(await conMarca(paginas[i].file)));}catch(err){progresoOcultar();alert('Error en la página '+(i+1)+': '+err.message);return false;}
   hechos++;progresoMostrar(tit,hechos/totalPasos*100,'Página '+(i+1)+' de '+nTot);
 }
 if(cont){
@@ -2160,6 +2174,7 @@ async function cargarSesion(){
 if(_sesionEnCurso){_sesionPendiente=true;return}
 _sesionEnCurso=true;
 try{do{_sesionPendiente=false;await _cargarSesionInterno()}while(_sesionPendiente)}finally{_sesionEnCurso=false}
+setTimeout(()=>{try{edadObligatoria()}catch(e){}},500);
 }
 async function _cargarSesionInterno(){
 let user=null;try{const {data:{session:_s}}=await sb.auth.getSession();user=(_s&&_s.user)||null;if(!user){const _r=await sb.auth.getUser();user=(_r&&_r.data&&_r.data.user)||null}}catch(_e){console.warn('sesión:',_e&&_e.message)}
@@ -4089,18 +4104,20 @@ function abrirVistaPreviaCreacion(){
  const c=window._continuar||null;
  const tit=c?('«'+c.titulo+'» — Capítulo '+c.n):($('titulo').value.trim()||'Sin título');
  const sub=c?'':(subtituloActual()||'');
- const poner=(parent,file,alt)=>{const im=document.createElement('img');im.alt=alt;im.decoding='async';im.onerror=()=>{if(!im._r){im._r=1;const fr=new FileReader();fr.onload=()=>{im.src=fr.result};fr.readAsDataURL(file)}};im.src=URL.createObjectURL(file);parent.appendChild(im);const marca=document.createElement('img');marca.className='pv-watermark';marca.src='/logo.jpg';marca.alt='SalaMangaS';marca.onerror=()=>marca.remove();parent.appendChild(marca)};
+ const poner=(parent,file,alt)=>{const im=document.createElement('img');im.alt=alt;im.decoding='async';im.onerror=()=>{if(!im._r){im._r=1;const fr=new FileReader();fr.onload=()=>{im.src=fr.result};fr.readAsDataURL(file)}};im.src=URL.createObjectURL(file);parent.appendChild(im)};
  if(portadaArchivo&&!c){const it=document.createElement('div');it.className='pv-item';poner(it,portadaArchivo,'Portada');w.appendChild(it)}
  const cab=document.createElement('div');cab.className='pv-cab';cab.innerHTML='<b>'+esc(tit)+'</b>'+(sub?'<small>'+esc(sub)+'</small>':'')+(!c&&$('sinopsis').value.trim()?'<small>'+esc($('sinopsis').value.trim())+'</small>':'')+'<small>'+paginas.length+' página(s) · tocá ✏️ para poner globos, también entre dos páginas</small>';
  w.appendChild(cab);
  /* Todo seguido, como una tira de Webtoon: sin espacios entre páginas */
  paginas.forEach((p,i)=>{
-   const it=document.createElement('div');it.className='pv-item';
+   const it=document.createElement('div');it.className='pv-item pv-pag';
    poner(it,p.file,'Página '+(i+1));
    const bt=document.createElement('div');bt.className='pv-btns';bt.innerHTML='<button type="button" onclick="pvEditarPagina('+i+')">✏️ Editar</button>';it.appendChild(bt);
-   if(i<paginas.length-1){const u=document.createElement('button');u.type='button';u.className='pv-union';u.textContent='💬 Editar unión con la siguiente';u.onclick=()=>pvEditarUnion(i);it.appendChild(u)}
+   if(i<paginas.length-1){const u=document.createElement('div');u.className='pv-junc';u.innerHTML='<button type="button" class="pv-union" onclick="pvEditarUnion('+i+')">💬 Editar unión</button><button type="button" class="pv-union" onclick="pvInsertar('+i+')">🖼️ Insertar imagen acá</button>';it.appendChild(u)}
    w.appendChild(it);
  });
+ const fin=document.createElement('div');fin.style.cssText='padding:16px;text-align:center;line-height:1.3;font-size:14px;background:#0b0820';fin.innerHTML='<button type="button" class="btn-main" style="width:100%;margin:0" onclick="pvAgregarFinal()">🖼️ Agregar imágenes de la galería</button>';w.appendChild(fin);
+ w.classList.toggle('marca',marcaActiva());
  $('preview-creacion').classList.add('on')
 }
 async function _imgDeArchivo(f){
@@ -4176,7 +4193,7 @@ function renderPDFSlots(){
  }
 }
 /* ===== CREAR: pantallas nuevas conectadas a publicar/borradores ===== */
-const CREAR_PFX={lapiz:'lapiz','lapiz-1':'lapiz','lapiz-2':'lapiz',pagina:'pagina',pdf:'pdf',ia:'iaCrear'};
+const CREAR_PFX={lapiz:'lapiz',pagina:'pagina',pdf:'pdf',ia:'iaCrear'};
 function abrirCrearPantalla(tipo){
  try{aplicarVisibilidadIA()}catch(e){}
  ocultarCrearPantallas();
@@ -4195,10 +4212,16 @@ function abrirCrearPantalla(tipo){
 }
 /* ===== IA visible: SOLO el CEO; y todos cuando el CEO prende "IA conectada" en el panel ===== */
 function aplicarVisibilidadIA(esCeoConfirmado){
-  /* Las interfaces quedan visibles. El servidor conserva los controles de IA activa,
-     funciones habilitadas, sesión, plan y generaciones; no se saltean desde el navegador. */
-  document.querySelectorAll('.ai-coming-soon').forEach(e=>{e.style.display='none'});
-  ['ia-legacy-ui','lapiz-legacy-ui-1','lapiz-legacy-ui-2'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display='';e.setAttribute('aria-hidden','false')}});
+  const ceo=esCeoConfirmado===true||((typeof esCeoSync==='function')&&esCeoSync());
+  const on=(typeof CONFIG==='object')&&!!CONFIG&&CONFIG.ia_activa==='1';
+  const ver=ceo||on;
+  document.querySelectorAll('.ai-coming-soon').forEach(e=>{e.style.display=ver?'none':''});
+  ['ia-legacy-ui','lapiz-legacy-ui-1','lapiz-legacy-ui-2'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display=ver?'':'none';e.setAttribute('aria-hidden',ver?'false':'true')}});
+  /* si todavía no se verificó si es CEO, se verifica una sola vez y se vuelve a aplicar */
+  if(!ver&&typeof miPerfil!=='undefined'&&miPerfil&&typeof esCeoReal==='function'&&!aplicarVisibilidadIA._chk){
+    aplicarVisibilidadIA._chk=1;
+    Promise.resolve(esCeoReal(true)).then(ok=>{if(ok)aplicarVisibilidadIA(true)}).catch(()=>{});
+  }
 }
 function nuevoCrear(tipo){limpiarCrearUI(true);abrirCrearPantalla(tipo)}
 function reabrirCrear(){
@@ -5654,17 +5677,35 @@ async function canjearGeneraciones(g){
 }
 
 /* ===================== EDAD (+18) ===================== */
-let _edadCb=null;
+let _edadCb=null,_edadModo='contenido';
 function esMayor18(){return esCeoSync()||!!(miPerfil&&miPerfil.mayor_18===true)}
 function esMangaAdulto(m){return !!m&&((Array.isArray(m.generos)&&m.generos.some(g=>/\+18/.test(g)))||/ecchi adulto/i.test(m.estilo||''))}
+function edadMostrar(modo){
+  _edadModo=modo;
+  const t=$('edadTit'),x=$('edadTxt'),f=$('edadForm'),c=$('edadCerrar'),o=$('edadSalir');
+  f.style.display=modo==='bloqueado'?'none':'';o.style.display=(modo==='app'||modo==='bloqueado')?'':'none';c.style.display=modo==='contenido'?'':'none';
+  if(modo==='app'){t.textContent='🔞 SalaMangaS es solo para mayores de 18';x.textContent='Para usar la app tenés que confirmar que sos mayor de edad. Lo hacés una sola vez.'}
+  else if(modo==='bloqueado'){t.textContent='No podés usar SalaMangaS';x.textContent='Esta app es solo para mayores de 18 años.'}
+  else{t.textContent='🔞 Contenido +18';x.textContent='Para crear o ver contenido +18 tenés que confirmar que sos mayor de edad.'}
+  $('edadFecha').value='';$('edadOk').checked=false;$('edadMsg').textContent='';$('edad-modal').classList.add('on');
+}
 function exigirMayor18(cb){
   if(esMayor18()){if(cb)cb();return true}
   if(!miPerfil){alert('Iniciá sesión para ver o crear contenido +18.');return false}
-  if(miPerfil.bloqueo_18){alert('No podés acceder a contenido +18.');return false}
-  _edadCb=cb||null;$('edadFecha').value='';$('edadOk').checked=false;$('edadMsg').textContent='';$('edad-modal').classList.add('on');
+  if(miPerfil.bloqueo_18){edadMostrar('bloqueado');return false}
+  _edadCb=cb||null;edadMostrar('contenido');
   return false;
 }
-function cerrarEdad(){$('edad-modal').classList.remove('on');_edadCb=null}
+/* TODA la app es para mayores de 18: al entrar se pide verificar la edad una sola vez (el CEO no). Se apaga con config solo_adultos=0 */
+function edadObligatoria(){
+  if(!miPerfil||esCeoSync())return;
+  if(String((typeof CONFIG!=='undefined'&&CONFIG&&CONFIG.solo_adultos)||'1')==='0')return;
+  if(miPerfil.mayor_18===true)return;
+  if(miPerfil.bloqueo_18){edadMostrar('bloqueado');return}
+  _edadCb=null;edadMostrar('app');
+}
+function cerrarEdad(){if(_edadModo==='app'||_edadModo==='bloqueado')return;$('edad-modal').classList.remove('on');_edadCb=null}
+async function edadSalir(){try{await cerrarSesion()}catch(e){location.reload()}}
 async function edadConfirmar(){
   const f=$('edadFecha').value,m=$('edadMsg'),b=$('edadBtn');
   if(!f){m.textContent='Poné tu fecha de nacimiento.';return}
@@ -5673,10 +5714,15 @@ async function edadConfirmar(){
   try{
     const {data,error}=await sb.rpc('verificar_edad',{p_nacimiento:f});
     if(error)throw error;
-    if(data==='ok'){try{await refrescarPerfil()}catch(e){}const cb=_edadCb;cerrarEdad();try{cargarInicio()}catch(e){}if(cb)cb();b.disabled=false;return}
-    if(data==='menor'||data==='bloqueado'){try{await refrescarPerfil()}catch(e){}cerrarEdad();alert('No podés acceder a contenido +18.');b.disabled=false;return}
+    if(data==='ok'){try{await refrescarPerfil()}catch(e){}const cb=_edadCb;_edadModo='contenido';$('edad-modal').classList.remove('on');_edadCb=null;try{cargarInicio()}catch(e){}if(cb)cb();b.disabled=false;return}
+    if(data==='menor'||data==='bloqueado'){try{await refrescarPerfil()}catch(e){}edadMostrar('bloqueado');b.disabled=false;return}
     m.textContent=data==='fecha_invalida'?'La fecha no es válida.':'No se pudo verificar ('+data+').';
-  }catch(e){m.textContent=/verificar_edad|schema|PGRST202/i.test(e.message||'')?'Falta correr generaciones_edad_moderacion.sql en Supabase.':'Error: '+(e.message||e)}
+  }catch(e){
+    const falta=/verificar_edad|schema|PGRST202/i.test(e.message||'');
+    m.textContent=falta?'Falta correr generaciones_edad_moderacion.sql en Supabase.':'Error: '+(e.message||e);
+    if(falta&&_edadModo==='app')_edadModo='contenido';   // si el SQL no está, no se deja a nadie encerrado
+    if(falta)$('edadCerrar').style.display='';
+  }
   b.disabled=false;
 }
 
@@ -5723,7 +5769,7 @@ function _puntoPagina(p,i,onclick){
   d.innerHTML='<span class="pg-n">'+(i+1)+'</span>';d.onclick=onclick;return d;
 }
 function _repintarSlots(){try{renderPaginaSlots()}catch(e){}try{renderIASlots()}catch(e){}try{renderLapizSlots()}catch(e){}}
-function agregarPaginaSlot(){
+function agregarPaginaSlot(cb,pos){
   const libre=MAX_PAGS-paginas.length;
   if(libre<=0){alert('Máximo '+MAX_PAGS+' páginas por capítulo (desde la 21, cada página cuesta '+COSTOS_SAKURAS.pagina+' Sakuras).');return}
   const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.multiple=true;
@@ -5732,12 +5778,14 @@ function agregarPaginaSlot(){
     fs.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'}));   // 1, 2, 3 ... 10 (orden natural)
     if(fs.length>libre){alert('Elegiste '+fs.length+' imágenes pero solo entran '+libre+' más (máximo '+MAX_PAGS+'). Se agregan las primeras '+libre+'.');fs=fs.slice(0,libre)}
     progresoMostrar('Preparando tus páginas...',0,'');
+    let p0=(typeof pos==='number')?pos:null;
     for(let i=0;i<fs.length;i++){
-      const r=await prepararImagen(fs[i],1600);
-      paginas.push({file:r.file,thumb:r.thumb});
+      const r=await prepararImagen(fs[i],1600),o={file:r.file,thumb:r.thumb};
+      if(p0===null)paginas.push(o);else paginas.splice(p0++,0,o);
       progresoMostrar('Preparando tus páginas...',(i+1)/fs.length*100,'Imagen '+(i+1)+' de '+fs.length);
     }
     progresoOcultar();_repintarSlots();
+    if(typeof cb==='function')cb();
   };
   inp.click();
 }
@@ -5978,6 +6026,27 @@ async function iaComponer(lay,urls){
   });
   return c.toDataURL('image/jpeg',.92);
 }
+
+/* ===================== MARCA DE AGUA: tu logo, transparente, en un costado de cada página ===================== */
+let _logoMarca=null;
+function cargarLogoMarca(){return _logoMarca||(_logoMarca=new Promise(ok=>{const im=new Image();im.onload=()=>ok(im);im.onerror=()=>ok(null);im.src='/logo.jpg'}))}
+function marcaActiva(){return String((typeof CONFIG!=='undefined'&&CONFIG&&CONFIG.marca_logo)||'1')!=='0'}
+async function conMarca(file){
+  if(!marcaActiva())return file;
+  try{
+    const logo=await cargarLogoMarca();if(!logo)return file;
+    const bmp=await _imgDeArchivo(file);
+    const W=bmp.width,H=bmp.height,c=document.createElement('canvas');c.width=W;c.height=H;
+    const x=c.getContext('2d');x.drawImage(bmp,0,0,W,H);
+    const sz=Math.max(56,Math.round(W*.11)),m=Math.round(W*.02),cx=W-m-sz/2,cy=H-m-sz/2;
+    x.save();x.globalAlpha=.4;x.beginPath();x.arc(cx,cy,sz/2,0,Math.PI*2);x.closePath();x.clip();x.drawImage(logo,cx-sz/2,cy-sz/2,sz,sz);x.restore();
+    const blob=await new Promise(ok=>c.toBlob(ok,'image/jpeg',.9));
+    return blob?new File([blob],file.name||'pagina.jpg',{type:'image/jpeg'}):file;
+  }catch(e){console.warn('Marca de agua:',e&&e.message);return file}
+}
+/* Agregar imágenes de la galería en una posición (para la vista previa) */
+function pvInsertar(i){agregarPaginaSlot(()=>{_repintarSlots();abrirVistaPreviaCreacion()},i+1)}
+function pvAgregarFinal(){agregarPaginaSlot(()=>{_repintarSlots();abrirVistaPreviaCreacion()})}
 </script>
 </body>
 </html>

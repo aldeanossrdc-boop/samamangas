@@ -4864,6 +4864,10 @@ iniciarApp=function(){
       const modeloDe=k=>{const lista=(MODELOS[k]||[]).map(x=>x[0]);const v=String((CONFIG||{})['ia_modelo_'+k]||'');return lista.includes(v)?v:'qwen'};
       const activo=k=>String((CONFIG||{})['ia_activa_'+k]??'1')!=='0';
       b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:12px"><b>🧠 Herramientas de IA</b><p style="font-size:11px;color:var(--text2);margin:5px 0 10px">Elegí un modelo y activá o desactivá cada función. Los cambios se aplican enseguida.</p>'+funciones.map(([k,t,nota])=>'<div style="border-top:1px solid rgba(212,175,55,.18);padding:9px 0"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font-size:13px">'+t+'</b><label style="display:flex;align-items:center;gap:5px;font-size:11px"><input type="checkbox" '+(activo(k)?'checked':'')+' onchange="ceoToggleFuncionIA(\''+k+'\',this.checked)"> Activada</label></div><div style="font-size:10px;color:var(--text2);margin-top:3px">'+nota+'</div>'+(MODELOS[k]?'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:7px">'+MODELOS[k].map(([v,n])=>'<button type="button" class="'+(modeloDe(k)===v?'btn-main':'btn')+'" style="flex:1;min-width:105px;margin:0;padding:7px 5px;font-size:11px" onclick="ceoElegirModeloIA(\''+k+'\',\''+v+'\')">'+n+'</button>').join('')+'</div>':'')+'</div>').join('')+'</div>');
+      /* Reglas de la app (el CEO las prende o apaga) */
+      const regla=(clave,pordefecto)=>String((CONFIG||{})[clave]??pordefecto)!=='0';
+      const reglas=[['solo_adultos','App solo para mayores de 18','Pide verificar la edad una sola vez al entrar.'],['fal_filtro_usuarios','Filtro de imágenes de Fal para usuarios','Apagado (recomendado para una app +18): la IA no bloquea imágenes sensuales como ropa interior o lencería. Si lo prendés, Fal revisa cada imagen y puede bloquearlas. Los desnudos explícitos siguen prohibidos en el pedido.'],['marca_logo','Logo en cada página al publicar','Tu logo, transparente, en un costado de cada página nueva.']];
+      b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:12px"><b>⚙️ Reglas de la app</b>'+reglas.map(([k,t,n])=>'<div style="border-top:1px solid rgba(212,175,55,.18);margin-top:9px;padding-top:9px"><label style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font-size:13px">'+t+'</b><input type="checkbox" '+(regla(k,k==='fal_filtro_usuarios'?'0':'1')?'checked':'')+' onchange="ceoToggleConfig(\''+k+'\',this.checked)"></label><div style="font-size:10px;color:var(--text2);margin-top:3px">'+n+'</div></div>').join('')+'</div>');
       /* Contador de saldo de Fal.ai */
       b.insertAdjacentHTML('afterbegin','<div class="card" style="padding:12px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>💳 Saldo de Fal.ai</b><button type="button" class="btn" style="margin:0;padding:6px 10px;font-size:12px" onclick="ceoFalSaldo()">🔄 Actualizar</button></div><div id="falSaldoBox" style="margin-top:8px;font-size:13px;color:var(--text2)">Consultando...</div></div>');
       setTimeout(()=>{try{ceoFalSaldo()}catch(e){}},0);
@@ -4881,6 +4885,10 @@ iniciarApp=function(){
       const _ok={lapiz:['qwen','flux-kontext'],escena:['qwen','flux2-flash','flux2-dev','flux2-flex','flux2-pro'],personaje:['qwen','leonardo','flux2-flash','flux2-dev','flux2-flex','flux2-pro']};
       if(!(_ok[funcion]||[]).includes(modelo))return;
       await ceoAccion(async()=>{const ok=await setConfig('ia_modelo_'+funcion,modelo);if(ok){CONFIG['ia_modelo_'+funcion]=modelo;ceoTab('sistema')}});
+    };
+    window.ceoToggleConfig=async function(clave,activo){
+      if(!['solo_adultos','fal_filtro_usuarios','marca_logo'].includes(clave))return;
+      await ceoAccion(async()=>{const v=activo?'1':'0';const ok=await setConfig(clave,v);if(ok){CONFIG[clave]=v;ceoTab('sistema')}});
     };
     window.ceoToggleFuncionIA=async function(funcion,activo){
       if(!['lapiz','escena','personaje','portada'].includes(funcion))return;
