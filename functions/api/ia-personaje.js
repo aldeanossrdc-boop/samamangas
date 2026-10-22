@@ -3,7 +3,7 @@
 // Ahora se genera con Fal.ai (síncrono: devuelve { imagen } al instante). Si el CEO elige "Leonardo" en el panel, usa Leonardo (devuelve { id }).
 // NO guarda nada ni descuenta el cupo: el cupo se descuenta recién cuando el usuario ACEPTA el personaje.
 import { out, getServiceClient } from './_shared.js';
-import { IAError, usuarioIA, rpcUsuario, crearGeneracion, modeloPersonajeCfg, funcionActiva } from './_ia.js';
+import { IAError, usuarioIA, rpcUsuario, crearGeneracion, modeloPersonajeCfg, funcionActiva, leerConfig } from './_ia.js';
 import { filtrar, esContenidoAdulto } from './_filtro.js';
 import { motorActivo, motorImagenes } from './_motor.js';
 
@@ -55,13 +55,19 @@ export async function onRequestPost({ request, env }) {
     const esMenor = (edad > 0 && edad < 18) || MINOR.test(desc.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
     const reglaEdad = esMenor ? (edad ? ' The character is ' + edad + ' years old: age-appropriate look.' : '')
       : (chibi ? '' : ' The character is an ADULT' + (edad >= 18 ? ' (' + edad + ' years old)' : '') + ': adult body proportions, mature adult face, no childlike features, no baby face.');
+    // Ropa: personajes comunes = vestidos. Si la ficha pide ropa interior, lencería o traje de baño (solo adultos verificados), se permite sin desnudos. El CEO queda libre.
+    const pideSensual = esContenidoAdulto(nombre, desc);
+    const claseRopa = ctx.esCeo ? '' : (pideSensual && !esMenor
+      ? 'Adult reference sheet: lingerie, underwear or swimwear is allowed, tasteful poses, no nudity, no exposed nipples or genitals. '
+      : 'Safe for work reference sheet: the character is fully clothed, neutral relaxed poses, tasteful, no nudity. ');
+    const filtroUsuarios = String((await leerConfig(env, 'fal_filtro_usuarios')) ?? '0') !== '0';
     // El texto del usuario (en español) va tal cual; las órdenes de formato van en inglés porque el modelo las obedece mejor.
     const prompt =
       'Professional character design reference sheet of ONE single character (' + quien + '), the SAME person shown in several different poses and views on one image: ' +
       'a large full-body front view standing, a large full-body side view, a full-body back view, a three-quarter view in a relaxed pose, and two close-up portraits (the face and a detail of an accessory). ' +
       'Consistent face, hair, body, outfit and accessories in every view. Neat panel layout on a plain soft neutral background. ' +
       'ABSOLUTELY NO text, no letters, no words, no labels, no captions, no titles, no numbers, no watermark, no logo. ' +
-      (ctx.esCeo ? '' : 'Safe for work reference sheet: the character is fully clothed, neutral relaxed poses, tasteful, no nudity. ') +
+      claseRopa +
       'Art style: ' + est.txt + '. Character "' + nombre + '": ' + desc + '.' + reglaEdad;
 
     if (escena === 'leonardo') {
@@ -69,7 +75,7 @@ export async function onRequestPost({ request, env }) {
       return out(200, { ok: true, id });
     }
     // Fal: síncrono. El filtro de imágenes de Fal está apagado para el CEO.
-    const { imagenes } = await motorImagenes(env, { escena, prompt, w: 832, h: 1248, n: 1, colorModo: est.color, seguro: !ctx.esCeo });
+    const { imagenes } = await motorImagenes(env, { escena, prompt, w: 832, h: 1248, n: 1, colorModo: est.color, seguro: !ctx.esCeo && filtroUsuarios });
     return out(200, { ok: true, sync: true, imagen: imagenes[0] });
   } catch (e) {
     return out(e instanceof IAError ? e.status : 500, { error: e instanceof IAError ? e.message : 'No se pudo crear el personaje. Probá de nuevo.', codigo: e.codigo || '' });

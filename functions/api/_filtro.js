@@ -11,13 +11,15 @@ const normalizar = t => sinAcentos(t)
   .replace(/[^a-z0-9ñ ]+/g, ' ').replace(/\s+/g, ' ').trim();
 
 const MSG = 'No se permite ese contenido en SalaMangaS. Probá describirlo de otra forma.';
+const MSG_EDAD = 'Aclará que el personaje es ADULTO (por ejemplo «mujer adulta de 24 años» o «hombre adulto de 30 años») y probá de nuevo. SalaMangaS es una app para adultos y no permite contenido sexual con menores.';
 
 // Palabras sexuales / de cuerpo (con un menor, CUALQUIERA de estas bloquea)
 const SEXUAL = '(desnud\\w*|sexual\\w*|sexo|porno\\w*|erotic\\w*|ecchi|hentai|sensual\\w*|tetas?|pechos|senos|escot\\w*|nalgas|culo|trasero|lenceri\\w*|bikini|calzon\\w*|minifalda|shorts? (muy )?cortos?|ropa interior|violar\\w*|violacion|provocativ\\w*|voluptuos\\w*|curvas|ajustad\\w*|entallad\\w*|seduc\\w*)';
 // Palabras que NO dejan dudas: es un menor
 const MENOR_SEGURO = '(nino|nina|ninos|ninas|ninez|menor|menores|bebe|adolescente|adolescentes|preadolescente|colegial|colegiala|colegiales|colegiala|infantil|criatura|lolita|loli|lolicon|shota|shotacon|jardin de infantes|primaria|secundaria|high ?school|middle ?school|teen|teenager|underage|minor|kid|kids|child|children|little girl|little boy)';
 // Palabras ambiguas (pueden ser jóvenes adultos): bloquean con contenido sexual si NO hay señal de adulto
-const AMBIGUO = '(chico|chica|chicos|chicas|pibe|piba|pibes|pibas|joven|jovenes|muchacha|muchacho|estudiante|estudiantes|escolar|escuela|colegio|uniforme|girl|boy|student)';
+// App +18: palabras comunes entre adultos (chica, chico, joven...) NO se consideran dudosas. Solo las de colegio/escuela y las inglesas "girl/boy".
+const AMBIGUO = '(estudiante|estudiantes|escolar|escuela|colegio|uniforme|girl|boy|student|schoolgirl|schoolboy)';
 const ADULTO = /\b(adult\w*|mujer|mujeres|hombre|hombres|madura\w*|senora|senor|mayor de edad|mayores de edad|profesora|profesor|maestra|maestro|secretaria|empresaria|doctora|enfermera adulta|18 ?\+|\+ ?18|woman|women|man|men|milf)\b/;
 
 const REGLAS_MENORES = [
@@ -59,7 +61,7 @@ export async function filtrar(env, ctx, ...textos) {
     const edades = edadesEn(crudo);
     if (edades.some(e => e < 18)) return MSG;                                   // "16 años" + contenido sexual
     const adulto = ADULTO.test(t) || edades.some(e => e >= 18);
-    if (!adulto) for (const re of AMBIGUO_SEXUAL) if (re.test(t)) return MSG;   // "chica con escote" sin señal de adulto
+    if (!adulto) for (const re of AMBIGUO_SEXUAL) if (re.test(t)) return MSG_EDAD;   // "chica con escote" sin señal de adulto: se pide aclarar la edad
   }
 
   // --- REGLA 2: solo usuarios comunes ---

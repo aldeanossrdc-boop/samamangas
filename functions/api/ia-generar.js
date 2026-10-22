@@ -6,7 +6,7 @@
 //      modo 'lapiz'   -> EDITA tu dibujo (Qwen Image Edit o FLUX Kontext, lo elige el CEO) = 1 generación
 // 6) si algo falla, el SERVIDOR devuelve la generación.
 import { out, getServiceClient } from './_shared.js';
-import { IAError, usuarioIA, iaActiva, modeloEscena, modeloLapizCfg, funcionActiva, rpcUsuario, cantidadPorModo, directivaColor } from './_ia.js';
+import { IAError, usuarioIA, iaActiva, modeloEscena, modeloLapizCfg, funcionActiva, leerConfig, rpcUsuario, cantidadPorModo, directivaColor } from './_ia.js';
 import { motorActivo, motorImagenes, motorEditar, motorConReferencias } from './_motor.js';
 import { filtrar, esContenidoAdulto } from './_filtro.js';
 
@@ -55,7 +55,9 @@ export async function onRequestPost({ request, env }) {
     if (refs.some(f => f.size > MAX_ARCHIVO)) return out(400, { error: 'Una imagen de referencia es muy pesada (máximo 8 MB)' });
     const refNotas = String(fd.get('ref_notas') || '').slice(0, 800);
     // Fal tiene un filtro propio de imágenes: activo para usuarios comunes y apagado para el CEO. (FAL_SAFETY_USUARIOS=off lo apaga para todos.)
-    const seguro = !ctx.esCeo && String(env.FAL_SAFETY_USUARIOS || '').toLowerCase() !== 'off';
+    // El CEO lo prende o apaga para los usuarios desde el panel (config fal_filtro_usuarios). Por defecto está prendido.
+    const filtroUsuarios = String((await leerConfig(env, 'fal_filtro_usuarios')) ?? '0') !== '0';
+    const seguro = !ctx.esCeo && filtroUsuarios && String(env.FAL_SAFETY_USUARIOS || '').toLowerCase() !== 'off';
 
     // Filtro: se revisan SOLO las palabras del usuario. Menores + sexual = bloqueo total para todos (CEO incluido).
     const textoFiltro = String(fd.get('texto') || '').slice(0, 3000) || (modo === 'paneles' ? paneles.join(' . ') : promptUsuario);
