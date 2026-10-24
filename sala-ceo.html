@@ -4928,32 +4928,112 @@ async function ceoGuardarPrecios(){await ceoAccion(async()=>{
  await cargarConfig();$('ceoPrecioMsg').textContent='Precios guardados en config. Recordá que los botones de compra deben leer estas claves para que el cobro real use los mismos importes.';
 })}
 CEO_R.tienda=async function(b){
- b.innerHTML='<div class="card" style="padding:14px"><h3 class="section">🛍️ Tienda oficial</h3><p style="font-size:12px;color:var(--text2)">Catálogo administrado exclusivamente por CEO: outfits y lugares oficiales.</p><div class="card" style="padding:12px;margin:10px 0"><label class="lbl">Tipo</label><select id="ceoRecTipo" class="input"><option value="personaje">Personaje</option><option value="outfit">Outfit / ropa</option><option value="lugar">Lugar / escenario</option></select><label class="lbl">Código único</label><input id="ceoRecCodigo" class="input" placeholder="Ej.: OUTFIT-001"><label class="lbl">Nombre</label><input id="ceoRecNombre" class="input" placeholder="Nombre del recurso"><label class="lbl">Línea (Dama / Hombre) — para personajes y outfits</label><select id="ceoRecCategoria" class="input"><option value="D">Damas (D)</option><option value="H">Hombres (H)</option><option value="N">Niños (N)</option><option value="U">Unisex (U)</option><option value="—">No aplica (lugar)</option></select><label class="lbl">Descripción</label><textarea id="ceoRecDesc" class="input" rows="3" placeholder="Descripción breve"></textarea><label class="lbl">Imagen</label><input id="ceoRecImagen" class="input" type="file" accept="image/*"><label class="lbl">Precio Sakuras normales</label><input id="ceoRecPrecio" class="input" type="number" min="0" value="1000"><label class="lbl">Precio Sakuras IA</label><input id="ceoRecPrecioIA" class="input" type="number" min="0" value="1000"><label class="lbl">Estado</label><select id="ceoRecActivo" class="input"><option value="true">Publicado</option><option value="false">Oculto</option></select><button class="btn-main" style="width:100%;margin-top:10px" onclick="ceoGuardarRecurso()">💾 Guardar recurso</button><p id="ceoRecMsg" style="font-size:12px;margin-top:8px"></p></div><button class="btn-ghost" style="width:100%" onclick="ceoCargarRecursos()">🔄 Actualizar catálogo</button><div id="ceoRecLista" style="margin-top:10px"></div></div>';
- await ceoCargarRecursos();
+  b.innerHTML='<style>.rc-top{display:flex;gap:10px;align-items:stretch}.rc-foto{width:120px;flex:0 0 120px;aspect-ratio:1/1;border:2px dashed rgba(212,175,55,.5);border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,.3);color:var(--gold3);text-align:center;font-size:13px;line-height:1.3}.rc-foto img{width:100%;height:100%;object-fit:contain;display:block}.rc-cod{display:flex;align-items:center;gap:6px}.rc-pref{font-weight:700;color:var(--gold3);font-size:20px}.rc-lista{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.rc-card{border:1px solid rgba(212,175,55,.3);border-radius:12px;padding:6px;background:rgba(255,255,255,.04);display:flex;flex-direction:column;gap:5px;min-width:0}.rc-img{width:100%;aspect-ratio:1/1;border-radius:9px;overflow:hidden;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font-size:28px}.rc-img img{width:100%;height:100%;object-fit:contain;display:block}.rc-card b{font-size:12px;color:var(--gold3);word-break:break-word}.rc-card small{font-size:10px;color:var(--text2);line-height:1.3}.rc-bt{display:flex;gap:5px}.rc-bt button{flex:1;padding:6px 2px;font-size:11px;border-radius:8px;margin:0}.rc-bar{height:12px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden;margin-top:8px;display:none}.rc-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd45c,#ffb300);transition:width .25s}</style>'
+  +'<div class="card" style="padding:14px"><h3 class="section">🛍️ Tienda oficial</h3><p style="font-size:12px;color:var(--text2);margin:0 0 8px">Cargá outfits, personajes y lugares. Nadie los puede usar si no los compra (o se los regalás).</p>'
+  +'<div class="card" style="padding:12px;margin:10px 0"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b id="ceoRecModo">➕ Nuevo</b><button type="button" class="btn" style="margin:0;padding:6px 10px;font-size:12px" onclick="ceoNuevoRecurso()">➕ Agregar nuevo</button></div>'
+  +'<div class="rc-top" style="margin-top:10px"><div id="ceoRecFotoTile" class="rc-foto" onclick="document.getElementById(\'ceoRecImagen\').click()"><span>＋<br>Foto</span></div><input id="ceoRecImagen" type="file" accept="image/*" style="display:none" onchange="ceoRecFoto(this)">'
+  +'<div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0"><select id="ceoRecTipo" class="input" onchange="ceoRecTipoCambio()"><option value="outfit">👕 Outfit</option><option value="personaje">🧑 Personaje</option><option value="lugar">📍 Lugar</option></select>'
+  +'<div id="ceoRecCats" style="display:grid;grid-template-columns:1fr 1fr;gap:5px"><button type="button" class="btn ceo-cat" data-c="D" onclick="ceoRecCat(\'D\')">👩 Dama</button><button type="button" class="btn ceo-cat" data-c="H" onclick="ceoRecCat(\'H\')">👨 Hombre</button><button type="button" class="btn ceo-cat" data-c="N" onclick="ceoRecCat(\'N\')">🧒 Niños</button><button type="button" class="btn ceo-cat" data-c="U" onclick="ceoRecCat(\'U\')">⚧ Unisex</button></div><select id="ceoRecCategoria" style="display:none"><option value="D">D</option><option value="H">H</option><option value="N">N</option><option value="U">U</option></select>'
+  +'<div class="rc-cod"><span id="ceoRecPref" class="rc-pref">D/</span><input id="ceoRecNum" class="input" type="number" min="1" inputmode="numeric" placeholder="N°" style="flex:1" oninput="ceoRecCodigoVer()"></div><small id="ceoRecCodigoTxt" style="color:var(--text2)"></small></div></div>'
+  +'<label class="lbl" style="margin-top:10px">Descripción</label><textarea id="ceoRecDesc" class="input" rows="3" placeholder="Cómo es: colores, detalles, ambiente..."></textarea>'
+  +'<details style="margin-top:8px"><summary style="cursor:pointer;color:var(--gold3);font-size:13px">⚙️ Nombre, precios y estado</summary><label class="lbl">Nombre (opcional: si lo dejás vacío se usa el código)</label><input id="ceoRecNombre" class="input" maxlength="60"><label class="lbl">Precio Sakuras normales</label><input id="ceoRecPrecio" class="input" type="number" min="0" value="2000"><label class="lbl">Precio Sakuras IA</label><input id="ceoRecPrecioIA" class="input" type="number" min="0" value="1000"><label class="lbl">Estado</label><select id="ceoRecActivo" class="input"><option value="1">Publicado</option><option value="0">Oculto</option></select></details>'
+  +'<button id="ceoRecBtn" class="btn-main" style="width:100%;margin-top:10px" onclick="ceoGuardarRecurso()">💾 Guardar</button><div id="ceoRecBar" class="rc-bar"><i id="ceoRecBarFill"></i></div><div id="ceoRecMsg" style="font-size:12px;margin-top:6px;color:var(--text2)"></div></div>'
+  +'<button class="btn" style="width:100%" onclick="ceoCargarRecursos()">🔄 Actualizar catálogo</button><div id="ceoRecLista" class="rc-lista"></div></div>';
+  await ceoCargarRecursos();ceoNuevoRecurso();
 };
-async function ceoCargarRecursos(){
- const l=$('ceoRecLista');if(!l)return;l.innerHTML=vacio('Cargando catálogo...');
- const {data,error}=await sb.from('recursos_tienda').select('*').order('created_at',{ascending:false}).limit(500);
- if(error){l.innerHTML='<div class="warn-mini">Todavía no se puede administrar el catálogo: Supabase respondió '+esc(error.message)+'. La tabla esperada por esta pantalla es <b>recursos_tienda</b>; hace falta crearla y configurar sus permisos antes de publicar.</div>';return}
- window._ceoRecursos=data||[];l.innerHTML=data.length?'':'<p style="font-size:12px;color:var(--text2)">Todavía no hay recursos cargados.</p>';
- data.forEach(r=>rowCeo(l,tt(r.nombre||r.codigo||'Recurso')+'<small>'+esc(r.tipo||'')+' · '+esc(r.codigo||'')+' · '+(r.activo?'Publicado':'Oculto')+' · 🪙 '+Number(r.precio_sakuras||0)+' / 🔴 '+Number(r.precio_sakuras_ia||0)+'</small>',bt('✏️ Editar',"ceoEditarRecurso('"+String(r.id).replace(/'/g,'')+"')")+bt('🗑️ Borrar',"ceoBorrarRecurso('"+String(r.id).replace(/'/g,'')+"')",1)));
-}
-async function ceoGuardarRecurso(){await ceoAccion(async()=>{
- const codigo=$('ceoRecCodigo').value.trim(),nombre=$('ceoRecNombre').value.trim();if(!codigo||!nombre){alert('Completá el código y el nombre.');return}
- let imagen_url='';const file=$('ceoRecImagen').files[0];if(file){try{imagen_url=await subirACloudinary(file)}catch(e){$('ceoRecMsg').textContent='No se pudo subir la imagen: '+(e.message||e);return}}
- const row={codigo,nombre,tipo:$('ceoRecTipo').value,categoria:$('ceoRecCategoria').value,descripcion:$('ceoRecDesc').value.trim(),precio_sakuras:Math.max(0,Math.floor(Number($('ceoRecPrecio').value)||0)),precio_sakuras_ia:Math.max(0,Math.floor(Number($('ceoRecPrecioIA').value)||0)),activo:$('ceoRecActivo').value==='true',oficial:true};
- const editId=window._ceoRecursoEditId;const actual=(window._ceoRecursos||[]).find(x=>String(x.id)===String(editId));
- row.imagen_url=imagen_url||(editId&&actual?actual.imagen_url:null);
- const query=editId?sb.from('recursos_tienda').update(row).eq('id',editId):sb.from('recursos_tienda').upsert(row,{onConflict:'codigo'});
- const {error}=await query;
- if(error){$('ceoRecMsg').textContent='No se guardó: '+error.message+'. Revisá que la tabla recursos_tienda tenga los campos esperados y permisos CEO.';return}
- window._ceoRecursoEditId=null;$('ceoRecMsg').textContent='Recurso guardado.';await ceoCargarRecursos();
-})}
-async function ceoEditarRecurso(id){const r=(window._ceoRecursos||[]).find(x=>String(x.id)===String(id));if(!r)return;
- $('ceoRecTipo').value=r.tipo||'outfit';$('ceoRecCodigo').value=r.codigo||'';$('ceoRecNombre').value=r.nombre||'';$('ceoRecCategoria').value=r.categoria||'U';$('ceoRecDesc').value=r.descripcion||'';$('ceoRecPrecio').value=r.precio_sakuras||0;$('ceoRecPrecioIA').value=r.precio_sakuras_ia||0;$('ceoRecActivo').value=String(r.activo!==false);window._ceoRecursoEditId=r.id;
- const btn=document.querySelector('#ceoRecLista')?.parentElement?.querySelector('button.btn-main');if(btn)btn.textContent='💾 Guardar cambios';alert('Editá los campos de arriba y guardá. La imagen actual se conserva si no seleccionás una nueva.');
-}
-async function ceoBorrarRecurso(id){await ceoAccion(async()=>{if(!confirm('¿Borrar este recurso del catálogo?'))return;const {error}=await sb.from('recursos_tienda').delete().eq('id',id);if(error){alert('No se pudo borrar: '+error.message);return}await ceoCargarRecursos()})}
+window._ceoRecursos=[];window._ceoRecEdit=null;window._ceoRecFile=null;
+window.ceoRecPref=function(){return document.getElementById('ceoRecTipo').value==='lugar'?'ML/':(document.getElementById('ceoRecCategoria').value+'/')};
+window.ceoRecTipoCambio=function(){
+  const t=document.getElementById('ceoRecTipo').value;
+  document.getElementById('ceoRecCats').style.display=t==='lugar'?'none':'grid';
+  const cv=document.getElementById('ceoRecCategoria').value;document.querySelectorAll('.ceo-cat').forEach(b=>b.classList.toggle('on',b.dataset.c===cv));
+  const pref=ceoRecPref();document.getElementById('ceoRecPref').textContent=pref;
+  if(!window._ceoRecEdit){
+    const re=new RegExp('^'+pref.replace('/','\\/')+'(\\d+)$','i');
+    const n=(window._ceoRecursos||[]).reduce((m,r)=>{const x=re.exec(String(r.codigo||''));return x?Math.max(m,Number(x[1])):m},0)+1;
+    document.getElementById('ceoRecNum').value=n;
+  }
+  ceoRecCodigoVer();
+};
+window.ceoRecCat=function(c){document.getElementById('ceoRecCategoria').value=c;if(window._ceoRecEdit){}ceoRecTipoCambio()};
+window.ceoRecCodigoVer=function(){document.getElementById('ceoRecCodigoTxt').textContent='Código: '+ceoRecPref()+(document.getElementById('ceoRecNum').value||'')};
+window.ceoRecAchicar=async function(f,max){
+  try{const bmp=await createImageBitmap(f);const s=Math.min(1,max/Math.max(bmp.width,bmp.height));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(bmp.width*s));c.height=Math.max(1,Math.round(bmp.height*s));const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(bmp,0,0,c.width,c.height);if(bmp.close)bmp.close();const bl=await new Promise(ok=>c.toBlob(ok,'image/jpeg',.88));return bl?new File([bl],'recurso.jpg',{type:'image/jpeg'}):f}catch(e){return f}
+};
+window.ceoRecFoto=async function(inp){
+  const f=inp.files&&inp.files[0];if(!f)return;
+  window._ceoRecFile=await ceoRecAchicar(f,1200);
+  document.getElementById('ceoRecFotoTile').innerHTML='<img src="'+URL.createObjectURL(window._ceoRecFile)+'" alt="">';
+};
+window.ceoNuevoRecurso=function(){
+  window._ceoRecEdit=null;window._ceoRecFile=null;
+  ['ceoRecDesc','ceoRecNombre'].forEach(i=>{const e=document.getElementById(i);if(e)e.value=''});
+  document.getElementById('ceoRecPrecio').value='2000';document.getElementById('ceoRecPrecioIA').value='1000';document.getElementById('ceoRecActivo').value='1';
+  document.getElementById('ceoRecImagen').value='';
+  document.getElementById('ceoRecFotoTile').innerHTML='<span>＋<br>Foto</span>';
+  document.getElementById('ceoRecModo').textContent='➕ Nuevo';document.getElementById('ceoRecBtn').textContent='💾 Guardar';
+  document.getElementById('ceoRecMsg').textContent='';
+  ceoRecTipoCambio();
+};
+window.ceoCargarRecursos=async function(){
+  const box=document.getElementById('ceoRecLista');if(!box)return;
+  const {data,error}=await sb.from('recursos_tienda').select('*').order('created_at',{ascending:false}).limit(500);
+  if(error){box.innerHTML='<div class="warn-mini" style="grid-column:1/-1">No se pudo leer el catálogo: '+esc(error.message)+'</div>';return}
+  window._ceoRecursos=data||[];
+  const linea={D:'Dama',H:'Hombre',N:'Niños',U:'Unisex'};
+  box.innerHTML=window._ceoRecursos.length?window._ceoRecursos.map(r=>{
+    const id=String(r.id).replace(/'/g,'');
+    return '<div class="rc-card"><div class="rc-img">'+(r.imagen_url?'<img src="'+esc(r.imagen_url)+'" alt="" loading="lazy">':'📷')+'</div><b>'+esc(r.codigo||'')+(r.nombre&&r.nombre!==r.codigo?' · '+esc(r.nombre):'')+'</b><small>'+esc(r.tipo)+(linea[r.categoria]?' · '+linea[r.categoria]:'')+'<br>🪙 '+Number(r.precio_sakuras||0)+' / 🔴 '+Number(r.precio_sakuras_ia||0)+' · '+(r.activo===false?'Oculto':'Publicado')+'</small><div class="rc-bt"><button type="button" class="btn" onclick="ceoEditarRecurso(\''+id+'\')">✏️ Editar</button><button type="button" class="btn" style="border-color:#ff6b81;color:#ff6b81" onclick="ceoBorrarRecurso(\''+id+'\')">🗑️ Borrar</button></div></div>';
+  }).join(''):'<div style="grid-column:1/-1;font-size:12px;color:var(--text2)">Todavía no cargaste nada.</div>';
+};
+window.ceoEditarRecurso=function(id){
+  const r=(window._ceoRecursos||[]).find(x=>String(x.id)===String(id));if(!r)return;
+  window._ceoRecEdit=r;window._ceoRecFile=null;
+  document.getElementById('ceoRecTipo').value=r.tipo||'outfit';
+  if(['D','H','N','U'].includes(r.categoria))document.getElementById('ceoRecCategoria').value=r.categoria;
+  const m=/^[A-Z]+\/(\d+)$/i.exec(String(r.codigo||''));
+  document.getElementById('ceoRecTipo').dispatchEvent(new Event('change'));
+  document.getElementById('ceoRecNum').value=m?m[1]:'';ceoRecCodigoVer();
+  document.getElementById('ceoRecDesc').value=r.descripcion||'';
+  document.getElementById('ceoRecNombre').value=(r.nombre&&r.nombre!==r.codigo)?r.nombre:'';
+  document.getElementById('ceoRecPrecio').value=r.precio_sakuras||0;document.getElementById('ceoRecPrecioIA').value=r.precio_sakuras_ia||0;
+  document.getElementById('ceoRecActivo').value=r.activo===false?'0':'1';
+  document.getElementById('ceoRecFotoTile').innerHTML=r.imagen_url?'<img src="'+esc(r.imagen_url)+'" alt="">':'<span>＋<br>Foto</span>';
+  document.getElementById('ceoRecModo').textContent='✏️ Editando '+(r.codigo||'');document.getElementById('ceoRecBtn').textContent='💾 Guardar cambios';
+  document.getElementById('ceoRecMsg').textContent='';
+  document.getElementById('ceoRecBtn').scrollIntoView({behavior:'smooth',block:'center'});
+};
+window.ceoGuardarRecurso=async function(){
+  const msg=t=>{document.getElementById('ceoRecMsg').textContent=t};
+  const btn=document.getElementById('ceoRecBtn'),bar=document.getElementById('ceoRecBar'),fill=document.getElementById('ceoRecBarFill');
+  const tipo=document.getElementById('ceoRecTipo').value,cat=tipo==='lugar'?'—':document.getElementById('ceoRecCategoria').value;
+  const num=Number(document.getElementById('ceoRecNum').value);
+  if(!num||num<1){msg('Poné el número del código.');return}
+  const codigo=ceoRecPref()+num,edit=window._ceoRecEdit;
+  if((window._ceoRecursos||[]).some(r=>r.codigo===codigo&&(!edit||String(r.id)!==String(edit.id)))){msg('Ya existe el código '+codigo+'. Cambiá el número.');return}
+  if(!edit&&!window._ceoRecFile){msg('Subí la foto (tocá el cuadrado).');return}
+  btn.disabled=true;bar.style.display='block';fill.style.width='5%';
+  let p=5;const iv=setInterval(()=>{p=Math.min(92,p+(92-p)*.12);fill.style.width=p+'%';msg('Guardando... '+Math.round(p)+'%')},300);
+  try{
+    let img=edit?edit.imagen_url:null;
+    if(window._ceoRecFile)img=await subirACloudinary(window._ceoRecFile);
+    const row={codigo:codigo,nombre:(document.getElementById('ceoRecNombre').value||'').trim()||codigo,tipo:tipo,categoria:cat,descripcion:(document.getElementById('ceoRecDesc').value||'').trim(),imagen_url:img,precio_sakuras:Number(document.getElementById('ceoRecPrecio').value||0),precio_sakuras_ia:Number(document.getElementById('ceoRecPrecioIA').value||0),activo:document.getElementById('ceoRecActivo').value==='1',oficial:true};
+    const r=edit?await sb.from('recursos_tienda').update(row).eq('id',edit.id):await sb.from('recursos_tienda').insert(row);
+    if(r.error)throw r.error;
+    clearInterval(iv);fill.style.width='100%';msg('Guardado ✅ '+codigo);
+    await ceoCargarRecursos();setTimeout(()=>{bar.style.display='none';ceoNuevoRecurso();msg('Guardado ✅ '+codigo+'. Ya podés cargar el siguiente.')},600);
+  }catch(e){clearInterval(iv);bar.style.display='none';msg('No se guardó: '+(e.message||e)+(/recursos_tienda|schema/i.test(e.message||'')?' · Falta correr tienda_recursos.sql en Supabase.':''))}
+  btn.disabled=false;
+};
+window.ceoBorrarRecurso=async function(id){
+  const r=(window._ceoRecursos||[]).find(x=>String(x.id)===String(id));if(!r)return;
+  if(!confirm('¿Borrar '+(r.codigo||'este artículo')+'? Los que ya lo compraron lo conservan.'))return;
+  const {error}=await sb.from('recursos_tienda').delete().eq('id',r.id);
+  if(error){alert('No se pudo borrar: '+error.message);return}
+  if(window._ceoRecEdit&&String(window._ceoRecEdit.id)===String(r.id))ceoNuevoRecurso();
+  ceoCargarRecursos();
+};
+
 CEO_R.reportes=async function(b){
  const {data,error}=await sb.from('reportes').select('*').order('created_at',{ascending:false}).limit(300);
  if(error){ceoAvisoEsquema('🚩 Reportes de contenido','No se pudo leer la tabla reportes: '+error.message+'. La tabla y sus permisos deben configurarse en Supabase.');return}
