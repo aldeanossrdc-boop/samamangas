@@ -57,7 +57,7 @@ export async function onRequestPost({ request, env }) {
       : (chibi ? '' : ' The character is an ADULT' + (edad >= 18 ? ' (' + edad + ' years old)' : '') + ': adult body proportions, mature adult face, no childlike features, no baby face.');
     // Ropa: personajes comunes = vestidos. Si la ficha pide ropa interior, lencería o traje de baño (solo adultos verificados), se permite sin desnudos. El CEO queda libre.
     const pideSensual = esContenidoAdulto(nombre, desc);
-    const claseRopa = ctx.esCeo ? '' : (pideSensual && !esMenor
+    const claseRopa = esMenor ? 'Safe for work reference sheet: the character is a minor, wears ordinary everyday clothes, neutral relaxed poses, never sexualized, no cleavage, no nudity. ' : ctx.esCeo ? '' : (pideSensual && !esMenor
       ? 'Adult reference sheet: lingerie, underwear or swimwear is allowed, tasteful poses, no nudity, no exposed nipples or genitals. '
       : 'Safe for work reference sheet: the character is fully clothed, neutral relaxed poses, tasteful, no nudity. ');
     const filtroUsuarios = String((await leerConfig(env, 'fal_filtro_usuarios')) ?? '0') !== '0';

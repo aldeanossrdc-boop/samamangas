@@ -73,8 +73,10 @@ export async function onRequestPost({ request, env }) {
     const reglaSuave = ctx.esCeo ? '' : ' No nudity: at most swimwear or lingerie level, no exposed nipples or genitals, no explicit sexual acts.';
     // Anclaje de edad: la app manda adultos=1 cuando todos los personajes son adultos (según su ficha). Evita caras y cuerpos de niños.
     const reglaAdultos = String(fd.get('adultos')) === '1' ? ' All characters are ADULTS: adult body proportions, mature adult faces, no childlike features, no baby face, no oversized eyes like a child.' : '';
-    const conReglas = p => (dirColor ? (dirColor + ' ' + p + ' ' + dirColor) : p) + reglaAdultos + reglaSuave;
-    const intro = 'Create ONE new vertical manga illustration using the reference images in this order: ' + (refNotas || 'each image is a reference') + '. Keep every character\'s face, hair, body and outfit exactly like its reference image, and keep the location/outfit references. IMPORTANT: each character reference shows ONE single figure: use it ONLY to learn that character\'s look. NEVER draw a character sheet, several views, labels or panels of the character, and never copy the reference background. Draw only the scene requested below. ';
+    // Adolescentes/menores: ropa normal de su edad, nunca sexualizados (rige para TODOS, CEO incluido).
+    const reglaMenores = String(fd.get('menores')) === '1' ? ' Any character under 18 wears ordinary everyday clothes, is drawn age-appropriate and NEVER sexualized: no cleavage, no lingerie or swimwear poses, no suggestive pose or camera angle, no fanservice.' : '';
+    const conReglas = p => (dirColor ? (dirColor + ' ' + p + ' ' + dirColor) : p) + reglaAdultos + reglaSuave + reglaMenores;
+    const intro = 'FACE LOCK (highest priority): copy each character\'s face from its own reference image exactly: same eye shape and color, eyebrows, nose, mouth, face shape, hair color, hairstyle and skin tone. Never blend faces between characters and never invent a new face. OUTFIT LOCK: every character wears only its own assigned outfit; characters with different outfits must look clearly different from each other. Create ONE new manga illustration (use the frame shape requested below; vertical if none is requested) using the reference images in this order: ' + (refNotas || 'each image is a reference') + '. Every character MUST have EXACTLY the same face (eye shape and color, nose, mouth), hair color and hairstyle, skin tone and body as in its own reference image. Each character wears ONLY the outfit shown in the outfit reference noted as \'outfit worn by NAME\'; a character without an outfit reference keeps the clothes of its own reference. The scene happens EXACTLY in the location shown in the location reference image. IMPORTANT: each character reference shows ONE single figure: use it ONLY to learn that character\'s look. NEVER draw a character sheet, several views, labels or panels of the character, and never copy the reference background. Draw only the scene requested below. Before finishing, double-check that every face, hairstyle, outfit and the location match their references. ';
 
     // ---- COBRAR (el CEO no gasta). Páginas con viñetas: 1 generación hasta 3 viñetas, 2 generaciones de 4 a 6 ----
     const costo = modo === 'paneles' ? costoPaneles(paneles.length) : 1;
@@ -101,9 +103,12 @@ export async function onRequestPost({ request, env }) {
     // ---- Página con viñetas: una imagen por viñeta, en una sola llamada ----
     if (modo === 'paneles') {
       const imagenes = [];
+      // Cada viñeta se pide con la forma de su cuadro (ancha, cuadrada o alta) para no recortarla después
+      let formas = []; try { formas = JSON.parse(String(fd.get('formas') || '[]')); } catch (e) { formas = []; }
+      const TAM = { wide: [1248, 832], square: [1024, 1024], tall: [ANCHO, ALTO] };
       for (let i = 0; i < paneles.length; i += 3) {     // de a 3 en paralelo para no saturar a Fal
         const lote = paneles.slice(i, i + 3);
-        const res = await Promise.all(lote.map(p => motorConReferencias(env, { escena, prompt: refs.length ? intro + conReglas(p) : conReglas(p), promptSinRef: conReglas(p), archivos: refs, w: ANCHO, h: ALTO, n: 1, colorModo, seguro })));
+        const res = await Promise.all(lote.map((p, k) => { const tam = TAM[formas[i + k]] || TAM.tall; return motorConReferencias(env, { escena, prompt: refs.length ? intro + conReglas(p) : conReglas(p), promptSinRef: conReglas(p), archivos: refs, w: tam[0], h: tam[1], n: 1, colorModo, seguro }); }));
         res.forEach(r => imagenes.push(r.imagenes[0]));
       }
       if (costo === 2 && !ctx.esCeo) { try { await rpcUsuario(env, ctx.token, 'usar_generacion_ia', { modo }); } catch (e) { console.warn('Segunda generación no cobrada:', e.message); } }
