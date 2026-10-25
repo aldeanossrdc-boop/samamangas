@@ -3603,7 +3603,7 @@ function iaPintarOutfits(){
   const lista=iaOutfitsComprados();
   if(!lista.length){c.innerHTML='<span class="ia-hint">Todavía no tenés outfits. Comprá en 🛍️ Tienda y aparecen acá con su foto.</span>';return}
   const pj=PERSONAJES.filter(p=>iaPjSel.includes(String(p.id)));
-  const otxt=r=>(r.nombre||r.codigo)+(r.descripcion?': '+r.descripcion:'');
+  const otxt=r=>(r.descripcion&&r.descripcion.trim())?r.descripcion.trim():'the exact clothes shown in its outfit reference image';
   if(!pj.length){
     c.innerHTML='<span class="ia-hint">Elegí un personaje arriba para ponerle su ropa. Sin personajes, el outfit se aplica a la escena.</span><div class="ia-sq">'+lista.map(r=>iaTile({sel:!!(iaOutfit&&iaOutfit.id===String(r.id)),img:r.imagen_url,nombre:r.nombre||r.codigo,ico:'👕',fit:1,data:'data-og="'+esc(String(r.id))+'"'})).join('')+'</div>';
     c.querySelectorAll('[data-og]').forEach(b=>b.onclick=()=>{const r=lista.find(x=>String(x.id)===b.dataset.og);iaOutfit=(iaOutfit&&iaOutfit.id===String(r.id))?null:{id:String(r.id),txt:otxt(r),img:r.imagen_url||null};iaPintarOutfits()});
@@ -3719,6 +3719,14 @@ async function iaGenerar(){
     if(iaModo==='lapiz'&&!iaBlob)throw new Error('Falta el dibujo a lápiz');
     if(iaPjSel.length>IA_MAX_PJ)throw new Error('Elegí como máximo '+IA_MAX_PJ+' personajes');
     const pj=PERSONAJES.filter(p=>iaPjSel.includes(String(p.id)));
+    /* Outfits de lencería / ropa interior / traje de baño: solo con edad verificada y solo para personajes adultos */
+    const _ropaAdulta=r=>/lencer|ropa interior|bikini|sensual|erotic|sexy|sexi|corset|corse|liguero|tanga|brasier|sosten|babydoll|swimsuit|lingerie|underwear/.test(String((r.nombre||'')+' '+(r.descripcion||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''));
+    const _ids=[...Object.values(iaOutfitPor).map(o=>o.id),...(iaOutfit?[iaOutfit.id]:[])];
+    const _hayAdulta=_ids.some(id=>{const r=(typeof TIENDA!=='undefined'?TIENDA.items:[]).find(x=>String(x.id)===String(id));return r&&_ropaAdulta(r)});
+    if(_hayAdulta){
+      if(!esMayor18()){exigirMayor18();const c1=new Error('cancelado');c1.cancelado=true;throw c1}
+      if(pj.some(p=>!pjEsAdulto(p)))throw new Error('Ese outfit es solo para personajes adultos. Sacá al personaje menor de edad o elegí otra ropa.');
+    }
     /* Anclaje de edad: si todos los personajes son adultos (según su ficha) se fuerzan proporciones y cara adultas */
     const adultos=pj.length>0&&pj.every(pjEsAdulto)&&!/chibi/i.test(iaEstilo||'');
     /* PROMPT FINAL, en este orden: ESTILO + PERSONAJES + LUGAR + OUTFIT + VIÑETAS (diseño) + TEXTO DEL USUARIO + VIÑETAS NUMERADAS */
@@ -3729,7 +3737,9 @@ async function iaGenerar(){
     const conVin=$('iaVinetasBox')&&$('iaVinetasBox').style.display!=='none';
     const pjTxt=pj.map((p,i)=>(i+1)+') '+p.nombre+': '+p.descripcion+pjEdadTxt(p)+(iaOutfitPor[p.id]?' — WEARING EXACTLY: '+iaOutfitPor[p.id].txt:'')).join(' | ');
     const partes=[est?est.p:'manga illustration, clean ink lines'];
+    const _ropaLinea=pj.filter(p=>iaOutfitPor[p.id]).map(p=>p.nombre+' wears ONLY '+iaOutfitPor[p.id].txt).join('; ');
     if(pj.length)partes.push('CHARACTERS — each one MUST have EXACTLY the same FACE (eyes, nose, mouth, hair color and hairstyle) as in its reference image: '+pjTxt);
+    if(_ropaLinea)partes.push('OUTFIT LOCK: '+_ropaLinea+'. Do NOT dress anyone in pajamas, robes, jackets or any other clothes instead of or over these outfits, even if the location suggests other clothes');
     if(iaLugar)partes.push('LOCATION (the scene happens exactly in this place, copy it from the location reference image): '+iaLugar.txt);
     if(iaOutfit)partes.push('OUTFIT (copy these exact clothes from the outfit reference image): '+iaOutfit.txt);
     if(lay)partes.push('PAGE LAYOUT: '+lay.p);
@@ -3755,7 +3765,7 @@ async function iaGenerar(){
         if(u)refs.push({src:u,nota:'character "'+p.nombre+'" (one single clean figure)'});
       }
       $('iaMarcoImg').innerHTML='<span>🎨 Dibujando...</span>';
-      for(const p of pj){const o=iaOutfitPor[p.id];if(o&&o.img)refs.push({src:o.img,nota:'outfit worn by "'+p.nombre+'"'})}
+      for(const p of pj){const o=iaOutfitPor[p.id];if(o&&o.img)refs.push({src:o.img,nota:'outfit worn by "'+p.nombre+'" (clothing sheet: copy ONLY the garments, their design and colors; ignore any mannequin, background or layout)'})}
       if(iaOutfit&&iaOutfit.img)refs.push({src:iaOutfit.img,nota:'outfit reference'});
       if(iaLugar&&iaLugar.img)refs.push({src:iaLugar.img,nota:'location reference'});
       iaRefFiles.forEach(f=>refs.push({src:f,nota:'extra reference'}));
@@ -3770,19 +3780,20 @@ async function iaGenerar(){
       if(!esCeoSync()&&!confirm('Esta página tiene '+nP+' viñetas y cuesta '+costo+' generación'+(costo>1?'es':'')+' en total (no una por viñeta).\n\n¿Seguir?')){const c0=new Error('cancelado');c0.cancelado=true;throw c0}
       const textosP=[...document.querySelectorAll('#iaPaneles .ia-panel-in')].map(e=>e.value.trim());
       const formas=lay.sv.map(sh=>{let w,hh;if(typeof sh==='string'){const q=sh.split(' ').map(p=>p.split(',').map(Number)),xs=q.map(p=>p[0]),ys=q.map(p=>p[1]);w=Math.max(...xs)-Math.min(...xs);hh=Math.max(...ys)-Math.min(...ys)}else{w=sh[2];hh=sh[3]}const r=w/hh;return r>1.5?'wide':r<0.8?'tall':'square'});
-      const FORMA_TXT={wide:'a WIDE horizontal frame (landscape): pull the camera back so the whole character fits inside the wide frame',square:'a SQUARE frame',tall:'a TALL vertical frame'};
+      const FORMA_TXT={wide:'a WIDE horizontal frame (landscape) with the characters large and centered',square:'a SQUARE frame',tall:'a TALL vertical frame'};
       const prompts=[];
       for(let i=0;i<nP;i++){
         const t=textosP[i]||'';
         const pp=[est?est.p:'manga illustration, clean ink lines'];
         if(pj.length)pp.push('CHARACTERS — draw only the ones that appear in this panel; each one MUST keep EXACTLY the same FACE (eyes, nose, mouth, hair color and hairstyle) as in its reference image: '+pjTxt);
+        if(_ropaLinea)pp.push('OUTFIT LOCK (in EVERY panel): '+_ropaLinea+'. Do NOT dress anyone in pajamas, robes, jackets or any other clothes instead of or over these outfits, even if the location suggests other clothes');
         if(iaLugar)pp.push('LOCATION (the scene happens exactly in this place, copy it from the location reference image): '+iaLugar.txt);
         if(iaOutfit)pp.push('OUTFIT (copy these exact clothes from the outfit reference image): '+iaOutfit.txt);
         pp.push('This is ONE SINGLE PANEL ('+(i+1)+' of '+nP+(t?'':', '+lay.labs[i])+') of a manga page. Draw ONLY this moment: '+(t||userTxt||'the next moment of the scene'));
         const pideCerca=/primer plano|close.?up|detalle|zoom|rostro|de cerca/i.test(t)||/primer plano|detalle/i.test(enc||'');
         pp.push(pideCerca
           ?'FRAMING: close-up as requested, but the whole head and the FACE stay completely visible and never cropped'
-          :'FRAMING (very important): show EVERY character of this panel FULL BODY, from the top of the head to the feet, with clear empty space above the head and below the feet. The whole head and the FACE must be completely visible inside the frame and never cropped. The camera is pulled back (wide or medium-wide shot). Faces look toward the camera or in three-quarter view, never only the back of the head. Do NOT zoom in, do NOT crop the body, do NOT show only a part of the body');
+          :(formas[i]==='wide'?'FRAMING (very important): medium-wide shot. Show EVERY character of this panel from the head down to at least the knees (full body if it fits), large and centered in the frame. The whole head and the FACE must be completely visible and never cropped. Characters are in the CENTER of the frame, never at the bottom or the edges. The background is the detailed real location, never an empty, blurred or sparkly backdrop':'FRAMING (very important): show EVERY character of this panel FULL BODY, from the top of the head to the feet, with clear empty space above the head and below the feet. The whole head and the FACE must be completely visible inside the frame and never cropped. The camera is pulled back (wide or medium-wide shot). Faces look toward the camera or in three-quarter view, never only the back of the head. Do NOT zoom in, do NOT crop the body, do NOT show only a part of the body. Characters are in the CENTER of the frame and the background is the detailed real location, never an empty blurred backdrop'))
         pp.push('Compose this image for '+FORMA_TXT[formas[i]]+', with the characters centered and fully inside the frame');
         if(userTxt&&t)pp.push('Story context: '+userTxt);
         pp.push('Single full-frame illustration, NO panel borders, NO page layout, NO text, NO speech bubbles');
@@ -6163,7 +6174,7 @@ async function iaComponer(lay,urls){
     const trazar=()=>{x.beginPath();pts.forEach((p,k)=>k?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]));x.closePath()};
     x.save();trazar();x.clip();
     const im=ims[i];
-    if(im){const r=Math.max(bw/im.width,bh/im.height),w=im.width*r,h=im.height*r;x.drawImage(im,bx+(bw-w)/2,by+(bh-h)*0.12,w,h)}
+    if(im){const r=Math.max(bw/im.width,bh/im.height),w=im.width*r,h=im.height*r;x.drawImage(im,bx+(bw-w)/2,by+(bh-h)*0.3,w,h)}
     else{x.fillStyle='#dddddd';x.fillRect(bx,by,bw,bh)}
     x.restore();
     trazar();x.lineWidth=6;x.lineJoin='miter';x.strokeStyle='#000000';x.stroke();
