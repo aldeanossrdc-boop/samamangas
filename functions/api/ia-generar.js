@@ -105,7 +105,7 @@ export async function onRequestPost({ request, env }) {
       const imagenes = [];
       // Cada viñeta se pide con la forma de su cuadro (ancha, cuadrada o alta) para no recortarla después
       let formas = []; try { formas = JSON.parse(String(fd.get('formas') || '[]')); } catch (e) { formas = []; }
-      const TAM = { wide: [1248, 832], square: [1024, 1024], tall: [ANCHO, ALTO] };
+      const TAM = { xtall: [576, 1536], vtall: [640, 1280], tall: [ANCHO, ALTO], square: [1024, 1024], wide: [1248, 832], xwide: [1536, 640] };
       for (let i = 0; i < paneles.length; i += 3) {     // de a 3 en paralelo para no saturar a Fal
         const lote = paneles.slice(i, i + 3);
         const res = await Promise.all(lote.map((p, k) => { const tam = TAM[formas[i + k]] || TAM.tall; return motorConReferencias(env, { escena, prompt: refs.length ? intro + conReglas(p) : conReglas(p), promptSinRef: conReglas(p), archivos: refs, w: tam[0], h: tam[1], n: 1, colorModo, seguro }); }));
