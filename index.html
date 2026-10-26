@@ -1346,9 +1346,21 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div class="card" style="margin-top:14px;text-align:center"><div id="ctaRefs" style="font-size:34px;font-weight:800;color:var(--gold)">0</div><div style="font-size:12px;color:var(--text2)">personas registradas con tu link</div><div id="ctaFalta" style="font-size:12px;color:var(--gold3);margin-top:6px"></div></div>
 <button class="btn-main" onclick="compartir()">🔗 Compartir mi link</button>
 <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="editarBio()">✏️ Editar mi bio</button>
+<div id="ctaDonBox" class="card" style="display:none;margin-top:10px"><div style="font-weight:800;color:var(--gold)">💖 Recibir donaciones</div><p class="warn-mini" style="margin:6px 0">Cargá tu CBU o alias. Los lectores te donan directo a tu cuenta: el 100% es tuyo, SalaMangaS no cobra comisión ni interviene.</p><input id="ctaDonTit" class="input" maxlength="60" placeholder="Nombre del titular de la cuenta"><input id="ctaDonAlias" class="input" maxlength="30" style="margin-top:6px" placeholder="Alias (ej: mi.alias.mp) o CBU de 22 números" autocapitalize="off" autocomplete="off"><button class="btn-main" style="margin-top:8px" onclick="guardarDonacion()">💾 Guardar mis datos</button><button class="btn-ghost" style="width:100%;margin-top:6px" onclick="quitarDonacion()">Quitar mis datos</button></div>
 <button id="btnHablarCEO" class="btn-main" style="display:none;margin-top:8px" onclick="abrirChatCEO()">💬 Hablar con el CEO</button>
+<button class="btn-ghost" style="width:100%;margin-top:8px" onclick="abrirTutoriales()">🎬 Cómo usar la app (videos)</button>
 <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button>
 </div></div>
+<div id="ia-enc-ov" style="display:none;position:fixed;inset:0;z-index:700;background:#07041a;flex-direction:column;padding:10px;gap:8px">
+<div style="display:flex;align-items:center;gap:8px"><b style="color:var(--gold);flex:1">🖐️ Encuadrar viñetas</b><span id="iaEncInfo" style="font-size:12px;color:var(--gold3)"></span></div>
+<p style="font-size:12px;color:var(--text2);margin:0">Tocá una viñeta y <b>arrastrala con el dedo</b> para moverla. Pellizcá con 2 dedos (o usá el control) para acercar o alejar.</p>
+<div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center"><canvas id="iaEncCv" style="max-width:100%;max-height:100%;touch-action:none;border-radius:8px;background:#fff"></canvas></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px">🔍−</span><input id="iaEncZoom" type="range" min="40" max="400" value="100" style="flex:1" oninput="iaEncZoomSet(this.value)"><span style="font-size:12px">+</span></div>
+<div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="iaEncReset()">↺ Reiniciar viñeta</button><button class="btn" style="flex:1" onclick="iaEncCerrar()">Cancelar</button><button class="btn-main" style="flex:1;margin:0" onclick="iaEncListo()">✅ Listo</button></div>
+</div>
+<div id="tutos-modal" class="modal-overlay"><div class="modal-box" style="max-height:88vh;overflow-y:auto"><button class="modal-close" onclick="cerrarOv('tutos-modal')">✕</button>
+<h2 style="font-family:'Cinzel',serif;color:var(--gold)">🎬 Cómo usar la app</h2>
+<div id="tutosLista" style="margin-top:10px"></div></div></div>
 <input type="file" id="lapizInput" accept="image/*" style="display:none" onchange="if(this.files[0])abrirIA('lapiz',this.files[0]);this.value=''">
 <input type="file" id="pdfInput" accept="application/pdf" style="display:none" onchange="if(this.files[0])importarPDF(this.files[0]);this.value=''">
 <div id="mant" style="display:none;position:fixed;inset:0;z-index:250;background:radial-gradient(circle at 50% 0%,#1a0a3a,#07041a);align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px">
@@ -1368,6 +1380,7 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div id="iaRes" style="margin-top:14px"></div>
 <div id="iaAviso2" class="ia-aviso2"></div>
 <button type="button" class="btn-ghost" style="font-size:12px;padding:6px 11px" onclick="abrirAsistente('historia',{campo:'iaTxt'})">📖 Ayudame con la historia</button>
+<button type="button" class="btn-ghost" style="font-size:12px;padding:6px 11px;margin:6px 0" onclick="abrirTutoriales()">🎬 Ver videos: cómo se usa</button>
 <details id="iaAyuda" class="ia-ayuda"><summary>💡 Ayuda para escribir mejor</summary>
 <div class="ia-aviso">⚠️ <b>Antes de generar:</b> en <b>Dibujo a lápiz</b> la IA crea <b>1 imagen</b> y en <b>SalaMangaS IA</b> crea <b>1 sola imagen</b>. Cada vez que tocás Generar se gasta <b>1 generación</b> (de tu plan o 1 Sakura IA), y si tocás Regenerar se gasta otra. Si la IA falla, la generación se te devuelve sola. No pidas <b>texto o letras</b> dentro de la imagen (la IA suele deformarlas), ni <b>personajes con derechos de autor</b>, ni contenido sexual o violento extremo: la IA lo bloquea.</div>
 <div class="ia-ayuda-t">Ejemplos (tocá uno para usarlo)</div><div id="iaEjemplos"></div>
@@ -1413,17 +1426,7 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div id="donar-creador-modal" class="modal-overlay"><div class="modal-box">
 <button class="modal-close" onclick="cerrarOv('donar-creador-modal')">✕</button>
 <h2 style="font-family:'Cinzel',serif;color:var(--gold)">💖 Donar al creador</h2>
-<p style="font-size:12px;color:var(--text2);margin-top:6px">El sistema registra el apoyo. Solo Mangakar Dios puede monetizar y recibe el 100% como creador cuando su alias está configurado.</p>
-<div class="donar-montos" id="donarMontos">
-<span class="chip" onclick="_elegirMontoDonar(500,this)">$500 ARS / $0.50 USD</span>
-<span class="chip" onclick="_elegirMontoDonar(1000,this)">$1000 ARS / $1 USD</span>
-<span class="chip" onclick="_elegirMontoDonar(2000,this)">$2000 ARS / $2 USD</span>
-<span class="chip" onclick="_elegirMontoDonar(5000,this)">$5000 ARS / $5 USD</span>
-</div>
-<div style="display:flex;gap:8px;margin-top:16px">
-<button class="btn pay-mp" style="flex:1" onclick="donarCreadorMP()">💳 Mercado Pago</button>
-<button class="btn-ghost pay-pp" style="flex:1" onclick="donarCreadorPP()">🅿️ PayPal</button>
-</div>
+<div id="donarCuenta" style="margin-top:10px"></div>
 <p id="donarCreadorMsg" style="font-size:11px;color:var(--text2);text-align:center;margin-top:10px"></p>
 </div></div>
 <div id="donar-plataforma-modal" class="modal-overlay"><div class="modal-box">
@@ -2872,9 +2875,35 @@ alert('Link copiado ✅');
 async function abrirCuenta(){
 if(!miPerfil){alert('Iniciá sesión primero');return}
 cerrarConfig();$('cuenta-modal').classList.add('on');
-$('ctaNombre').innerHTML=esc(miPerfil.username||'')+insigniaHTML(miPerfil);$('btnHablarCEO').style.display=puedeChatCEO()?'block':'none';
+$('ctaNombre').innerHTML=esc(miPerfil.username||'')+insigniaHTML(miPerfil);{const _db=$('ctaDonBox');if(_db){_db.style.display=(puedeMonetizar(miPerfil)||esCeoSync())?'block':'none';$('ctaDonTit').value=miPerfil.donacion_titular||'';$('ctaDonAlias').value=miPerfil.donacion_alias||''}}$('btnHablarCEO').style.display=puedeChatCEO()?'block':'none';
 let n=0;try{const r=await sb.from('referidos').select('*',{count:'exact',head:true}).eq('referidor_id',miPerfil.id);n=r.count||0}catch(e){}
 $('ctaRefs').innerText=n;$('ctaFalta').innerText='Te faltan '+(10-n%10)+' para ganar 100 🪙';
+}
+async function abrirTutoriales(){
+  try{cerrarOv('cuenta-modal')}catch(e){}
+  $('tutos-modal').classList.add('on');
+  const w=$('tutosLista');w.innerHTML=vacio('Cargando...');
+  try{
+    const {data,error}=await sb.from('tutoriales').select('id,titulo,descripcion,video_url').order('created_at',{ascending:false}).limit(30);
+    if(error)throw error;
+    w.innerHTML=(data&&data.length)?data.map(v=>'<div class="card" style="margin-top:10px"><b style="color:var(--gold3)">'+esc(v.titulo)+'</b>'+(v.descripcion?'<div style="font-size:12px;color:var(--text2);margin:4px 0 8px">'+esc(v.descripcion)+'</div>':'')+'<video src="'+esc(v.video_url)+'" controls playsinline preload="metadata" style="width:100%;max-height:60vh;border-radius:10px;background:#000;display:block"></video></div>').join(''):vacio('Pronto vas a ver acá videos que muestran cómo usar cada función ✨');
+  }catch(e){w.innerHTML=vacio('Todavía no hay videos disponibles.')}
+}
+async function guardarDonacion(){
+  if(!miPerfil||!(puedeMonetizar(miPerfil)||esCeoSync())){alert('Solo los planes Semi Dios y Dios pueden recibir donaciones.');return}
+  const tit=($('ctaDonTit').value||'').trim().slice(0,60),al=($('ctaDonAlias').value||'').trim().replace(/\s+/g,'');
+  if(!tit){alert('Poné el nombre del titular de la cuenta, así quien dona puede verificarlo.');return}
+  if(!/^\d{22}$/.test(al)&&!/^[A-Za-z0-9._-]{6,30}$/.test(al)){alert('Poné un alias válido (6 a 30 letras, números, punto o guion) o un CBU de 22 números.');return}
+  const {error}=await sb.from('profiles').update({donacion_alias:al,donacion_titular:tit}).eq('id',miPerfil.id);
+  if(error){alert('No se pudo guardar: '+error.message);return}
+  miPerfil.donacion_alias=al;miPerfil.donacion_titular=tit;AUTORES[miPerfil.id]=miPerfil;
+  alert('✅ Guardado. Tus lectores ya pueden donarte directo a tu cuenta. Revisá que el alias esté bien escrito.');
+}
+async function quitarDonacion(){
+  if(!miPerfil||!confirm('¿Quitar tu CBU/alias? Nadie va a poder donarte hasta que lo cargues de nuevo.'))return;
+  const {error}=await sb.from('profiles').update({donacion_alias:null,donacion_titular:null}).eq('id',miPerfil.id);
+  if(error){alert('No se pudo quitar: '+error.message);return}
+  miPerfil.donacion_alias=null;miPerfil.donacion_titular=null;AUTORES[miPerfil.id]=miPerfil;$('ctaDonTit').value='';$('ctaDonAlias').value='';alert('Datos quitados.');
 }
 async function editarBio(){
 const b=prompt('Tu bio (máx. 200 caracteres):',miPerfil.bio||'');
@@ -3540,6 +3569,25 @@ function iaSvg(l,w,h){
   const nums=l.sv.length>1?l.sv.map((x,i)=>{const c=cen(x);return '<text x="'+c[0].toFixed(1)+'" y="'+(c[1]+5).toFixed(1)+'" text-anchor="middle" font-size="15" font-weight="800" fill="#fff" stroke="#000" stroke-width=".9" paint-order="stroke" font-family="Fredoka,sans-serif">'+(i+1)+'</text>'}).join(''):'';
   return '<svg viewBox="0 0 60 80" width="'+w+'" height="'+h+'" aria-hidden="true">'+formas+nums+'</svg>';
 }
+/* Encuadre que pide el usuario (en español) -> orden clara en inglés para la IA */
+function iaEncuadre(t){
+  t=String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(/solo (la |el |su )?(cara|rostro)|(primer plano|close.?up|de cerca) (de )?(la |el |su )?(cara|rostro)|(cara|rostro) (de cerca|en primer plano)|extreme close/.test(t))return 'cara';
+  if(/cuerpo (completo|entero|total)|de pies a cabeza|full ?body|cuerpo de pies/.test(t))return 'completo';
+  if(/medio cuerpo|mitad del cuerpo|de la cintura para arriba|hasta la cintura|busto|plano medio|torso|tres cuartos|de rodillas para arriba/.test(t))return 'medio';
+  if(/plano general|plano abierto|panoramic|de lejos|toda la escena|plano entero/.test(t))return 'general';
+  if(/primer plano|close.?up|de cerca|detalle|zoom|rostro/.test(t))return 'cerca';
+  return null;
+}
+const IA_ENC={
+  cara:'FRAMING (MANDATORY, overrides everything else): FACE CLOSE-UP. The face fills most of the frame, centered, with the whole head and the hair completely visible and never cut by the frame. Do NOT draw the full body',
+  completo:'FRAMING (MANDATORY, overrides everything else): FULL BODY. Every character is drawn completely from the top of the head to the feet, with empty space above the head and below the feet. The whole head and the FACE are fully visible. The camera is far enough away to fit everyone. Do NOT zoom in and do NOT crop any body part',
+  medio:'FRAMING (MANDATORY, overrides everything else): MEDIUM SHOT from the head to the waist. Characters centered, with clear empty space above the head. The whole head and the FACE are fully visible and never cut',
+  general:'FRAMING (MANDATORY, overrides everything else): WIDE ESTABLISHING SHOT. Characters full body but smaller, the location is very visible. Heads and faces fully inside the frame and never cut',
+  cerca:'FRAMING (MANDATORY): close-up as requested, but the whole head and the FACE stay completely visible and never cropped',
+  defecto:'FRAMING (very important): show EVERY character FULL BODY, from the top of the head to the feet, with clear empty space above the head and below the feet. The whole head and the FACE must be completely visible inside the frame and never cropped. The camera is pulled back. Faces look toward the camera or in three-quarter view, never only the back of the head. Do NOT zoom in, do NOT crop the body',
+  ancho:'FRAMING (very important): medium-wide shot. Show EVERY character from the head down to at least the knees (full body if it fits), large and centered in the frame. The whole head and the FACE must be completely visible and never cropped. Faces look toward the camera or in three-quarter view'
+};
 const IA_LUGARES_BASE=['Dormitorio','Casa','Colegio','Trabajo','Calle','Parque','Café','Playa','Bosque','Ciudad de noche','Hospital','Gimnasio'];
 /* Muestra solo los primeros N y un botón "＋ Ver más" */
 function iaPlegable(cont,n){
@@ -3743,7 +3791,7 @@ async function iaGenerar(){
     if(iaLugar)partes.push('LOCATION (the scene happens exactly in this place, copy it from the location reference image): '+iaLugar.txt);
     if(iaOutfit)partes.push('OUTFIT (copy these exact clothes from the outfit reference image): '+iaOutfit.txt);
     if(lay)partes.push('PAGE LAYOUT: '+lay.p);
-    if(pj.length&&!/primer plano|detalle/i.test(enc||'')&&!/primer plano|close.?up|de cerca|rostro/i.test(userTxt))partes.push('FRAMING: show each character full body with the whole head and FACE completely visible, never cropped, camera not too close');
+    {const _e0=iaEncuadre(userTxt)||(/primer plano|detalle/i.test(enc||'')?'cerca':null);if(pj.length||_e0)partes.push(IA_ENC[_e0]||IA_ENC.defecto)}
     partes.push('SCENE: '+(userTxt||'dynamic, expressive manga scene'));
     if(lay&&paneles.length)partes.push('PANELS in reading order — '+paneles.join(' | '));
     if(conVin){if(enc)partes.push('Camera framing: '+enc);if(ang)partes.push('Camera angle: '+ang);if(emo)partes.push('Emotion: '+emo)}
@@ -3779,8 +3827,8 @@ async function iaGenerar(){
       const nP=lay.sv.length,costo=nP<=3?1:2;
       if(!esCeoSync()&&!confirm('Esta página tiene '+nP+' viñetas y cuesta '+costo+' generación'+(costo>1?'es':'')+' en total (no una por viñeta).\n\n¿Seguir?')){const c0=new Error('cancelado');c0.cancelado=true;throw c0}
       const textosP=[...document.querySelectorAll('#iaPaneles .ia-panel-in')].map(e=>e.value.trim());
-      const formas=lay.sv.map(sh=>{let w,hh;if(typeof sh==='string'){const q=sh.split(' ').map(p=>p.split(',').map(Number)),xs=q.map(p=>p[0]),ys=q.map(p=>p[1]);w=Math.max(...xs)-Math.min(...xs);hh=Math.max(...ys)-Math.min(...ys)}else{w=sh[2];hh=sh[3]}const r=w/hh;return r>1.5?'wide':r<0.8?'tall':'square'});
-      const FORMA_TXT={wide:'a WIDE horizontal frame (landscape) with the characters large and centered',square:'a SQUARE frame',tall:'a TALL vertical frame'};
+      const formas=lay.sv.map(sh=>{let w,hh;if(typeof sh==='string'){const q=sh.split(' ').map(p=>p.split(',').map(Number)),xs=q.map(p=>p[0]),ys=q.map(p=>p[1]);w=Math.max(...xs)-Math.min(...xs);hh=Math.max(...ys)-Math.min(...ys)}else{w=sh[2];hh=sh[3]}const r=(w*(832/60))/(hh*(1248/80));return r<0.42?'xtall':r<0.58?'vtall':r<0.8?'tall':r<1.25?'square':r<1.8?'wide':'xwide'});
+      const FORMA_TXT={xtall:'a VERY NARROW tall vertical frame: compose vertically, characters close together and centered',vtall:'a NARROW tall vertical frame, characters centered',tall:'a TALL vertical frame',square:'a SQUARE frame',wide:'a WIDE horizontal frame (landscape) with the characters large and centered',xwide:'a VERY WIDE horizontal strip frame with the characters large and centered, head and face fully inside'};
       const prompts=[];
       for(let i=0;i<nP;i++){
         const t=textosP[i]||'';
@@ -3790,12 +3838,13 @@ async function iaGenerar(){
         if(iaLugar)pp.push('LOCATION (the scene happens exactly in this place, copy it from the location reference image): '+iaLugar.txt);
         if(iaOutfit)pp.push('OUTFIT (copy these exact clothes from the outfit reference image): '+iaOutfit.txt);
         pp.push('This is ONE SINGLE PANEL ('+(i+1)+' of '+nP+(t?'':', '+lay.labs[i])+') of a manga page. Draw ONLY this moment: '+(t||userTxt||'the next moment of the scene'));
-        const pideCerca=/primer plano|close.?up|detalle|zoom|rostro|de cerca/i.test(t)||/primer plano|detalle/i.test(enc||'');
-        pp.push(pideCerca
-          ?'FRAMING: close-up as requested, but the whole head and the FACE stay completely visible and never cropped'
-          :(formas[i]==='wide'?'FRAMING (very important): medium-wide shot. Show EVERY character of this panel from the head down to at least the knees (full body if it fits), large and centered in the frame. The whole head and the FACE must be completely visible and never cropped. Characters are in the CENTER of the frame, never at the bottom or the edges. The background is the detailed real location, never an empty, blurred or sparkly backdrop':'FRAMING (very important): show EVERY character of this panel FULL BODY, from the top of the head to the feet, with clear empty space above the head and below the feet. The whole head and the FACE must be completely visible inside the frame and never cropped. The camera is pulled back (wide or medium-wide shot). Faces look toward the camera or in three-quarter view, never only the back of the head. Do NOT zoom in, do NOT crop the body, do NOT show only a part of the body. Characters are in the CENTER of the frame and the background is the detailed real location, never an empty blurred backdrop'))
-        pp.push('Compose this image for '+FORMA_TXT[formas[i]]+', with the characters centered and fully inside the frame');
+        const _e1=iaEncuadre(t)||(/primer plano|detalle/i.test(enc||'')?'cerca':null);
+        const marco=IA_ENC[_e1]||((formas[i]==='wide'||formas[i]==='xwide')?IA_ENC.ancho:IA_ENC.defecto);
+        pp.push(marco);
+        pp.push('Compose this image for '+FORMA_TXT[formas[i]]+'. Characters are in the CENTER of the frame (never at the bottom or the edges) and the background is the detailed real location, never an empty, blurred or sparkly backdrop');
+        window._iaMarcoUlt=marco;
         if(userTxt&&t)pp.push('Story context: '+userTxt);
+        pp.push('FINAL CHECK: '+marco.replace(/^FRAMING[^:]*: /,'')+'. The head and face of every character must not touch or cross the edges of the frame');
         pp.push('Single full-frame illustration, NO panel borders, NO page layout, NO text, NO speech bubbles');
         prompts.push(pp.join('. ')+'.');
       }
@@ -3815,7 +3864,8 @@ async function iaGenerar(){
       }
       try{await refrescarPerfil()}catch(e){}
       $('iaMarcoImg').innerHTML='<span>🧩 Armando la página...</span>';
-      iaMostrar([await iaComponer(lay,jj.imagenes||[])]);
+      iaPan={lay,urls:jj.imagenes||[],ims:null,aj:[]};
+      iaMostrar([await iaComponer(lay,iaPan.urls,iaPan.aj)]);
       iaBarraFin();btn.disabled=false;btn.innerText='✨ Generar';
       return;
     }
@@ -3825,6 +3875,7 @@ async function iaGenerar(){
       if(j.codigo==='sin_generaciones'){try{await refrescarPerfil()}catch(e){}abrirSakuras('ia')}if(j.codigo==='edad')exigirMayor18();
       throw new Error(j.error||'Error del servidor');
     }
+    iaPan=null;
     if(j.sync&&j.imagenes){iaMostrar(j.imagenes)}
     else{iaUltimoId=j.id;iaMostrar(await iaEsperar(j.id,tk))}
   }catch(e){if(e&&e.cancelado){$('iaRes').innerHTML='';$('iaMarcoImg').innerHTML='<span>Tu imagen va a aparecer acá</span>'}else iaError(e)}
@@ -3852,7 +3903,7 @@ function iaMostrar(urls){
   $('iaMarcoImg').innerHTML=u?'<img src="'+esc(u)+'" alt="Imagen generada">':'<span>No llegó la imagen</span>';
   const v=$('iaMarcoVer');if(v)v.style.display=u?'block':'none';
   if(u)$('iaMarco').classList.add('ver');
-  $('iaRes').innerHTML='<div class="ia-result-card"><div style="display:flex;gap:8px"><button class="btn-main" style="flex:1" onclick="iaElegir(0,\'portada\')">📕 Portada</button><button class="btn" style="flex:1" onclick="iaElegir(0,\'pagina\')">📄 Página</button></div><button class="btn" style="width:100%;margin-top:8px" onclick="iaEditarResultado()">✏️ Editar (globos, onomatopeyas, textos)</button><p style="font-size:11px;color:var(--text2);margin:8px 0 6px;text-align:center">Si no te convence, tocá 👁️ para cambiar el texto y regenerá.</p><button class="btn" style="width:100%" onclick="iaGenerar()">🔄 Regenerar (gasta 1 generación)</button></div>';
+  $('iaRes').innerHTML='<div class="ia-result-card"><div style="display:flex;gap:8px"><button class="btn-main" style="flex:1" onclick="iaElegir(0,\'portada\')">📕 Portada</button><button class="btn" style="flex:1" onclick="iaElegir(0,\'pagina\')">📄 Página</button></div>'+(iaPan?'<button class="btn" style="width:100%;margin-top:8px" onclick="iaEncAbrir()">🖐️ Encuadrar viñetas (mover con el dedo)</button>':'')+'<button class="btn" style="width:100%;margin-top:8px" onclick="iaEditarResultado()">✏️ Editar (globos, onomatopeyas, textos)</button><p style="font-size:11px;color:var(--text2);margin:8px 0 6px;text-align:center">Si no te convence, tocá 👁️ para cambiar el texto y regenerá.</p><button class="btn" style="width:100%" onclick="iaGenerar()">🔄 Regenerar (gasta 1 generación)</button></div>';
 }
 function iaError(e){
   if(e&&e.pendiente){$('iaRes').innerHTML='<p style="color:var(--gold3);font-size:13px;text-align:center">'+esc(e.message)+' Tu generación sigue en proceso y no se vuelve a descontar.</p><button class="btn-main" style="width:100%;margin-top:8px" onclick="iaReanudar()">⏳ Seguir esperando</button>';return}
@@ -3934,7 +3985,7 @@ const PLANES_SALAMANGAS={
  gratis:{nombre:'Mangakers Gratis',precioARS:0,precioUSD:0,mangas:1,personajes:0,lugares:5,capitulos:2,sakuras:200,chats:['mangakars'],monetiza:false},
  pro:{nombre:'Mangakers Pro',precioARS:3000,precioUSD:3,mangas:1,personajes:5,lugares:5,capitulos:3,sakuras:500,chats:['mangakars','pro'],monetiza:false,insignia:'Pro plata'},
  superpro:{nombre:'Súper Mangakers Pro',precioARS:5000,precioUSD:5,mangas:2,personajes:7,lugares:5,capitulos:4,sakuras:2000,chats:['mangakars','pro'],monetiza:false,insignia:'Pro oro'},
- semidios:{nombre:'Semi Dios Mangakers',precioARS:12000,precioUSD:12,mangas:2,personajes:10,lugares:5,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:false,porcentaje:0,insignia:'Dios'},
+ semidios:{nombre:'Semi Dios Mangakers',donaciones:true,precioARS:12000,precioUSD:12,mangas:2,personajes:10,lugares:5,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:false,porcentaje:0,insignia:'Dios'},
  dios:{nombre:'Mangakers Dios',precioARS:30000,precioUSD:30,mangas:2,personajes:15,lugares:5,ilimitado:true,sakuras:4000,chats:['mangakars','pro','dios'],monetiza:true,porcentaje:100,insignia:'Dios'}
 };
 const SALAS={mangakars:'SalaMangakers',pro:'SalaMangakers Pro',dios:'Dios del Manga'};
@@ -4082,8 +4133,8 @@ function renderPlanesDefinitivos(){
   if(k==='gratis')bullets='<li>1 manga</li><li>0 personajes propios en la cuota del plan</li><li>5 lugares por manga</li><li>2 capítulos de 15 a 20 páginas o 2 PDF por mes</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMangakers</li><li>No monetiza</li>';
   if(k==='pro')bullets='<li>1 manga</li><li>Hasta 5 personajes</li><li>5 lugares por manga</li><li>3 capítulos de 15 a 20 páginas o 3 PDF por mes</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>Insignia Pro plata</li><li>No monetiza</li>';
   if(k==='superpro')bullets='<li>2 mangas</li><li>Hasta 7 personajes</li><li>5 lugares por manga</li><li>4 capítulos de 15 a 20 páginas o 4 PDF por mes</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Insignia Pro oro</li><li>No monetiza</li>';
-  if(k==='semidios')bullets='<li>2 mangas</li><li>Hasta 10 personajes</li><li>5 lugares por manga</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>No monetiza</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li><li>Botón con contador exacto del apoyo, se abona cada 30 días</li>';
-  if(k==='dios')bullets='<li>2 mangas</li><li>Hasta 15 personajes</li><li>5 lugares por manga</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>Lectura ilimitada todo el mes</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>💰 Monetiza: 100% de las donaciones para el creador</li><li>Alias del creador para Mercado Pago Argentina / PayPal internacional</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li>';
+  if(k==='semidios')bullets='<li>2 mangas</li><li>Hasta 10 personajes</li><li>5 lugares por manga</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li><li>💖 Recibí donaciones: cargá tu CBU o alias y el 100% de lo que te donen va directo a tu cuenta, sin comisión</li>';
+  if(k==='dios')bullets='<li>2 mangas</li><li>Hasta 15 personajes</li><li>5 lugares por manga</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>Lectura ilimitada todo el mes</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>💖 Recibí donaciones: cargá tu CBU o alias y el 100% de lo que te donen va directo a tu cuenta, sin comisión</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li>';
   d.innerHTML=`<h3>${p.nombre}</h3><div class="plan-ins">${insigniaGrande(k,'xl')}<p>${INSIGNIAS[k].corto}</p></div><div class="plan-price">${precio}</div><ul>${bullets}</ul>`;
   if(k!=='gratis'){
     const row=document.createElement('div');row.style.cssText='display:flex;gap:8px;margin-top:10px';
@@ -4521,14 +4572,16 @@ publicar=async function(){
 function abrirDonarCreador(){
  if(!requireUser()||!rd||!rd.m)return;
  const autor=AUTORES[rd.m.user_id];
- if(autor&&!puedeMonetizar(autor)){alert('Este creador todavía no puede recibir donaciones (necesita un plan Semi Dios o Dios vigente).');return}
- _montoDonarDef=1000;
- const w=$('donarMontos');if(w)w.innerHTML='';
- [1000,2000,3000,5000,7000,10000].forEach(n=>{const c=document.createElement('span');c.className='chip'+(n===1000?' on':'');c.textContent='$'+n.toLocaleString('es-AR')+' ARS / $'+(n/1000)+' USD';c.onclick=()=>{_montoDonarDef=n;w.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')};w.appendChild(c)});
- const k=planClave(autor||{});
- $('donarCreadorMsg').innerText=k==='dios'?'Plan Dios: la regla es 100% para el creador; la cuenta de cobro/alias debe estar configurada en el servidor.':(k==='semidios'?'Plan Semi Dios: el sistema debe registrar la donación para que el CEO liquide el 50% a los 30 días.':'');
+ if(!autor||!puedeMonetizar(autor)){alert('Este creador todavía no puede recibir donaciones (necesita un plan Semi Dios o Dios vigente).');return}
+ const al=autor.donacion_alias,tit=autor.donacion_titular,esCbu=/^\d{22}$/.test(al||'');
+ window._donAlias=al||'';
+ $('donarCuenta').innerHTML='<p style="font-size:12px;color:var(--text2)">El <b>100%</b> de tu donación va directo a la cuenta del creador. SalaMangaS no interviene, no cobra comisión y no puede verificar ni devolver transferencias. Revisá que el titular sea correcto antes de transferir.</p>'
+  +(al?'<div class="card" style="text-align:center;margin-top:10px"><div style="font-size:12px;color:var(--text2)">Titular</div><div style="font-weight:800;color:var(--gold3)">'+esc(tit||'Creador')+'</div><div style="font-size:12px;color:var(--text2);margin-top:8px">'+(esCbu?'CBU':'Alias')+'</div><div style="font-size:18px;font-weight:800;color:var(--gold);word-break:break-all">'+esc(al)+'</div></div><button class="btn-main" onclick="copiarDonacion()">📋 Copiar '+(esCbu?'CBU':'alias')+'</button>'
+   :'<div class="warn-mini" style="margin-top:10px">Este creador todavía no cargó su CBU o alias. Probá de nuevo más adelante.</div>');
+ $('donarCreadorMsg').innerText='';
  $('donar-creador-modal').classList.add('on')
 }
+function copiarDonacion(){const v=window._donAlias||'';try{navigator.clipboard.writeText(v).then(()=>alert('Copiado ✅'),()=>prompt('Copiá esto:',v))}catch(e){prompt('Copiá esto:',v)}}
 /* Logo y protección de imágenes */
 document.addEventListener('contextmenu',e=>{if(e.target?.tagName==='IMG')e.preventDefault()});
 document.addEventListener('dragstart',e=>{if(e.target?.tagName==='IMG')e.preventDefault()});
@@ -4653,8 +4706,8 @@ subirACloudinary=async function(file){
    (y su clave en ORDEN_INSIGNIAS), 3) si depende de una regla nueva, tocá claveInsignia(). */
 const INSIGNIAS={
   ceo:{img:'/ceo.png',emoji:'🐉',nombre:'CEO',corto:'🐉 El creador supremo de SalaMangaS. Solo uno en toda la plataforma. Es el dueño, el que construyó todo desde cero.',largo:'El creador supremo de SalaMangaS. Solo existe uno en toda la plataforma: el dueño, el que construyó todo desde cero.',gana:'No se compra ni se regala. Es única.'},
-  dios:{img:'/dios.png',emoji:'👑',nombre:'Mangakers Dios',corto:'👑 El máximo poder. Corona imperial.',largo:'El máximo poder dentro de SalaMangaS. La corona imperial es para quienes lo apoyan todo.',gana:'4 creaciones gratis por mes, lectura ilimitada, monetiza el 100% de las donaciones, chat directo con el CEO y chat Dios del Manga.'},
-  semidios:{img:'/semidios.png',emoji:'🌟',nombre:'Semi Dios',corto:'🦊 A un paso de lo divino. Máscara del zorro.',largo:'A un paso de lo divino. La máscara del zorro marca a quienes ya están cerca de la cima.',gana:'3 mangas gratis por mes, capítulos sin límite, 4000 Sakuras para leer, chat directo con el CEO y chat Dios del Manga. No monetiza.'},
+  dios:{img:'/dios.png',emoji:'👑',nombre:'Mangakers Dios',corto:'👑 El máximo poder. Corona imperial.',largo:'El máximo poder dentro de SalaMangaS. La corona imperial es para quienes lo apoyan todo.',gana:'4 creaciones gratis por mes, lectura ilimitada, recibe el 100% de las donaciones directo en su CBU o alias, chat directo con el CEO y chat Dios del Manga.'},
+  semidios:{img:'/semidios.png',emoji:'🌟',nombre:'Semi Dios',corto:'🦊 A un paso de lo divino. Máscara del zorro.',largo:'A un paso de lo divino. La máscara del zorro marca a quienes ya están cerca de la cima.',gana:'3 mangas gratis por mes, capítulos sin límite, 4000 Sakuras para leer, chat directo con el CEO y chat Dios del Manga. Podés cargar tu CBU o alias para recibir donaciones directas (100% tuyas).'},
   superpro:{img:'/superpro.png',emoji:'🥇',nombre:'Súper Mangakers Pro',corto:'⚔️ El que domina el arte. Espada del guerrero.',largo:'El que domina el arte. Las espadas cruzadas son del guerrero que ya conoce su oficio.',gana:'2 mangas, 4 capítulos por mes, 2000 Sakuras y chat SalaMangakers Pro. No monetiza.'},
   pro:{img:'/pro.png',emoji:'🥈',nombre:'Mangakers Pro',corto:'🖋️ El que escribe y crea. Pluma de autor.',largo:'El que escribe y crea. La pluma con el libro es la marca del autor.',gana:'1 manga, 3 capítulos por mes, 500 Sakuras y chat SalaMangakers Pro. No monetiza.'},
   gratis:{img:'/gratis.png',emoji:'🌱',nombre:'Mangakers Gratis',corto:'🌱 El que recién arranca. Sin insignia especial.',largo:'El que recién arranca su camino en SalaMangaS. La estrella dorada es el primer paso.',gana:'1 manga, 2 capítulos por mes y 200 Sakuras diarias (no acumulables). No monetiza.'}
@@ -6162,24 +6215,98 @@ function iaEditarResultado(){
 }
 
 /* Arma la página con el diseño de viñetas elegido: cada imagen va recortada dentro de su viñeta, con borde negro */
-async function iaComponer(lay,urls){
-  const W=832,H=1248,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
-  x.fillStyle='#ffffff';x.fillRect(0,0,W,H);
-  const sx=W/60,sy=H/80;
-  const ims=await Promise.all(urls.map(u=>new Promise(ok=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>ok(im);im.onerror=()=>ok(null);im.src=u})));
+let iaPan=null;
+function iaCargarIms(urls){return Promise.all((urls||[]).map(u=>new Promise(ok=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>ok(im);im.onerror=()=>ok(null);im.src=u})))}
+function iaPanelGeo(sh){
+  const W=832,H=1248,sx=W/60,sy=H/80;
+  const poly=typeof sh==='string'?sh.split(' ').map(p=>p.split(',').map(Number)):[[sh[0],sh[1]],[sh[0]+sh[2],sh[1]],[sh[0]+sh[2],sh[1]+sh[3]],[sh[0],sh[1]+sh[3]]];
+  const pts=poly.map(p=>[p[0]*sx,p[1]*sy]),xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+  const bx=Math.min(...xs),by=Math.min(...ys);
+  return {pts,bx,by,bw:Math.max(...xs)-bx,bh:Math.max(...ys)-by};
+}
+/* Posición de la imagen dentro de su viñeta: automática, más lo que movió el usuario (dx,dy en fracción de la viñeta, s = zoom) */
+function iaGeoImg(im,g,a){
+  const pa=g.bw/g.bh,ia=im.width/im.height,mm=Math.max(pa/ia,ia/pa);
+  let w,h,x,y;
+  if(mm>1.25){const r1=Math.min(g.bw/im.width,g.bh/im.height);w=im.width*r1;h=im.height*r1;x=g.bx+(g.bw-w)/2;y=g.by+(g.bh-h)/2}
+  else{const r=Math.max(g.bw/im.width,g.bh/im.height);w=im.width*r;h=im.height*r;x=g.bx+(g.bw-w)/2;y=g.by+(g.bh-h)*0.3}
+  if(a){const s=a.s||1,cx=x+w/2+(a.dx||0)*g.bw,cy=y+h/2+(a.dy||0)*g.bh;w*=s;h*=s;x=cx-w/2;y=cy-h/2}
+  return {x,y,w,h};
+}
+function iaDibujarPagina(x,lay,ims,aj,sel){
+  x.fillStyle='#ffffff';x.fillRect(0,0,832,1248);
   lay.sv.forEach((sh,i)=>{
-    const poly=typeof sh==='string'?sh.split(' ').map(p=>p.split(',').map(Number)):[[sh[0],sh[1]],[sh[0]+sh[2],sh[1]],[sh[0]+sh[2],sh[1]+sh[3]],[sh[0],sh[1]+sh[3]]];
-    const pts=poly.map(p=>[p[0]*sx,p[1]*sy]),xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
-    const bx=Math.min(...xs),by=Math.min(...ys),bw=Math.max(...xs)-bx,bh=Math.max(...ys)-by;
+    const g=iaPanelGeo(sh),pts=g.pts;
     const trazar=()=>{x.beginPath();pts.forEach((p,k)=>k?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]));x.closePath()};
     x.save();trazar();x.clip();
     const im=ims[i];
-    if(im){const r=Math.max(bw/im.width,bh/im.height),w=im.width*r,h=im.height*r;x.drawImage(im,bx+(bw-w)/2,by+(bh-h)*0.3,w,h)}
-    else{x.fillStyle='#dddddd';x.fillRect(bx,by,bw,bh)}
+    if(im){
+      const r=iaGeoImg(im,g,aj&&aj[i]);
+      const cubre=r.x<=g.bx+1&&r.y<=g.by+1&&r.x+r.w>=g.bx+g.bw-1&&r.y+r.h>=g.by+g.bh-1;
+      if(!cubre){const r0=Math.max(g.bw/im.width,g.bh/im.height)*1.12;x.save();try{x.filter='blur(16px) brightness(.8)'}catch(e){}x.drawImage(im,g.bx+(g.bw-im.width*r0)/2,g.by+(g.bh-im.height*r0)/2,im.width*r0,im.height*r0);x.restore()}
+      x.drawImage(im,r.x,r.y,r.w,r.h);
+    }else{x.fillStyle='#dddddd';x.fillRect(g.bx,g.by,g.bw,g.bh)}
     x.restore();
     trazar();x.lineWidth=6;x.lineJoin='miter';x.strokeStyle='#000000';x.stroke();
   });
+  if(sel!=null&&lay.sv[sel]){const pts=iaPanelGeo(lay.sv[sel]).pts;x.save();x.beginPath();pts.forEach((p,k)=>k?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]));x.closePath();x.lineWidth=10;x.setLineDash([22,12]);x.strokeStyle='#ffd45c';x.stroke();x.restore()}
+}
+async function iaComponer(lay,urls,aj,imsListas){
+  const c=document.createElement('canvas');c.width=832;c.height=1248;
+  const ims=imsListas||await iaCargarIms(urls);
+  iaDibujarPagina(c.getContext('2d'),lay,ims,aj,null);
   return c.toDataURL('image/jpeg',.92);
+}
+/* ---- Encuadrar con el dedo ---- */
+let _enc=null;
+function iaEncPos(e){const c=$('iaEncCv'),r=c.getBoundingClientRect();return {x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height}}
+function iaEncHit(p){const c=$('iaEncCv'),x=c.getContext('2d');for(let i=iaPan.lay.sv.length-1;i>=0;i--){const pts=iaPanelGeo(iaPan.lay.sv[i]).pts;x.beginPath();pts.forEach((q,k)=>k?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.closePath();if(x.isPointInPath(p.x,p.y))return i}return -1}
+function iaEncPintar(){
+  if(!_enc||!iaPan)return;
+  const c=$('iaEncCv');iaDibujarPagina(c.getContext('2d'),iaPan.lay,iaPan.ims,_enc.aj,_enc.sel);
+  $('iaEncInfo').textContent='Viñeta '+(_enc.sel+1)+' seleccionada';$('iaEncZoom').value=Math.round(_enc.aj[_enc.sel].s*100);
+}
+function iaEncPedir(){if(_enc&&!_enc.raf)_enc.raf=requestAnimationFrame(()=>{_enc.raf=0;iaEncPintar()})}
+async function iaEncAbrir(){
+  if(!iaPan)return;
+  const ov=$('ia-enc-ov');ov.style.display='flex';
+  if(!iaPan.ims)iaPan.ims=await iaCargarIms(iaPan.urls);
+  const n=iaPan.lay.sv.length;
+  _enc={sel:0,ptrs:new Map(),raf:0,aj:Array.from({length:n},(_,i)=>Object.assign({dx:0,dy:0,s:1},(iaPan.aj&&iaPan.aj[i])||{}))};
+  const c=$('iaEncCv');c.width=832;c.height=1248;
+  if(!c._ok){
+    c._ok=1;
+    c.addEventListener('pointerdown',e=>{
+      if(!_enc)return;try{c.setPointerCapture(e.pointerId)}catch(x){}
+      const p=iaEncPos(e);
+      if(_enc.ptrs.size===0){const hh=iaEncHit(p);if(hh>=0)_enc.sel=hh}
+      _enc.ptrs.set(e.pointerId,p);iaEncPedir();
+    });
+    c.addEventListener('pointermove',e=>{
+      if(!_enc||!_enc.ptrs.has(e.pointerId))return;
+      const p=iaEncPos(e),prev=_enc.ptrs.get(e.pointerId),a=_enc.aj[_enc.sel],g=iaPanelGeo(iaPan.lay.sv[_enc.sel]);
+      if(_enc.ptrs.size===1){
+        a.dx=Math.max(-1.5,Math.min(1.5,a.dx+(p.x-prev.x)/g.bw));a.dy=Math.max(-1.5,Math.min(1.5,a.dy+(p.y-prev.y)/g.bh));
+      }else if(_enc.ptrs.size===2){
+        const otro=[..._enc.ptrs.entries()].find(([id])=>id!==e.pointerId)[1];
+        const d0=Math.hypot(prev.x-otro.x,prev.y-otro.y),d1=Math.hypot(p.x-otro.x,p.y-otro.y);
+        if(d0>10)a.s=Math.max(.4,Math.min(4,a.s*d1/d0));
+      }
+      _enc.ptrs.set(e.pointerId,p);iaEncPedir();
+    });
+    const fin=e=>{if(_enc)_enc.ptrs.delete(e.pointerId)};
+    c.addEventListener('pointerup',fin);c.addEventListener('pointercancel',fin);c.addEventListener('pointerleave',fin);
+  }
+  iaEncPintar();
+}
+function iaEncZoomSet(v){if(!_enc)return;_enc.aj[_enc.sel].s=Math.max(.4,Math.min(4,Number(v)/100));iaEncPedir()}
+function iaEncReset(){if(!_enc)return;_enc.aj[_enc.sel]={dx:0,dy:0,s:1};iaEncPintar()}
+function iaEncCerrar(){$('ia-enc-ov').style.display='none';_enc=null}
+async function iaEncListo(){
+  if(!_enc||!iaPan)return;
+  iaPan.aj=_enc.aj;
+  try{const url=await iaComponer(iaPan.lay,iaPan.urls,iaPan.aj,iaPan.ims);iaMostrar([url])}catch(e){alert('No se pudo armar la página: '+(e.message||e))}
+  iaEncCerrar();
 }
 
 /* ===================== MARCA DE AGUA: tu logo, transparente, en un costado de cada página ===================== */

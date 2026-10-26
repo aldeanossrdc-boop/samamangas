@@ -962,7 +962,7 @@ Entrar con Google
 <p style="font-size:13px;color:var(--text2)">Mangas: <b id="ceoMangas">0</b></p>
 <p style="font-size:13px;color:var(--text2)">Pendientes: <b id="ceoPend">0</b></p>
 <div id="ceoTabs" style="margin-top:14px">
-<span class="chip on" data-t="pend" onclick="ceoTab('pend')">⏳ Pendientes</span><span class="chip" data-t="mangas" onclick="ceoTab('mangas')">📚 Mangas</span><span class="chip" data-t="usuarios" onclick="ceoTab('usuarios')">👥 Usuarios</span><span class="chip" data-t="chats" onclick="ceoTab('chats')">💬 Chats</span><span class="chip" data-t="subs" onclick="ceoTab('subs')">⭐ Suscriptores</span><span class="chip" data-t="donaciones" onclick="ceoTab('donaciones')">💖 Donaciones</span><span class="chip" data-t="stats" onclick="ceoTab('stats')">📊 Stats</span><span class="chip" data-t="sistema" onclick="ceoTab('sistema')">⚙️ Sistema</span><span class="chip" data-t="regalar" onclick="ceoTab('regalar')">🎁 Regalar</span><span class="chip" data-t="tienda" onclick="ceoTab('tienda')">🛍️ Tienda</span><span class="chip" data-t="precios" onclick="ceoTab('precios')">💰 Precios</span><span class="chip" data-t="reportes" onclick="ceoTab('reportes')">🚩 Reportes</span><span class="chip" data-t="donaciones_pend" onclick="ceoTab('donaciones_pend')">💸 Pagos</span>
+<span class="chip on" data-t="pend" onclick="ceoTab('pend')">⏳ Pendientes</span><span class="chip" data-t="mangas" onclick="ceoTab('mangas')">📚 Mangas</span><span class="chip" data-t="usuarios" onclick="ceoTab('usuarios')">👥 Usuarios</span><span class="chip" data-t="chats" onclick="ceoTab('chats')">💬 Chats</span><span class="chip" data-t="subs" onclick="ceoTab('subs')">⭐ Suscriptores</span><span class="chip" data-t="donaciones" onclick="ceoTab('donaciones')">💖 Donaciones</span><span class="chip" data-t="stats" onclick="ceoTab('stats')">📊 Stats</span><span class="chip" data-t="sistema" onclick="ceoTab('sistema')">⚙️ Sistema</span><span class="chip" data-t="regalar" onclick="ceoTab('regalar')">🎁 Regalar</span><span class="chip" data-t="tienda" onclick="ceoTab('tienda')">🛍️ Tienda</span><span class="chip" data-t="videos" onclick="ceoTab('videos')">🎬 Videos IA</span><span class="chip" data-t="precios" onclick="ceoTab('precios')">💰 Precios</span><span class="chip" data-t="reportes" onclick="ceoTab('reportes')">🚩 Reportes</span><span class="chip" data-t="donaciones_pend" onclick="ceoTab('donaciones_pend')">💸 Pagos</span>
 </div>
 <div id="ceoBody" style="margin-top:12px"></div>
 <button class="btn-main" style="margin-top:14px" onclick="location.href='/'">⬅ Volver a la app</button>
@@ -5087,6 +5087,102 @@ async function ceoMarcarDonacionPagada(id){await ceoAccion(async()=>{if(!confirm
   verificar();
   setInterval(async()=>{if(ok&&!(await esCeoReal(true)))location.replace('/')},30000);
 })();
+</script>
+<script>
+/* ===== PANEL CEO: 🎬 VIDEOS IA (tutoriales con Fal) ===== */
+(function(){
+const PLANT=[
+ ['📄 Crear página con viñetas','Vertical smartphone app tutorial. A manga creation app on a purple and gold dark interface. A finger taps the Create button, picks a 3-panel layout with numbered panels, types a short scene, taps the golden Generate button, and a finished manga page with three panels appears. Smooth finger taps, clean modern UI, cinematic lighting'],
+ ['👤 Elegir personaje y outfit','Vertical smartphone app tutorial. In a manga creation app a finger taps square character cards with faces, then picks a different outfit for each character from a grid of square outfit cards, checkmarks appear on the chosen ones. Purple and gold dark interface, smooth taps'],
+ ['🛍️ Usar la tienda','Vertical smartphone app tutorial. A finger scrolls a store of outfits and places in square cards, taps one, buys it, and it appears in the Create screen ready to use. Purple and gold dark interface, smooth taps'],
+ ['🖐️ Encuadrar con el dedo','Vertical smartphone app tutorial. A finger drags an image inside a manga panel to reframe it and pinches with two fingers to zoom, then taps Done and the manga page updates. Purple and gold dark interface'],
+ ['📕 Generar portada','Vertical smartphone app tutorial. A finger chooses a visual style and color, writes a title idea, taps Generate and a manga cover appears with a progress bar showing percent. Purple and gold dark interface']
+];
+function cargarCss(){if(document.getElementById('vdCss'))return;const st=document.createElement('style');st.id='vdCss';st.textContent='.vd-sq{width:120px;aspect-ratio:1/1;border:2px dashed rgba(212,175,55,.5);border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,.3);color:var(--gold3);text-align:center;font-size:13px;line-height:1.3;margin:6px 0}.vd-sq img{width:100%;height:100%;object-fit:contain}.vd-bar{height:16px;background:rgba(255,255,255,.1);border-radius:9px;overflow:hidden;margin-top:10px}.vd-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd45c,#ffb300);transition:width .4s}.vd-item{border:1px solid rgba(212,175,55,.3);border-radius:12px;padding:8px;margin-top:10px;background:rgba(255,255,255,.03)}.vd-item video,#vdRes video{width:100%;max-height:60vh;border-radius:10px;background:#000;display:block}.vd-row{display:flex;gap:8px;margin-top:8px}.vd-row>*{flex:1}';document.head.appendChild(st)}
+window._vd={file:null,url:null};
+window.vdCosto=function(){const c=document.getElementById('vdCal').value==='calidad'?0.14:0.07,d=Number(document.getElementById('vdDur').value);document.getElementById('vdCosto').textContent='Costo aproximado en Fal: US$ '+(c*d).toFixed(2)+' por video ('+d+' seg)'};
+window.vdPlantilla=function(i){document.getElementById('vdPrompt').value=PLANT[i][1]};
+window.vdFotoVer=function(inp){const f=inp.files&&inp.files[0];_vd.file=f||null;const t=document.getElementById('vdFoto');t.innerHTML=f?'<img src="'+URL.createObjectURL(f)+'" alt="">':'<span>＋<br>Captura</span>';document.getElementById('vdFmt').disabled=!!f};
+async function vdToken(){const {data:{session}}=await sb.auth.getSession();return session?session.access_token:''}
+async function vdPost(body){const r=await fetch('/api/ceo-video',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+await vdToken()},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'Error del servidor');return j}
+function vdBar(p,txt){const w=document.getElementById('vdBar');if(!w)return;w.style.display=p==null?'none':'block';if(p==null)return;document.getElementById('vdBarIn').style.width=p+'%';document.getElementById('vdBarTxt').textContent=Math.round(p)+'% · '+(txt||'')}
+window.vdGenerar=async function(){
+  const prompt=(document.getElementById('vdPrompt').value||'').trim();
+  if(prompt.length<10){alert('Describí el video que querés (o elegí una plantilla).');return}
+  const cal=document.getElementById('vdCal').value,dur=Number(document.getElementById('vdDur').value),usd=(cal==='calidad'?0.14:0.07)*dur;
+  if(!confirm('Este video cuesta aproximadamente US$ '+usd.toFixed(2)+' en Fal.\n\n¿Generar?'))return;
+  const btn=document.getElementById('vdGen');btn.disabled=true;document.getElementById('vdRes').innerHTML='';
+  try{
+    let img='';
+    if(_vd.file){vdBar(3,'Subiendo la captura');img=await subirACloudinary(_vd.file)}
+    vdBar(6,'Enviando a Fal');
+    const j=await vdPost({accion:'crear',modelo:cal,prompt,duracion:dur,formato:document.getElementById('vdFmt').value,imagen_url:img});
+    const t0=Date.now(),estimado=(cal==='calidad'?170:110)*1000*(dur/5>1?1.5:1);let fin=null;
+    while(Date.now()-t0<9*60*1000){
+      await new Promise(r=>setTimeout(r,4000));
+      const e=await vdPost({accion:'estado',status_url:j.status_url,response_url:j.response_url});
+      const p=Math.min(94,100*(1-Math.exp(-2.4*(Date.now()-t0)/estimado)));
+      if(e.estado==='listo'){fin=e.video_url;break}
+      if(e.estado==='fallo')throw new Error(e.error||'Fal no pudo crear el video');
+      vdBar(Math.max(8,p),e.estado==='cola'?('En cola'+(e.posicion!=null?' (posición '+e.posicion+')':'')):'Generando el video');
+    }
+    if(!fin)throw new Error('Está tardando demasiado. Probá de nuevo en un rato.');
+    vdBar(100,'Listo');_vd.url=fin;
+    document.getElementById('vdRes').innerHTML='<div class="card" style="margin-top:12px"><video src="'+esc(fin)+'" controls playsinline></video><input id="vdTit" class="input" maxlength="80" placeholder="Título (ej: Cómo crear una página)" style="margin-top:8px"><textarea id="vdDesc" class="input" rows="2" maxlength="300" placeholder="Descripción corta (opcional)"></textarea><div class="vd-row"><button class="btn" onclick="vdDescargar(_vd.url,\'tutorial-salamangas.mp4\')">⬇️ Descargar</button><button class="btn-main" style="margin:0" onclick="vdPublicar()">📢 Publicar</button></div><p class="warn-mini" style="margin-top:8px">Descargalo o publicalo ahora: el link temporal de Fal puede vencer.</p></div>';
+  }catch(e){vdBar(null);alert('No se pudo crear el video: '+(e.message||e))}
+  btn.disabled=false;setTimeout(()=>{try{if(!_vd.url||document.getElementById('vdBarTxt').textContent.indexOf('Listo')<0)vdBar(null)}catch(x){}},4000);
+};
+window.vdDescargar=async function(url,nombre){
+  try{const r=await fetch(url);if(!r.ok)throw new Error('x');const b=await r.blob();const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=nombre||'video.mp4';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
+  catch(e){window.open(url,'_blank')}
+};
+window.vdPublicar=async function(){
+  const tit=(document.getElementById('vdTit').value||'').trim();
+  if(!tit){alert('Poné un título para el tutorial.');return}
+  if(!_vd.url)return;
+  vdBar(20,'Guardando el video en tu nube');
+  try{
+    const fd=new FormData();fd.append('file',_vd.url);fd.append('upload_preset',CLOUD_PRESET);
+    const r=await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/video/upload',{method:'POST',body:fd});const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.secure_url)throw new Error((d.error&&d.error.message)||'Cloudinary no pudo guardar el video (revisá que el preset permita videos)');
+    vdBar(70,'Publicando');
+    const {error}=await sb.from('tutoriales').insert({titulo:tit,descripcion:(document.getElementById('vdDesc').value||'').trim(),video_url:d.secure_url});
+    if(error)throw error;
+    vdBar(100,'Publicado');alert('✅ Tutorial publicado. Los usuarios lo ven en Mi cuenta > Cómo usar la app.');
+    document.getElementById('vdRes').innerHTML='';_vd.url=null;window.vdLista();
+  }catch(e){vdBar(null);alert('No se pudo publicar: '+(e.message||e)+(/tutoriales/.test(String(e.message||''))?'\n\nFalta correr tutoriales.sql en Supabase.':''))}
+  setTimeout(()=>vdBar(null),2500);
+};
+window.vdLista=async function(){
+  const w=document.getElementById('vdLista');if(!w)return;
+  w.innerHTML=vacio('Cargando...');
+  const {data,error}=await sb.from('tutoriales').select('*').order('created_at',{ascending:false}).limit(50);
+  if(error){w.innerHTML='<p class="warn-mini">No se pudo leer la lista ('+esc(error.message)+'). Si es la primera vez, corré tutoriales.sql en Supabase.</p>';return}
+  w.innerHTML=(data&&data.length)?data.map(v=>'<div class="vd-item"><b style="color:var(--gold3)">'+esc(v.titulo)+'</b>'+(v.descripcion?'<div style="font-size:12px;color:var(--text2);margin:4px 0">'+esc(v.descripcion)+'</div>':'')+'<video src="'+esc(v.video_url)+'" controls playsinline preload="metadata"></video><div class="vd-row"><button class="btn" onclick="vdDescargar(\''+esc(v.video_url)+'\',\'tutorial.mp4\')">⬇️ Descargar</button><button class="btn" style="border-color:#ff6b81;color:#ff6b81" onclick="vdBorrar(\''+esc(String(v.id))+'\')">🗑️ Borrar</button></div></div>').join(''):vacio('Todavía no publicaste ningún tutorial');
+};
+window.vdBorrar=async function(id){
+  if(!confirm('¿Borrar este tutorial? Los usuarios dejan de verlo.'))return;
+  const {error}=await sb.from('tutoriales').delete().eq('id',id);
+  if(error){alert('No se pudo borrar: '+error.message);return}
+  window.vdLista();
+};
+CEO_R.videos=async function(b){
+  cargarCss();_vd.file=null;_vd.url=null;
+  b.innerHTML='<div class="card"><h3 class="section">🎬 Videos IA (tutoriales)</h3><p class="warn-mini">Creá videos cortos que muestren cómo se usa cada función. Si subís una <b>captura real de la app</b>, el video la anima y queda más fiel. Se paga por segundo en Fal.</p>'
+   +'<div style="margin:8px 0">'+PLANT.map((p,i)=>'<span class="chip" onclick="vdPlantilla('+i+')">'+p[0]+'</span>').join('')+'</div>'
+   +'<textarea id="vdPrompt" class="input" rows="5" maxlength="1500" placeholder="Describí qué debe mostrar el video (mejor en inglés) o elegí una plantilla de arriba"></textarea>'
+   +'<label class="lbl">Captura de la app (opcional)</label><div id="vdFoto" class="vd-sq" onclick="document.getElementById(\'vdFile\').click()"><span>＋<br>Captura</span></div><input id="vdFile" type="file" accept="image/*" style="display:none" onchange="vdFotoVer(this)">'
+   +'<label class="lbl">Calidad</label><select id="vdCal" class="input" onchange="vdCosto()"><option value="rapido">Rápido y barato (~US$0,07 por segundo)</option><option value="calidad">Mejor calidad (~US$0,14 por segundo)</option></select>'
+   +'<label class="lbl">Duración</label><select id="vdDur" class="input" onchange="vdCosto()"><option value="5">5 segundos</option><option value="10">10 segundos</option></select>'
+   +'<label class="lbl">Formato</label><select id="vdFmt" class="input"><option value="9:16">Vertical 9:16 (celular)</option><option value="16:9">Horizontal 16:9</option><option value="1:1">Cuadrado 1:1</option></select>'
+   +'<p id="vdCosto" class="warn-mini" style="margin-top:8px"></p>'
+   +'<button id="vdGen" class="btn-main" onclick="vdGenerar()">🎬 Generar video</button>'
+   +'<div id="vdBar" style="display:none"><div class="vd-bar"><i id="vdBarIn"></i></div><div id="vdBarTxt" style="font-size:12px;color:var(--gold3);margin-top:4px;text-align:center"></div></div><div id="vdRes"></div></div>'
+   +'<div class="card"><h3 class="section">📢 Tutoriales publicados</h3><div id="vdLista"></div></div>';
+  vdCosto();window.vdLista();
+};
+})();
+
 </script>
 </body>
 </html>
