@@ -5089,67 +5089,122 @@ async function ceoMarcarDonacionPagada(id){await ceoAccion(async()=>{if(!confirm
 })();
 </script>
 <script>
-/* ===== PANEL CEO: 🎬 VIDEOS IA (tutoriales con Fal) ===== */
+/* ===== PANEL CEO: 🎬 VIDEOS IA (tutoriales con Fal) · varios pasos con capturas · español ===== */
 (function(){
+const MAXP=8;
 const PLANT=[
- ['📄 Crear página con viñetas','Vertical smartphone app tutorial. A manga creation app on a purple and gold dark interface. A finger taps the Create button, picks a 3-panel layout with numbered panels, types a short scene, taps the golden Generate button, and a finished manga page with three panels appears. Smooth finger taps, clean modern UI, cinematic lighting'],
- ['👤 Elegir personaje y outfit','Vertical smartphone app tutorial. In a manga creation app a finger taps square character cards with faces, then picks a different outfit for each character from a grid of square outfit cards, checkmarks appear on the chosen ones. Purple and gold dark interface, smooth taps'],
- ['🛍️ Usar la tienda','Vertical smartphone app tutorial. A finger scrolls a store of outfits and places in square cards, taps one, buys it, and it appears in the Create screen ready to use. Purple and gold dark interface, smooth taps'],
- ['🖐️ Encuadrar con el dedo','Vertical smartphone app tutorial. A finger drags an image inside a manga panel to reframe it and pinches with two fingers to zoom, then taps Done and the manga page updates. Purple and gold dark interface'],
- ['📕 Generar portada','Vertical smartphone app tutorial. A finger chooses a visual style and color, writes a title idea, taps Generate and a manga cover appears with a progress bar showing percent. Purple and gold dark interface']
+ ['📄 Crear página con viñetas','Tutorial: cómo crear una página de manga con viñetas en la app. El usuario toca Crear, elige una distribución de 3 viñetas, escribe qué pasa en cada una, toca Generar y aparece la página terminada.'],
+ ['👤 Personaje y outfit','Tutorial: cómo elegir los personajes y un outfit distinto para cada uno antes de generar.'],
+ ['🛍️ Usar la tienda','Tutorial: cómo comprar un outfit o un lugar en la tienda y usarlo en Crear.'],
+ ['🖐️ Encuadrar con el dedo','Tutorial: cómo mover y hacer zoom a una viñeta con el dedo para encuadrarla bien.'],
+ ['📕 Generar portada','Tutorial: cómo elegir estilo y color y generar la portada de un manga.']
 ];
-function cargarCss(){if(document.getElementById('vdCss'))return;const st=document.createElement('style');st.id='vdCss';st.textContent='.vd-sq{width:120px;aspect-ratio:1/1;border:2px dashed rgba(212,175,55,.5);border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,.3);color:var(--gold3);text-align:center;font-size:13px;line-height:1.3;margin:6px 0}.vd-sq img{width:100%;height:100%;object-fit:contain}.vd-bar{height:16px;background:rgba(255,255,255,.1);border-radius:9px;overflow:hidden;margin-top:10px}.vd-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd45c,#ffb300);transition:width .4s}.vd-item{border:1px solid rgba(212,175,55,.3);border-radius:12px;padding:8px;margin-top:10px;background:rgba(255,255,255,.03)}.vd-item video,#vdRes video{width:100%;max-height:60vh;border-radius:10px;background:#000;display:block}.vd-row{display:flex;gap:8px;margin-top:8px}.vd-row>*{flex:1}';document.head.appendChild(st)}
-window._vd={file:null,url:null};
-window.vdCosto=function(){const c=document.getElementById('vdCal').value==='calidad'?0.14:0.07,d=Number(document.getElementById('vdDur').value);document.getElementById('vdCosto').textContent='Costo aproximado en Fal: US$ '+(c*d).toFixed(2)+' por video ('+d+' seg)'};
-window.vdPlantilla=function(i){document.getElementById('vdPrompt').value=PLANT[i][1]};
-window.vdFotoVer=function(inp){const f=inp.files&&inp.files[0];_vd.file=f||null;const t=document.getElementById('vdFoto');t.innerHTML=f?'<img src="'+URL.createObjectURL(f)+'" alt="">':'<span>＋<br>Captura</span>';document.getElementById('vdFmt').disabled=!!f};
+function cargarCss(){if(document.getElementById('vdCss'))return;const st=document.createElement('style');st.id='vdCss';st.textContent='.vd-sq{width:96px;min-width:96px;aspect-ratio:1/1;border:2px dashed rgba(212,175,55,.5);border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,.3);color:var(--gold3);text-align:center;font-size:12px;line-height:1.3}.vd-sq img{width:100%;height:100%;object-fit:contain}.vd-paso{display:flex;gap:8px;align-items:flex-start;margin-top:8px;padding:8px;border:1px solid rgba(212,175,55,.3);border-radius:12px;background:rgba(255,255,255,.03)}.vd-paso textarea{width:100%;margin:4px 0}.vd-bar{height:16px;background:rgba(255,255,255,.1);border-radius:9px;overflow:hidden;margin-top:10px}.vd-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd45c,#ffb300);transition:width .4s}.vd-item{border:1px solid rgba(212,175,55,.3);border-radius:12px;padding:8px;margin-top:10px;background:rgba(255,255,255,.03)}.vd-item video,#vdRes video{width:100%;max-height:60vh;border-radius:10px;background:#000;display:block;margin-top:6px}.vd-row{display:flex;gap:8px;margin-top:8px}.vd-row>*{flex:1}.vd-mini{padding:4px 9px!important;font-size:12px!important;min-width:0!important;flex:0 0 auto!important}';document.head.appendChild(st)}
+window._vd={pasos:[{file:null,texto:''}],clips:[],destino:null};
+function sync(){document.querySelectorAll('.vd-paso').forEach((el,i)=>{const t=el.querySelector('textarea');if(t&&_vd.pasos[i])_vd.pasos[i].texto=t.value})}
+function pintarPasos(){
+  const w=document.getElementById('vdPasos');if(!w)return;
+  w.innerHTML=_vd.pasos.map((p,i)=>'<div class="vd-paso"><div class="vd-sq" onclick="vdElegirFoto('+i+')">'+(p.file?'<img src="'+esc(p.url||(p.url=URL.createObjectURL(p.file)))+'" alt="">':'<span>＋<br>Captura</span>')+'</div><div style="flex:1;min-width:0"><b style="color:var(--gold3)">Paso '+(i+1)+'</b><textarea class="input" rows="3" maxlength="500" placeholder="¿Qué pasa en este paso? (en español). Ej: Toco el botón Crear y elijo la distribución de 3 viñetas">'+esc(p.texto||'')+'</textarea><div style="display:flex;gap:6px"><button type="button" class="btn vd-mini" onclick="vdMover('+i+',-1)">▲</button><button type="button" class="btn vd-mini" onclick="vdMover('+i+',1)">▼</button><button type="button" class="btn vd-mini" style="border-color:#ff6b81;color:#ff6b81" onclick="vdQuitar('+i+')">🗑️</button></div></div></div>').join('');
+  vdCosto();
+}
+window.vdAgregarPaso=function(){sync();if(_vd.pasos.length>=MAXP){alert('Máximo '+MAXP+' pasos por tutorial.');return}_vd.pasos.push({file:null,texto:''});pintarPasos()};
+window.vdQuitar=function(i){sync();_vd.pasos.splice(i,1);if(!_vd.pasos.length)_vd.pasos.push({file:null,texto:''});pintarPasos()};
+window.vdMover=function(i,d){sync();const j=i+d;if(j<0||j>=_vd.pasos.length)return;const t=_vd.pasos[i];_vd.pasos[i]=_vd.pasos[j];_vd.pasos[j]=t;pintarPasos()};
+window.vdElegirFoto=function(i){_vd.destino=i;const f=document.getElementById('vdFile');f.multiple=false;f.value='';f.click()};
+window.vdSubirVarias=function(){_vd.destino=null;const f=document.getElementById('vdFile');f.multiple=true;f.value='';f.click()};
+window.vdFilesElegidos=function(inp){
+  sync();const fs=[...(inp.files||[])];if(!fs.length)return;
+  if(_vd.destino!=null){_vd.pasos[_vd.destino]=Object.assign(_vd.pasos[_vd.destino]||{texto:''},{file:fs[0],url:null})}
+  else{
+    // todas las capturas elegidas, en orden, como pasos nuevos (se completa primero los pasos vacíos)
+    for(const f of fs){let h=_vd.pasos.find(p=>!p.file&&!p.texto);if(!h){if(_vd.pasos.length>=MAXP){alert('Máximo '+MAXP+' pasos: se usaron las primeras.');break}h={file:null,texto:''};_vd.pasos.push(h)}h.file=f;h.url=null}
+  }
+  pintarPasos();
+};
+window.vdCosto=function(){const c=document.getElementById('vdCal');if(!c)return;const r=c.value==='calidad'?0.14:0.07,d=Number(document.getElementById('vdDur').value),n=Math.max(1,_vd.pasos.filter(p=>p.file||(p.texto||'').trim()).length);document.getElementById('vdCosto').textContent='Costo aproximado en Fal: US$ '+(r*d*n).toFixed(2)+' ('+n+' '+(n>1?'videos':'video')+' de '+d+' seg)'};
+window.vdPlantilla=function(i){document.getElementById('vdObj').value=PLANT[i][1]};
 async function vdToken(){const {data:{session}}=await sb.auth.getSession();return session?session.access_token:''}
 async function vdPost(body){const r=await fetch('/api/ceo-video',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+await vdToken()},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'Error del servidor');return j}
 function vdBar(p,txt){const w=document.getElementById('vdBar');if(!w)return;w.style.display=p==null?'none':'block';if(p==null)return;document.getElementById('vdBarIn').style.width=p+'%';document.getElementById('vdBarTxt').textContent=Math.round(p)+'% · '+(txt||'')}
-window.vdGenerar=async function(){
-  const prompt=(document.getElementById('vdPrompt').value||'').trim();
-  if(prompt.length<10){alert('Describí el video que querés (o elegí una plantilla).');return}
-  const cal=document.getElementById('vdCal').value,dur=Number(document.getElementById('vdDur').value),usd=(cal==='calidad'?0.14:0.07)*dur;
-  if(!confirm('Este video cuesta aproximadamente US$ '+usd.toFixed(2)+' en Fal.\n\n¿Generar?'))return;
-  const btn=document.getElementById('vdGen');btn.disabled=true;document.getElementById('vdRes').innerHTML='';
-  try{
-    let img='';
-    if(_vd.file){vdBar(3,'Subiendo la captura');img=await subirACloudinary(_vd.file)}
-    vdBar(6,'Enviando a Fal');
-    const j=await vdPost({accion:'crear',modelo:cal,prompt,duracion:dur,formato:document.getElementById('vdFmt').value,imagen_url:img});
-    const t0=Date.now(),estimado=(cal==='calidad'?170:110)*1000*(dur/5>1?1.5:1);let fin=null;
-    while(Date.now()-t0<9*60*1000){
-      await new Promise(r=>setTimeout(r,4000));
-      const e=await vdPost({accion:'estado',status_url:j.status_url,response_url:j.response_url});
-      const p=Math.min(94,100*(1-Math.exp(-2.4*(Date.now()-t0)/estimado)));
-      if(e.estado==='listo'){fin=e.video_url;break}
-      if(e.estado==='fallo')throw new Error(e.error||'Fal no pudo crear el video');
-      vdBar(Math.max(8,p),e.estado==='cola'?('En cola'+(e.posicion!=null?' (posición '+e.posicion+')':'')):'Generando el video');
+const esp=ms=>new Promise(r=>setTimeout(r,ms));
+// Espera a que todos los trabajos terminen. Devuelve la lista de URLs de video.
+async function esperar(trabajos,estimadoMs,txtBase,p0,p1){
+  const t0=Date.now(),res=new Array(trabajos.length).fill(null);
+  while(Date.now()-t0<12*60*1000){
+    await esp(4000);
+    let cola=null;
+    for(let i=0;i<trabajos.length;i++){
+      if(res[i])continue;
+      const e=await vdPost({accion:'estado',status_url:trabajos[i].status_url,response_url:trabajos[i].response_url});
+      if(e.estado==='listo')res[i]=e.video_url;
+      else if(e.estado==='fallo')throw new Error((trabajos.length>1?'Paso '+(i+1)+': ':'')+(e.error||'Fal no pudo crear el video'));
+      else if(e.estado==='cola')cola=e.posicion;
     }
-    if(!fin)throw new Error('Está tardando demasiado. Probá de nuevo en un rato.');
-    vdBar(100,'Listo');_vd.url=fin;
-    document.getElementById('vdRes').innerHTML='<div class="card" style="margin-top:12px"><video src="'+esc(fin)+'" controls playsinline></video><input id="vdTit" class="input" maxlength="80" placeholder="Título (ej: Cómo crear una página)" style="margin-top:8px"><textarea id="vdDesc" class="input" rows="2" maxlength="300" placeholder="Descripción corta (opcional)"></textarea><div class="vd-row"><button class="btn" onclick="vdDescargar(_vd.url,\'tutorial-salamangas.mp4\')">⬇️ Descargar</button><button class="btn-main" style="margin:0" onclick="vdPublicar()">📢 Publicar</button></div><p class="warn-mini" style="margin-top:8px">Descargalo o publicalo ahora: el link temporal de Fal puede vencer.</p></div>';
+    const hechos=res.filter(Boolean).length,prog=Math.min(0.94,1-Math.exp(-2.4*(Date.now()-t0)/estimadoMs));
+    const frac=(hechos+(trabajos.length-hechos)*prog)/trabajos.length;
+    vdBar(p0+(p1-p0)*frac,hechos===trabajos.length?'Listo':(txtBase+(trabajos.length>1?' ('+hechos+' de '+trabajos.length+' listos)':'')+(cola!=null?' · en cola '+cola:'')));
+    if(hechos===trabajos.length)return res;
+  }
+  throw new Error('Está tardando demasiado. Probá de nuevo en un rato.');
+}
+function pintarResultado(){
+  const w=document.getElementById('vdRes');if(!w)return;
+  const c=_vd.clips;
+  w.innerHTML='<div class="card" style="margin-top:12px">'+c.map((u,i)=>'<div class="vd-item"><b style="color:var(--gold3)">'+(c.length>1?'Paso '+(i+1):'Video listo')+'</b><video src="'+esc(u)+'" controls playsinline preload="metadata"></video><button type="button" class="btn" style="width:100%;margin-top:8px" onclick="vdDescargar(_vd.clips['+i+'],\'tutorial-paso-'+(i+1)+'.mp4\')">⬇️ Descargar'+(c.length>1?' este paso':'')+'</button></div>').join('')
+   +(c.length>1?'<button type="button" class="btn" style="width:100%;margin-top:10px" onclick="vdUnir()">🔗 Unir todos en un solo video</button>':'')
+   +'<input id="vdTit" class="input" maxlength="70" placeholder="Título (ej: Cómo crear una página)" style="margin-top:10px"><textarea id="vdDesc" class="input" rows="2" maxlength="300" placeholder="Descripción corta (opcional)"></textarea><button class="btn-main" onclick="vdPublicar()">📢 Publicar'+(c.length>1?' (un tutorial por paso)':'')+'</button><p class="warn-mini" style="margin-top:8px">Descargá o publicá ahora: el link temporal de Fal puede vencer.</p></div>';
+}
+window.vdGenerar=async function(){
+  sync();
+  const objetivo=(document.getElementById('vdObj').value||'').trim();
+  const pasos=_vd.pasos.filter(p=>p.file||(p.texto||'').trim());
+  if(!pasos.length&&objetivo.length<10){alert('Escribí qué querés mostrar o agregá pasos con capturas.');return}
+  const cal=document.getElementById('vdCal').value,dur=Number(document.getElementById('vdDur').value),n=Math.max(1,pasos.length),usd=(cal==='calidad'?0.14:0.07)*dur*n;
+  if(!confirm('Se van a crear '+n+' '+(n>1?'videos':'video')+' ('+dur+' seg cada uno).\nCosto aproximado en Fal: US$ '+usd.toFixed(2)+'\n\n¿Generar?'))return;
+  const btn=document.getElementById('vdGen');btn.disabled=true;document.getElementById('vdRes').innerHTML='';_vd.clips=[];
+  try{
+    const listos=[];
+    for(let i=0;i<pasos.length;i++){
+      let img='';
+      if(pasos[i].file){vdBar(2+8*i/pasos.length,'Subiendo captura '+(i+1)+' de '+pasos.length);img=await subirACloudinary(pasos[i].file)}
+      listos.push({texto:(pasos[i].texto||'').trim(),imagen_url:img});
+    }
+    vdBar(10,'Enviando a Fal');
+    const j=await vdPost({accion:'crear',modelo:cal,objetivo,pasos:listos,duracion:dur,formato:document.getElementById('vdFmt').value});
+    _vd.clips=await esperar(j.trabajos,(cal==='calidad'?170:110)*1000*(dur>5?1.5:1),'Generando',12,100);
+    vdBar(100,'Listo');pintarResultado();
   }catch(e){vdBar(null);alert('No se pudo crear el video: '+(e.message||e))}
-  btn.disabled=false;setTimeout(()=>{try{if(!_vd.url||document.getElementById('vdBarTxt').textContent.indexOf('Listo')<0)vdBar(null)}catch(x){}},4000);
+  btn.disabled=false;setTimeout(()=>{try{if(!_vd.clips.length)vdBar(null)}catch(x){}},4000);
+};
+window.vdUnir=async function(){
+  if(_vd.clips.length<2)return;
+  try{
+    vdBar(5,'Uniendo los videos');
+    const j=await vdPost({accion:'unir',video_urls:_vd.clips});
+    const r=await esperar([j],40000,'Uniendo los videos',5,100);
+    _vd.clips=[r[0]];pintarResultado();
+  }catch(e){vdBar(null);alert('No se pudo unir ('+(e.message||e)+'). Podés descargar o publicar cada paso por separado.')}
+  setTimeout(()=>vdBar(null),2500);
 };
 window.vdDescargar=async function(url,nombre){
   try{const r=await fetch(url);if(!r.ok)throw new Error('x');const b=await r.blob();const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=nombre||'video.mp4';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
   catch(e){window.open(url,'_blank')}
 };
 window.vdPublicar=async function(){
-  const tit=(document.getElementById('vdTit').value||'').trim();
+  const tit=(document.getElementById('vdTit').value||'').trim(),desc=(document.getElementById('vdDesc').value||'').trim();
   if(!tit){alert('Poné un título para el tutorial.');return}
-  if(!_vd.url)return;
-  vdBar(20,'Guardando el video en tu nube');
+  const c=_vd.clips.slice();if(!c.length)return;
   try{
-    const fd=new FormData();fd.append('file',_vd.url);fd.append('upload_preset',CLOUD_PRESET);
-    const r=await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/video/upload',{method:'POST',body:fd});const d=await r.json().catch(()=>({}));
-    if(!r.ok||!d.secure_url)throw new Error((d.error&&d.error.message)||'Cloudinary no pudo guardar el video (revisá que el preset permita videos)');
-    vdBar(70,'Publicando');
-    const {error}=await sb.from('tutoriales').insert({titulo:tit,descripcion:(document.getElementById('vdDesc').value||'').trim(),video_url:d.secure_url});
-    if(error)throw error;
-    vdBar(100,'Publicado');alert('✅ Tutorial publicado. Los usuarios lo ven en Mi cuenta > Cómo usar la app.');
-    document.getElementById('vdRes').innerHTML='';_vd.url=null;window.vdLista();
+    for(let i=0;i<c.length;i++){
+      vdBar(10+80*i/c.length,'Guardando el video '+(i+1)+' de '+c.length);
+      const fd=new FormData();fd.append('file',c[i]);fd.append('upload_preset',CLOUD_PRESET);
+      const r=await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/video/upload',{method:'POST',body:fd});const d=await r.json().catch(()=>({}));
+      if(!r.ok||!d.secure_url)throw new Error((d.error&&d.error.message)||'Cloudinary no pudo guardar el video (revisá que el preset permita videos)');
+      const {error}=await sb.from('tutoriales').insert({titulo:c.length>1?tit+' · Paso '+(i+1):tit,descripcion:desc,video_url:d.secure_url});
+      if(error)throw error;
+    }
+    vdBar(100,'Publicado');alert('✅ Publicado. Los usuarios lo ven en Mi cuenta > Cómo usar la app.');
+    document.getElementById('vdRes').innerHTML='';_vd.clips=[];window.vdLista();
   }catch(e){vdBar(null);alert('No se pudo publicar: '+(e.message||e)+(/tutoriales/.test(String(e.message||''))?'\n\nFalta correr tutoriales.sql en Supabase.':''))}
   setTimeout(()=>vdBar(null),2500);
 };
@@ -5167,19 +5222,20 @@ window.vdBorrar=async function(id){
   window.vdLista();
 };
 CEO_R.videos=async function(b){
-  cargarCss();_vd.file=null;_vd.url=null;
-  b.innerHTML='<div class="card"><h3 class="section">🎬 Videos IA (tutoriales)</h3><p class="warn-mini">Creá videos cortos que muestren cómo se usa cada función. Si subís una <b>captura real de la app</b>, el video la anima y queda más fiel. Se paga por segundo en Fal.</p>'
+  cargarCss();_vd.pasos=[{file:null,texto:''}];_vd.clips=[];
+  b.innerHTML='<div class="card"><h3 class="section">🎬 Videos IA (tutoriales)</h3><p class="warn-mini">Escribí todo en <b>español</b>: la IA lo traduce sola. Subí las <b>capturas de pantalla en orden</b> y explicá qué pasa en cada paso. Cada captura se convierte en una escena animada.</p>'
    +'<div style="margin:8px 0">'+PLANT.map((p,i)=>'<span class="chip" onclick="vdPlantilla('+i+')">'+p[0]+'</span>').join('')+'</div>'
-   +'<textarea id="vdPrompt" class="input" rows="5" maxlength="1500" placeholder="Describí qué debe mostrar el video (mejor en inglés) o elegí una plantilla de arriba"></textarea>'
-   +'<label class="lbl">Captura de la app (opcional)</label><div id="vdFoto" class="vd-sq" onclick="document.getElementById(\'vdFile\').click()"><span>＋<br>Captura</span></div><input id="vdFile" type="file" accept="image/*" style="display:none" onchange="vdFotoVer(this)">'
-   +'<label class="lbl">Calidad</label><select id="vdCal" class="input" onchange="vdCosto()"><option value="rapido">Rápido y barato (~US$0,07 por segundo)</option><option value="calidad">Mejor calidad (~US$0,14 por segundo)</option></select>'
-   +'<label class="lbl">Duración</label><select id="vdDur" class="input" onchange="vdCosto()"><option value="5">5 segundos</option><option value="10">10 segundos</option></select>'
-   +'<label class="lbl">Formato</label><select id="vdFmt" class="input"><option value="9:16">Vertical 9:16 (celular)</option><option value="16:9">Horizontal 16:9</option><option value="1:1">Cuadrado 1:1</option></select>'
+   +'<label class="lbl">¿De qué trata el tutorial? (en español)</label><textarea id="vdObj" class="input" rows="3" maxlength="1500" placeholder="Ej: Cómo crear una página de manga con 3 viñetas, paso a paso"></textarea>'
+   +'<label class="lbl" style="margin-top:10px">Pasos con capturas</label><button type="button" class="btn" style="width:100%" onclick="vdSubirVarias()">📸 Subir varias capturas de una vez</button><input id="vdFile" type="file" accept="image/*" style="display:none" onchange="vdFilesElegidos(this)"><div id="vdPasos"></div>'
+   +'<button type="button" class="btn" style="width:100%;margin-top:8px" onclick="vdAgregarPaso()">＋ Agregar paso</button>'
+   +'<label class="lbl" style="margin-top:10px">Calidad</label><select id="vdCal" class="input" onchange="vdCosto()"><option value="rapido">Rápido y barato (~US$0,07 por segundo)</option><option value="calidad">Mejor calidad (~US$0,14 por segundo)</option></select>'
+   +'<label class="lbl">Duración de cada paso</label><select id="vdDur" class="input" onchange="vdCosto()"><option value="5">5 segundos</option><option value="10">10 segundos</option></select>'
+   +'<label class="lbl">Formato (solo si un paso no tiene captura)</label><select id="vdFmt" class="input"><option value="9:16">Vertical 9:16 (celular)</option><option value="16:9">Horizontal 16:9</option><option value="1:1">Cuadrado 1:1</option></select>'
    +'<p id="vdCosto" class="warn-mini" style="margin-top:8px"></p>'
    +'<button id="vdGen" class="btn-main" onclick="vdGenerar()">🎬 Generar video</button>'
    +'<div id="vdBar" style="display:none"><div class="vd-bar"><i id="vdBarIn"></i></div><div id="vdBarTxt" style="font-size:12px;color:var(--gold3);margin-top:4px;text-align:center"></div></div><div id="vdRes"></div></div>'
    +'<div class="card"><h3 class="section">📢 Tutoriales publicados</h3><div id="vdLista"></div></div>';
-  vdCosto();window.vdLista();
+  pintarPasos();window.vdLista();
 };
 })();
 

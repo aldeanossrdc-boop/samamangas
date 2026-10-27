@@ -2486,7 +2486,8 @@ const k=String(m.id),uid=m.user_id;
 const pags=[m.portada_url,...(m.paginas_urls||[])].filter(Boolean);
 let idx=0;
 const mio=!!miPerfil&&miPerfil.id===uid,sig=SEGUIDOS.has(uid);
-d.innerHTML=`${pags.length?'<img class="mcover" loading="lazy" src="'+esc(pags[0])+'">':'<div class="noimg"></div>'}<span class="mpg"></span><img class="manga-logo-mark" src="logo.jpg" alt="SalaMangaS" onerror="this.style.display='none'"><div class="heart${FAVS.has(k)?' on':''}" data-fav="${esc(k)}">❤️</div><div class="t">${esc(m.titulo)}</div>${m.subtitulo?'<div class="st">'+esc(m.subtitulo)+'</div>':''}<div class="a">${esc(nomAutor(uid))}${insigniaHTML(AUTORES[uid])}</div><div class="mstats" data-stat="${esc(k)}">👍 ${m.likes||0} · 👁️ ${m.vistas||0}</div><div class="mbtns"><button type="button" class="mb-seg${sig?' on':''}"${mio?' disabled':''}>${mio?'Sos vos':(sig?'✓ Siguiendo':'＋ Seguir')}</button><button type="button" class="mb-sig"${pags.length<2?' disabled':''}>Siguiente ▶</button><button type="button" class="mb-sig" data-report data-report-type="manga" data-report-id="${esc(k)}" data-report-owner="${esc(uid)}" data-report-title="${esc(m.titulo)}" data-report-url="${esc(location.origin+'/?report_manga='+encodeURIComponent(k))}" title="Reportar publicación">🚩 ¡Ojo acá!</button></div>`;
+d.innerHTML=`${pags.length?'<img class="mcover" loading="lazy" src="'+esc(pags[0])+'">':'<div class="noimg"></div>'}<span class="mpg"></span><img class="manga-logo-mark" src="logo.jpg" alt="SalaMangaS" onerror="this.style.display='none'"><div class="heart${FAVS.has(k)?' on':''}" data-fav="${esc(k)}">❤️</div><div class="t">${esc(m.titulo)}</div>${m.subtitulo?'<div class="st">'+esc(m.subtitulo)+'</div>':''}<div class="a">${esc(nomAutor(uid))}${insigniaHTML(AUTORES[uid])}</div><div class="mstats" data-stat="${esc(k)}">👍 ${m.likes||0} · 👁️ ${m.vistas||0}</div><div class="mbtns"><button type="button" class="mb-seg${sig?' on':''}"${mio?' disabled':''}>${mio?'Sos vos':(sig?'✓ Siguiendo':'＋ Seguir')}</button><button type="button" class="mb-sig"${pags.length<2?' disabled':''}>Siguiente ▶</button><button type="button" class="mb-sig" data-report data-report-type="manga" data-report-id="${esc(k)}" data-report-owner="${esc(uid)}" data-report-title="${esc(m.titulo)}" data-report-url="${esc(location.origin+'/?report_manga='+encodeURIComponent(k))}" title="Reportar publicación">🚩 ¡Ojo acá!</button>${esCeoSync()?'<button type="button" class="mb-sig mb-del" style="border-color:#ff6b81;color:#ff6b81">🗑️ Borrar</button>':''}</div>`;
+const _bd=d.querySelector('.mb-del');if(_bd)_bd.onclick=e=>{e.stopPropagation();galBorrarManga(m.id,d)};
 d.onclick=()=>abrirLector(m.id);
 d.querySelector('.heart').onclick=e=>{e.stopPropagation();toggleFav(m.id)};
 d.querySelector('.a').onclick=e=>{e.stopPropagation();usuarioTap(uid,(AUTORES[uid]&&AUTORES[uid].username)||'')};
@@ -3085,6 +3086,22 @@ try{
 const {data:s}=await sb.from('seguidores').select('seguidor_id').eq('creador_id',m.user_id);
 if(s&&s.length)await sb.from('notificaciones').insert(s.map(x=>({user_id:x.seguidor_id,tipo:'capitulo',texto:'📖 '+nomAutor(m.user_id)+' subió "'+m.titulo+'"',manga_id:String(m.id)})));
 }catch(e){}
+}
+async function galBorrarManga(id,card){
+  if(!esCeoSync())return;
+  await ceoAccion(async()=>{
+    if(!(await esCeoReal())){alert('Solo el CEO puede borrar mangas.');return}
+    if(!confirm('¿Borrar este manga para siempre? No se puede deshacer.'))return;
+    const k=String(id);
+    const {data,error}=await sb.from('mangas').delete().eq('id',id).select('id');
+    if(error){alert('Error: '+error.message);return}
+    if(!data||!data.length){alert('La base no dejó borrar (permisos). Corré el SQL del CEO en Supabase.');return}
+    await Promise.all(['comentarios','favoritos','historial'].map(t=>sb.from(t).delete().eq('manga_id',k)));
+    MANGAS=MANGAS.filter(m=>String(m.id)!==k);
+    try{if(typeof MIS_MANGAS!=='undefined'&&Array.isArray(MIS_MANGAS)){const ix=MIS_MANGAS.findIndex(m=>String(m.id)===k);if(ix>=0)MIS_MANGAS.splice(ix,1)}}catch(e){}
+    if(card&&card.remove)card.remove();
+    try{cargarStatsCEO()}catch(e){}
+  });
 }
 async function ceoBorrar(id){await ceoAccion(async()=>{
 if(!confirm('¿Borrar este manga para siempre? No se puede deshacer.'))return;
