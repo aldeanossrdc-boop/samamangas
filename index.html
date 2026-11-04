@@ -1346,7 +1346,7 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div class="card" style="margin-top:14px;text-align:center"><div id="ctaRefs" style="font-size:34px;font-weight:800;color:var(--gold)">0</div><div style="font-size:12px;color:var(--text2)">personas registradas con tu link</div><div id="ctaFalta" style="font-size:12px;color:var(--gold3);margin-top:6px"></div></div>
 <button class="btn-main" onclick="compartir()">🔗 Compartir mi link</button>
 <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="editarBio()">✏️ Editar mi bio</button>
-<div id="ctaDonBox" class="card" style="display:none;margin-top:10px"><div style="font-weight:800;color:var(--gold)">💖 Recibir donaciones</div><p class="warn-mini" style="margin:6px 0">Cargá tu CBU o alias. Los lectores te donan directo a tu cuenta: el 100% es tuyo, SalaMangaS no cobra comisión ni interviene.</p><input id="ctaDonTit" class="input" maxlength="60" placeholder="Nombre del titular de la cuenta"><input id="ctaDonAlias" class="input" maxlength="30" style="margin-top:6px" placeholder="Alias (ej: mi.alias.mp) o CBU de 22 números" autocapitalize="off" autocomplete="off"><button class="btn-main" style="margin-top:8px" onclick="guardarDonacion()">💾 Guardar mis datos</button><button class="btn-ghost" style="width:100%;margin-top:6px" onclick="quitarDonacion()">Quitar mis datos</button></div>
+<div id="ctaDonBox" class="card" style="display:none;margin-top:10px"><div style="font-weight:800;color:var(--gold)">💖 Mi alias o CBU para donaciones</div><p class="warn-mini" style="margin:6px 0">Cargá tu CBU o alias. Los lectores te donan directo a tu cuenta: el 100% es tuyo, SalaMangaS no cobra comisión ni interviene.</p><input id="ctaDonTit" class="input" maxlength="60" placeholder="Nombre del titular de la cuenta"><input id="ctaDonAlias" class="input" maxlength="30" style="margin-top:6px" placeholder="Alias (ej: mi.alias.mp) o CBU de 22 números" autocapitalize="off" autocomplete="off"><button class="btn-main" style="margin-top:8px" onclick="guardarDonacion()">💾 Guardar mis datos</button><button class="btn-ghost" style="width:100%;margin-top:6px" onclick="quitarDonacion()">Quitar mis datos</button></div>
 <button id="btnHablarCEO" class="btn-main" style="display:none;margin-top:8px" onclick="abrirChatCEO()">💬 Hablar con el CEO</button>
 <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="abrirTutoriales()">🎬 Cómo usar la app (videos)</button>
 <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button>
@@ -1640,7 +1640,7 @@ let monto = 1000;
 let lang = 'es';
 let filaActual = 0;
 const T = {
-es:{nav_inicio:"🏠 Inicio",nav_crear:"➕ Crear",nav_chat:"💬 Chat",nav_config:"⚙️ Config",nav_perfil:"👤 Mi perfil",nav_donar:"💖 Donar",apoyar_t:"💖 Apoya a los Creadores",apoyar_s:"Mantén el Manga Gratis",donar_btn:"Donar $1000 ARS",tend_t:"⭐ Tendencias",ver_mas:"Ver más ›",seguir_t:"📖 Continuar Leyendo",recom_t:"👑 Recomendados",desc_t:"🌸 Descubrir",crear_t:"Crear Nuevo Manga",crear_s:"Completa los detalles para tu nueva obra",elegir_como:"✨ Elegir CÓMO crear",op_img:"Dibujo a lápiz",op_img_d:"La IA lo convierte",op_pdf:"PDF",op_pdf_d:"Importar PDF",op_ia_d:"Generar con IA",lbl_titulo:"Título del Manga",lbl_genero:"Género (selección múltiple)",lbl_estilo:"Estilo Visual (solo 1)",lbl_sinop:"Sinopsis",lbl_portada:"Subir Portada",portada_toque:"📷 Toca para subir la portada",lbl_paginas:"Páginas",sig_btn:"Siguiente →",pags_info:"15 a 20 páginas (gratis) o 15 a 30 (pago) • Mínimo 15 para publicar",btn_personajes:"👥 Personajes",btn_mis_mangas:"📚 Mis mangas",aviso_pub:"⚠️ Al tocar Publicar se enviará a revisión.",btn_guardar:"💾 Guardar Borrador",btn_monet:"🔒 Monetizar",btn_publicar:"Publicar",monet_msg:"Para monetizar tu manga, necesitás el plan Mangakar Dios."},
+es:{nav_inicio:"🏠 Inicio",nav_crear:"➕ Crear",nav_chat:"💬 Chat",nav_config:"⚙️ Config",nav_perfil:"👤 Mi perfil",nav_donar:"💖 Donar",apoyar_t:"💖 Apoya a los Creadores",apoyar_s:"Mantén el Manga Gratis",donar_btn:"Donar $1000 ARS",tend_t:"⭐ Tendencias",ver_mas:"Ver más ›",seguir_t:"📖 Continuar Leyendo",recom_t:"👑 Recomendados",desc_t:"🌸 Descubrir",crear_t:"Crear Nuevo Manga",crear_s:"Completa los detalles para tu nueva obra",elegir_como:"✨ Elegir CÓMO crear",op_img:"Dibujo a lápiz",op_img_d:"La IA lo convierte",op_pdf:"PDF",op_pdf_d:"Importar PDF",op_ia_d:"Generar con IA",lbl_titulo:"Título del Manga",lbl_genero:"Género (selección múltiple)",lbl_estilo:"Estilo Visual (solo 1)",lbl_sinop:"Sinopsis",lbl_portada:"Subir Portada",portada_toque:"📷 Toca para subir la portada",lbl_paginas:"Páginas",sig_btn:"Siguiente →",pags_info:"15 a 20 páginas (gratis) o 15 a 30 (pago) • Mínimo 15 para publicar",btn_personajes:"👥 Personajes",btn_mis_mangas:"📚 Mis mangas",aviso_pub:"⚠️ Al tocar Publicar se enviará a revisión.",btn_guardar:"💾 Guardar Borrador",btn_monet:"🔒 Monetizar",btn_publicar:"Publicar",monet_msg:"Para recibir donaciones directo en tu alias o CBU necesitás el plan Súper Pro, Semi Dios o Dios."},
 en:{nav_inicio:"🏠 Home",nav_crear:"➕ Create",nav_chat:"💬 Chat",nav_config:"⚙️ Settings",nav_perfil:"👤 My profile",nav_donar:"💖 Donate",apoyar_t:"💖 Support Creators",apoyar_s:"Keep Manga Free",donar_btn:"Donate $1000 ARS",tend_t:"⭐ Trending",ver_mas:"See more ›",seguir_t:"📖 Continue Reading",recom_t:"👑 Recommended",desc_t:"🌸 Discover",crear_t:"Create New Manga",crear_s:"Complete details",elegir_como:"✨ Choose HOW to create",op_img:"Pencil drawing",op_img_d:"AI converts it",op_pdf:"PDF",op_pdf_d:"Import PDF",op_ia_d:"Generate with AI",lbl_titulo:"Manga Title",lbl_genero:"Genre",lbl_estilo:"Visual Style",lbl_sinop:"Synopsis",lbl_portada:"Upload Cover",portada_toque:"📷 Tap to upload cover",lbl_paginas:"Pages",sig_btn:"Next →",pags_info:"15 to 20 pages (free) or 15 to 30 (paid)",btn_personajes:"👥 Characters",btn_mis_mangas:"📚 My mangas",aviso_pub:"⚠️ Publish sends to review.",btn_guardar:"💾 Save Draft",btn_monet:"🔒 Monetize",btn_publicar:"Publish",monet_msg:"To monetize, you need the subscription plan."},
 zh:{nav_inicio:"🏠 首页",nav_crear:"➕ 创建",nav_chat:"💬 聊天",nav_config:"⚙️ 设置",nav_perfil:"👤 我的资料",nav_donar:"💖 捐赠",apoyar_t:"💖 支持创作者",apoyar_s:"保持漫画免费",donar_btn:"捐赠 $1000 ARS",tend_t:"⭐ 热门",ver_mas:"更多 ›",seguir_t:"📖 继续阅读",recom_t:"👑 推荐",desc_t:"🌸 发现",crear_t:"创建新漫画",crear_s:"完成新作品的详细信息",elegir_como:"✨ 选择创建方式",op_img:"铅笔画",op_img_d:"AI会转换它",op_pdf:"PDF",op_pdf_d:"导入PDF",op_ia_d:"AI生成",lbl_titulo:"漫画标题",lbl_genero:"类型",lbl_estilo:"视觉风格",lbl_sinop:"简介",lbl_portada:"上传封面",portada_toque:"📷 点击上传封面",lbl_paginas:"页面",sig_btn:"下一页 →",pags_info:"15到20页（免费）或15到30页（付费）",btn_personajes:"👥 角色",btn_mis_mangas:"📚 我的漫画",aviso_pub:"⚠️ 点击发布后将送审",btn_guardar:"💾 保存草稿",btn_monet:"🔒 变现",btn_publicar:"发布",monet_msg:"要变现您的漫画，需要订阅计划。"},
 ja:{nav_inicio:"🏠 ホーム",nav_crear:"➕ 作成",nav_chat:"💬 チャット",nav_config:"⚙️ 設定",nav_perfil:"👤 プロフィール",nav_donar:"💖 寄付",apoyar_t:"💖 クリエイターを支援",apoyar_s:"漫画を無料に保つ",donar_btn:"寄付 $1000 ARS",tend_t:"⭐ トレンド",ver_mas:"もっと見る ›",seguir_t:"📖 続きを読む",recom_t:"👑 おすすめ",desc_t:"🌸 発見",crear_t:"新しい漫画を作成",crear_s:"新作の詳細を入力",elegir_como:"✨ 作成方法を選択",op_img:"鉛筆画",op_img_d:"AIが変換します",op_pdf:"PDF",op_pdf_d:"PDFをインポート",op_ia_d:"AIで生成",lbl_titulo:"漫画タイトル",lbl_genero:"ジャンル",lbl_estilo:"ビジュアルスタイル",lbl_sinop:"あらすじ",lbl_portada:"表紙をアップロード",portada_toque:"📷 タップして表紙をアップロード",lbl_paginas:"ページ",sig_btn:"次へ →",pags_info:"15〜20ページ（無料）または15〜30ページ（有料）",btn_personajes:"👥 キャラクター",btn_mis_mangas:"📚 マイ漫画",aviso_pub:"⚠️ 公開すると審査に送られます",btn_guardar:"💾 下書き保存",btn_monet:"🔒 収益化",btn_publicar:"公開",monet_msg:"漫画を収益化するには購読プランが必要です。"},
@@ -2292,7 +2292,7 @@ function planVigentePerfil(perfil){
 }
 function puedeMonetizar(perfil){
 if(!perfil) return false;
-return ['semidios','dios'].includes(planClave(perfil)) && planVigentePerfil(perfil);
+return ['superpro','semidios','dios'].includes(planClave(perfil)) && planVigentePerfil(perfil);
 }
 async function limpiarMensajesAntiguos(){
   try{
@@ -2664,7 +2664,7 @@ if(!AUTORES[uid]){try{const {data}=await sb.from('profiles').select('*').eq('id'
 const p=AUTORES[uid]||{};let n=0;
 try{const r=await sb.from('seguidores').select('*',{count:'exact',head:true}).eq('creador_id',uid);n=r.count||0}catch(e){}
 const sig=SEGUIDOS.has(uid);
-b.innerHTML=`<div style="text-align:center"><div class="msg-avatar" style="width:84px;height:84px;font-size:32px;margin:0 auto">${p.avatar_url?'<img src="'+esc(p.avatar_url)+'" style="width:100%;height:100%;object-fit:cover">':esc((p.username||'?')[0].toUpperCase())}</div><h1 class="title" style="font-size:22px;margin-top:10px">${esc(p.username||'Autor')}${insigniaHTML(p)}</h1><p style="font-size:12px;color:var(--text2)">${n} seguidores</p><p style="font-size:13px;margin:10px 0">${esc(p.bio||'Este creador todavía no escribió su bio ✨')}</p><div style="display:flex;gap:8px"><button class="btn${sig?' on':''}" style="flex:1" onclick="toggleSeguir('${esc(uid)}',this)">${sig?'✓ Siguiendo':'＋ Seguir'}</button><button class="btn-ghost" style="flex:1" onclick="compartir()">🔗 Compartir</button></div>${miPerfil&&uid===miPerfil.id&&puedeChatCEO()?'<button class="btn-main" style="margin-top:8px" onclick="abrirChatCEO()">💬 Hablar con el CEO</button>':''}<button class="btn-ghost" style="width:100%;margin-top:8px" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button></div><h3 class="section">📚 Sus mangas</h3><div id="creGrid" class="manga-grid"></div>`;
+b.innerHTML=`<div style="text-align:center"><div class="msg-avatar" style="width:84px;height:84px;font-size:32px;margin:0 auto">${p.avatar_url?'<img src="'+esc(p.avatar_url)+'" style="width:100%;height:100%;object-fit:cover">':esc((p.username||'?')[0].toUpperCase())}</div><h1 class="title" style="font-size:22px;margin-top:10px">${esc(p.username||'Autor')}${insigniaHTML(p)}</h1><p style="font-size:12px;color:var(--text2)">${n} seguidores</p><p style="font-size:13px;margin:10px 0">${esc(p.bio||'Este creador todavía no escribió su bio ✨')}</p><div style="display:flex;gap:8px"><button class="btn${sig?' on':''}" style="flex:1" onclick="toggleSeguir('${esc(uid)}',this)">${sig?'✓ Siguiendo':'＋ Seguir'}</button><button class="btn-ghost" style="flex:1" onclick="compartir()">🔗 Compartir</button></div>${miPerfil&&uid===miPerfil.id&&puedeChatCEO()?'<button class="btn-main" style="margin-top:8px" onclick="abrirChatCEO()">💬 Hablar con el CEO</button>':''}${puedeMonetizar(p)?'<button class="btn-main" style="margin-top:8px" onclick="abrirDonarCreador(\''+esc(uid)+'\')">💖 Donar al creador</button>':''}<button class="btn-ghost" style="width:100%;margin-top:8px" onclick="abrirDonarPlataforma()">💖 Donar a la plataforma</button></div><h3 class="section">📚 Sus mangas</h3><div id="creGrid" class="manga-grid"></div>`;
     pintar('creGrid',MANGAS.filter(m=>m.user_id===uid));
 }
 async function toggleSeguir(uid,btn){
@@ -2891,7 +2891,7 @@ async function abrirTutoriales(){
   }catch(e){w.innerHTML=vacio('Todavía no hay videos disponibles.')}
 }
 async function guardarDonacion(){
-  if(!miPerfil||!(puedeMonetizar(miPerfil)||esCeoSync())){alert('Solo los planes Semi Dios y Dios pueden recibir donaciones.');return}
+  if(!miPerfil||!(puedeMonetizar(miPerfil)||esCeoSync())){alert('Solo los planes Súper Pro, Semi Dios y Dios pueden recibir donaciones.');return}
   const tit=($('ctaDonTit').value||'').trim().slice(0,60),al=($('ctaDonAlias').value||'').trim().replace(/\s+/g,'');
   if(!tit){alert('Poné el nombre del titular de la cuenta, así quien dona puede verificarlo.');return}
   if(!/^\d{22}$/.test(al)&&!/^[A-Za-z0-9._-]{6,30}$/.test(al)){alert('Poné un alias válido (6 a 30 letras, números, punto o guion) o un CBU de 22 números.');return}
@@ -3300,7 +3300,8 @@ async function guardarBorrador(){
   if(_c)titulo=_c.titulo;
   if(!titulo){alert('Poné un título');return}
   const _lim=limiteBorradores(),_lista0=await bdTodos().catch(()=>[]);
-  const _mismo=_c?_lista0.find(d=>d.continuar&&String(d.continuar.id)===String(_c.id)):null;
+  let _mismo=_c?_lista0.find(d=>d.continuar&&String(d.continuar.id)===String(_c.id)):null;
+  if(!_mismo&&window._borradorId)_mismo=_lista0.find(d=>String(d.id)===String(window._borradorId))||null;   /* si estás editando un borrador, se REEMPLAZA (no se crea otro) */
   if(!esCeoSync()&&!_mismo&&_lista0.length>=_lim){alert('Tu plan permite hasta '+_lim+' borrador(es): depende de cuántos mangas podés crear según tu plan, más los mangas extra que compraste.\n\nBorrá un borrador o publicá para liberar lugar.');return}
   const btn=event&&event.target;if(btn){btn.disabled=true;btn.innerText='Guardando...'}
   window._finG=barraGlobal('Guardando tu borrador...',7000,'Guardando las páginas');
@@ -3313,7 +3314,8 @@ async function guardarBorrador(){
     const pdfPreview=document.getElementById('pdfPreview');
     const draft={id:_mismo?_mismo.id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),continuar:_c,modo:m,titulo,generos:[...generosSel],estilo:estiloSel,subtitulo,sinopsis:document.getElementById('sinopsis').value,portada,paginas:pages,pdfNombre:pdfPreview?.querySelector('.pdf-info')?.innerText||'',fecha:new Date().toISOString()};
     await bdPut(draft);
-    alert('Borrador completo guardado ✅ ('+pages.length+' páginas'+(portada?' + portada':'')+')');
+    window._borradorId=draft.id;
+    alert('Borrador '+(_mismo?'actualizado':'guardado')+' ✅ ('+pages.length+' páginas'+(portada?' + portada':'')+')');
   }catch(e){
     if(e && e.name==='QuotaExceededError') alert('Tu celular no tiene lugar para guardar este borrador. Liberá espacio e intentá de nuevo.');
     else alert('No se pudo guardar el borrador completo. Si las imágenes son muy pesadas, reducí su tamaño e intentá de nuevo.');
@@ -3663,6 +3665,26 @@ function iaPintarLugares(){
 }
 /* Outfits: se elige UNO PARA CADA personaje (así 3 personajes pueden llevar ropa distinta) */
 function iaOutfitsComprados(){return (typeof TIENDA!=='undefined'?TIENDA.items:[]).filter(r=>r.tipo==='outfit'&&(TIENDA.compras.has(String(r.id))||(typeof esCeoSync==='function'&&esCeoSync())))}
+/* Género del personaje (Mujer / Hombre) y categoría del outfit (D dama · H hombre · N niños · U unisex, por su código) */
+function pjGeneroDe(p){
+  const d=String((p&&p.descripcion)||'');
+  const m=/G[eé]nero:\s*(Mujer|Hombre|Otro)/i.exec(d);
+  if(m)return /mujer/i.test(m[1])?'F':/hombre/i.test(m[1])?'M':'';
+  const t=d.toLowerCase();
+  if(/\b(mujer|chica|dama|femenin[oa]|se[ñn]ora|ni[ñn]a|ella|muchacha)\b/.test(t))return 'F';
+  if(/\b(hombre|chico|var[oó]n|masculin[oa]|se[ñn]or|ni[ñn]o|muchacho)\b/.test(t))return 'M';
+  return '';
+}
+function outfitCat(r){const m=/^\s*([DHNU])\s*[\/\-]/i.exec(String((r&&r.codigo)||''));return m?m[1].toUpperCase():''}
+function outfitsParaPj(p,lista){
+  const g=pjGeneroDe(p),e=pjEdadDe(p),nino=e>0&&e<13;
+  return lista.filter(r=>{
+    const c=outfitCat(r);if(!c||c==='U')return true;
+    if(nino)return c==='N';
+    if(!g)return true;
+    return g==='F'?c==='D':c==='H';
+  });
+}
 function iaPintarOutfits(){
   const c=$('iaOutfits');if(!c)return;
   const lista=iaOutfitsComprados();
@@ -3674,11 +3696,11 @@ function iaPintarOutfits(){
     c.querySelectorAll('[data-og]').forEach(b=>b.onclick=()=>{const r=lista.find(x=>String(x.id)===b.dataset.og);iaOutfit=(iaOutfit&&iaOutfit.id===String(r.id))?null:{id:String(r.id),txt:otxt(r),img:r.imagen_url||null};iaPintarOutfits()});
     return;
   }
-  c.innerHTML=pj.map(p=>'<div class="ia-ofila"><div class="ia-ofila-t">👤 '+esc(p.nombre)+'</div><div class="ia-sq">'+iaTile({sel:!iaOutfitPor[p.id],ico:'👤',img:p.foto_limpia||p.foto_url,face:p.foto_limpia?'50% 8%':'18% 6%',nombre:'Su ropa de siempre',data:'data-oc="'+esc(String(p.id))+'|"'})+lista.map(r=>iaTile({sel:!!(iaOutfitPor[p.id]&&iaOutfitPor[p.id].id===String(r.id)),img:r.imagen_url,nombre:r.nombre||r.codigo,ico:'👕',fit:1,data:'data-oc="'+esc(String(p.id))+'|'+esc(String(r.id))+'"'})).join('')+'</div></div>').join('');
+  c.innerHTML=pj.map(p=>'<div class="ia-ofila"><div class="ia-ofila-t">👤 '+esc(p.nombre)+'</div><div class="ia-sq">'+iaTile({sel:!iaOutfitPor[p.id],ico:'👤',img:p.foto_limpia||p.foto_url,face:p.foto_limpia?'50% 8%':'18% 6%',nombre:'Su ropa de siempre',data:'data-oc="'+esc(String(p.id))+'|"'})+outfitsParaPj(p,lista).map(r=>iaTile({sel:!!(iaOutfitPor[p.id]&&iaOutfitPor[p.id].id===String(r.id)),img:r.imagen_url,nombre:r.nombre||r.codigo,ico:'👕',fit:1,data:'data-oc="'+esc(String(p.id))+'|'+esc(String(r.id))+'"'})).join('')+'</div></div>').join('');
   c.querySelectorAll('[data-oc]').forEach(b=>b.onclick=()=>{
     const [pid,oid]=b.dataset.oc.split('|');
     if(!oid||(iaOutfitPor[pid]&&iaOutfitPor[pid].id===oid))delete iaOutfitPor[pid];
-    else{const r=lista.find(x=>String(x.id)===oid);if(r)iaOutfitPor[pid]={id:oid,txt:otxt(r),img:r.imagen_url||null}}
+    else{const r=lista.find(x=>String(x.id)===oid),pp=PERSONAJES.find(x=>String(x.id)===pid);if(r&&(!pp||outfitsParaPj(pp,[r]).length))iaOutfitPor[pid]={id:oid,txt:otxt(r),img:r.imagen_url||null}}
     iaPintarOutfits();
   });
 }
@@ -3728,7 +3750,7 @@ function iaPintarPaneles(){
   const l=IA_LAYOUTS_D.find(x=>x.k===iaLay);
   if(!l||l.k==='full'){c.innerHTML='';return}
   const ej=['Ej.: Evelin y Matías salen','Ej.: Evelin camina','Ej.: Evelin se cae','Ej.: Matías la mira sorprendido','Ej.: ella se ríe','Ej.: los dos se van'];
-  c.innerHTML='<div class="lay-prev">'+iaSvg(l,84,112)+'<ol>'+l.labs.map((lb,i)=>'<li><b>'+(i+1)+'</b>Viñeta '+(i+1)+': '+esc(lb)+'</li>').join('')+'</ol></div>'+l.labs.map((lb,i)=>'<input class="input ia-panel-in" maxlength="160" placeholder="Viñeta '+(i+1)+' ('+esc(lb)+') — '+esc(ej[i]||'Ej.: qué pasa acá')+'">').join('');
+  c.innerHTML=(l.labs.length>1?'<div class="warn-mini" style="border:1px solid #ffb300;color:#ffd45c;margin-bottom:8px">⚠️ Elegiste <b>'+l.labs.length+' viñetas</b>: esta página gasta <b>'+l.labs.length+' generaciones</b> (1 por cada viñeta).</div>':'')+'<div class="lay-prev">'+iaSvg(l,84,112)+'<ol>'+l.labs.map((lb,i)=>'<li><b>'+(i+1)+'</b>Viñeta '+(i+1)+': '+esc(lb)+'</li>').join('')+'</ol></div>'+l.labs.map((lb,i)=>'<input class="input ia-panel-in" maxlength="160" placeholder="Viñeta '+(i+1)+' ('+esc(lb)+') — '+esc(ej[i]||'Ej.: qué pasa acá')+'">').join('');
 }
 async function abrirIA(modo,file){
   if(!miPerfil){alert('Iniciá sesión primero');return}
@@ -3839,10 +3861,10 @@ async function iaGenerar(){
       if(usadas.length)fd.append('ref_notas',usadas.map((n,i)=>'Image '+(i+1)+': '+n).join('; '));
     }
     const tk=await iaToken();
-    /* Con viñetas elegidas: UNA sola llamada. El servidor dibuja una imagen por viñeta (1 generación hasta 3 viñetas, 2 de 4 a 6) y acá se arma la página con el diseño exacto */
+    /* Con viñetas elegidas: UNA sola llamada. El servidor dibuja una imagen por viñeta (1 generación por cada viñeta) y acá se arma la página con el diseño exacto */
     if(iaModo!=='lapiz'&&lay&&lay.k!=='full'&&lay.sv.length>1){
-      const nP=lay.sv.length,costo=nP<=3?1:2;
-      if(!esCeoSync()&&!confirm('Esta página tiene '+nP+' viñetas y cuesta '+costo+' generación'+(costo>1?'es':'')+' en total (no una por viñeta).\n\n¿Seguir?')){const c0=new Error('cancelado');c0.cancelado=true;throw c0}
+      const nP=lay.sv.length,costo=nP;
+      if(!esCeoSync()&&!confirm('⚠️ Esta página tiene '+nP+' viñetas y gasta '+costo+' generaciones (1 por cada viñeta).\n\n¿Seguir?')){const c0=new Error('cancelado');c0.cancelado=true;throw c0}
       const textosP=[...document.querySelectorAll('#iaPaneles .ia-panel-in')].map(e=>e.value.trim());
       const formas=lay.sv.map(sh=>{let w,hh;if(typeof sh==='string'){const q=sh.split(' ').map(p=>p.split(',').map(Number)),xs=q.map(p=>p[0]),ys=q.map(p=>p[1]);w=Math.max(...xs)-Math.min(...xs);hh=Math.max(...ys)-Math.min(...ys)}else{w=sh[2];hh=sh[3]}const r=(w*(832/60))/(hh*(1248/80));return r<0.42?'xtall':r<0.58?'vtall':r<0.8?'tall':r<1.25?'square':r<1.8?'wide':'xwide'});
       const FORMA_TXT={xtall:'a VERY NARROW tall vertical frame: compose vertically, characters close together and centered',vtall:'a NARROW tall vertical frame, characters centered',tall:'a TALL vertical frame',square:'a SQUARE frame',wide:'a WIDE horizontal frame (landscape) with the characters large and centered',xwide:'a VERY WIDE horizontal strip frame with the characters large and centered, head and face fully inside'};
@@ -4149,9 +4171,9 @@ function renderPlanesDefinitivos(){
   let bullets='';
   if(k==='gratis')bullets='<li>1 manga</li><li>0 personajes propios en la cuota del plan</li><li>5 lugares por manga</li><li>2 capítulos de 15 a 20 páginas o 2 PDF por mes</li><li>200 Sakuras diarias, no acumulables</li><li>Chat: SalaMangakers</li><li>No monetiza</li>';
   if(k==='pro')bullets='<li>1 manga</li><li>Hasta 5 personajes</li><li>5 lugares por manga</li><li>3 capítulos de 15 a 20 páginas o 3 PDF por mes</li><li>500 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>Insignia Pro plata</li><li>No monetiza</li>';
-  if(k==='superpro')bullets='<li>2 mangas</li><li>Hasta 7 personajes</li><li>5 lugares por manga</li><li>4 capítulos de 15 a 20 páginas o 4 PDF por mes</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Insignia Pro oro</li><li>No monetiza</li>';
-  if(k==='semidios')bullets='<li>2 mangas</li><li>Hasta 10 personajes</li><li>5 lugares por manga</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li><li>💖 Recibí donaciones: cargá tu CBU o alias y el 100% de lo que te donen va directo a tu cuenta, sin comisión</li>';
-  if(k==='dios')bullets='<li>2 mangas</li><li>Hasta 15 personajes</li><li>5 lugares por manga</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>Lectura ilimitada todo el mes</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA — <b style="color:var(--gold)">Próximamente</b></li><li>💖 Recibí donaciones: cargá tu CBU o alias y el 100% de lo que te donen va directo a tu cuenta, sin comisión</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li>';
+  if(k==='superpro')bullets='<li>2 mangas</li><li>Hasta 7 personajes</li><li>5 lugares por manga</li><li>4 capítulos de 15 a 20 páginas o 4 PDF por mes</li><li>2000 Sakuras para leer o crear</li><li>Chat: SalaMangakers + SalaMangakers Pro</li><li>🤖 SalaMangaS IA incluida</li><li>Insignia Pro oro</li><li>💖 Monetizá el 100% de tus donaciones: cargá tu alias o CBU y recibís directo en tu cuenta, sin comisión</li>';
+  if(k==='semidios')bullets='<li>2 mangas</li><li>Hasta 10 personajes</li><li>5 lugares por manga</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA incluida</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li><li>💖 Monetizá el 100% de tus donaciones: cargá tu alias o CBU y recibís directo en tu cuenta, sin comisión</li>';
+  if(k==='dios')bullets='<li>2 mangas</li><li>Hasta 15 personajes</li><li>5 lugares por manga</li><li>Capítulos sin límite, máximo 20 páginas por capítulo</li><li>Lectura ilimitada todo el mes</li><li>4000 Sakuras para leer</li><li>🤖 SalaMangaS IA incluida</li><li>💖 Monetizá el 100% de tus donaciones: cargá tu alias o CBU y recibís directo en tu cuenta, sin comisión</li><li>Chat directo con el CEO</li><li>Chat: Dios del Manga</li><li>Insignia Dios</li>';
   d.innerHTML=`<h3>${p.nombre}</h3><div class="plan-ins">${insigniaGrande(k,'xl')}<p>${INSIGNIAS[k].corto}</p></div><div class="plan-price">${precio}</div><ul>${bullets}</ul>`;
   if(k!=='gratis'){
     const row=document.createElement('div');row.style.cssText='display:flex;gap:8px;margin-top:10px';
@@ -4496,7 +4518,7 @@ function sincronizarCrear(){
  else if(!portadaArchivo&&paginas[0])portadaArchivo=paginas[0].file;
 }
 function limpiarCrearUI(sinVolver){
- window._continuar=null;
+ window._continuar=null;window._borradorId=null;
  paginas=[];portadaArchivo=null;generosSel=[];estiloSel=null;filaActual=0;
  ['lapiz','pagina','pdf','iaCrear'].forEach(pf=>{
   ['Titulo','Subtitulo','Sinopsis','Portada','Prompt'].forEach(s=>{const e=$(pf+s);if(e)e.value=''});
@@ -4521,7 +4543,7 @@ async function cargarBorrador(id){
  if(!d)return;
  const modo=d.modo||'pagina';
  limpiarCrearUI(true);
- window._continuar=d.continuar||null;
+ window._continuar=d.continuar||null;window._borradorId=d.id;
  go('crear');
  abrirCrearPantalla(modo==='lapiz'?'lapiz-2':modo);
  const pf=CREAR_PFX[modo]||'pagina';
@@ -4581,15 +4603,16 @@ publicar=async function(){
  if(!ok)return;
  if(!_esCeo&&total>0){const r=await gastarSakurasPropio(total);if(!r.ok)console.warn('No se pudo cobrar tras publicar')}
  if(tieneGratis&&!_esCeo)consumirCuotaCreacion();
- window._continuar=null;
+ window._continuar=null;window._borradorId=null;
  if(paginas.length===0)limpiarCrearUI();
  try{renderCrearHome()}catch(e){}
 }
 /* Donación creador: montos definitivos 1000–10000 y mensaje según plan */
-function abrirDonarCreador(){
- if(!requireUser()||!rd||!rd.m)return;
- const autor=AUTORES[rd.m.user_id];
- if(!autor||!puedeMonetizar(autor)){alert('Este creador todavía no puede recibir donaciones (necesita un plan Semi Dios o Dios vigente).');return}
+function abrirDonarCreador(uid){
+ if(!requireUser())return;
+ if(!uid&&(!rd||!rd.m))return;
+ const autor=AUTORES[uid||rd.m.user_id];
+ if(!autor||!puedeMonetizar(autor)){alert('Este creador todavía no puede recibir donaciones (necesita un plan Súper Pro, Semi Dios o Dios vigente).');return}
  const al=autor.donacion_alias,tit=autor.donacion_titular,esCbu=/^\d{22}$/.test(al||'');
  window._donAlias=al||'';
  $('donarCuenta').innerHTML='<p style="font-size:12px;color:var(--text2)">El <b>100%</b> de tu donación va directo a la cuenta del creador. SalaMangaS no interviene, no cobra comisión y no puede verificar ni devolver transferencias. Revisá que el titular sea correcto antes de transferir.</p>'
@@ -4724,8 +4747,8 @@ subirACloudinary=async function(file){
 const INSIGNIAS={
   ceo:{img:'/ceo.png',emoji:'🐉',nombre:'CEO',corto:'🐉 El creador supremo de SalaMangaS. Solo uno en toda la plataforma. Es el dueño, el que construyó todo desde cero.',largo:'El creador supremo de SalaMangaS. Solo existe uno en toda la plataforma: el dueño, el que construyó todo desde cero.',gana:'No se compra ni se regala. Es única.'},
   dios:{img:'/dios.png',emoji:'👑',nombre:'Mangakers Dios',corto:'👑 El máximo poder. Corona imperial.',largo:'El máximo poder dentro de SalaMangaS. La corona imperial es para quienes lo apoyan todo.',gana:'4 creaciones gratis por mes, lectura ilimitada, recibe el 100% de las donaciones directo en su CBU o alias, chat directo con el CEO y chat Dios del Manga.'},
-  semidios:{img:'/semidios.png',emoji:'🌟',nombre:'Semi Dios',corto:'🦊 A un paso de lo divino. Máscara del zorro.',largo:'A un paso de lo divino. La máscara del zorro marca a quienes ya están cerca de la cima.',gana:'3 mangas gratis por mes, capítulos sin límite, 4000 Sakuras para leer, chat directo con el CEO y chat Dios del Manga. Podés cargar tu CBU o alias para recibir donaciones directas (100% tuyas).'},
-  superpro:{img:'/superpro.png',emoji:'🥇',nombre:'Súper Mangakers Pro',corto:'⚔️ El que domina el arte. Espada del guerrero.',largo:'El que domina el arte. Las espadas cruzadas son del guerrero que ya conoce su oficio.',gana:'2 mangas, 4 capítulos por mes, 2000 Sakuras y chat SalaMangakers Pro. No monetiza.'},
+  semidios:{img:'/semidios.png',emoji:'🌟',nombre:'Semi Dios',corto:'🦊 A un paso de lo divino. Máscara del zorro.',largo:'A un paso de lo divino. La máscara del zorro marca a quienes ya están cerca de la cima.',gana:'3 mangas gratis por mes, capítulos sin límite, 4000 Sakuras para leer, chat directo con el CEO y chat Dios del Manga. Monetizá el 100% de tus donaciones con tu alias o CBU.'},
+  superpro:{img:'/superpro.png',emoji:'🥇',nombre:'Súper Mangakers Pro',corto:'⚔️ El que domina el arte. Espada del guerrero.',largo:'El que domina el arte. Las espadas cruzadas son del guerrero que ya conoce su oficio.',gana:'2 mangas, 4 capítulos por mes, 2000 Sakuras y chat SalaMangakers Pro. Monetizá el 100% de tus donaciones con tu alias o CBU.'},
   pro:{img:'/pro.png',emoji:'🥈',nombre:'Mangakers Pro',corto:'🖋️ El que escribe y crea. Pluma de autor.',largo:'El que escribe y crea. La pluma con el libro es la marca del autor.',gana:'1 manga, 3 capítulos por mes, 500 Sakuras y chat SalaMangakers Pro. No monetiza.'},
   gratis:{img:'/gratis.png',emoji:'🌱',nombre:'Mangakers Gratis',corto:'🌱 El que recién arranca. Sin insignia especial.',largo:'El que recién arranca su camino en SalaMangaS. La estrella dorada es el primer paso.',gana:'1 manga, 2 capítulos por mes y 200 Sakuras diarias (no acumulables). No monetiza.'}
 };
