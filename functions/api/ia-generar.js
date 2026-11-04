@@ -13,7 +13,7 @@ import { filtrar, esContenidoAdulto } from './_filtro.js';
 const MAX_ARCHIVO = 8 * 1024 * 1024; // 8 MB (la app ya achica la imagen antes de mandarla)
 const ANCHO = 832, ALTO = 1248;      // vertical 2:3 FIJO
 const esArchivo = f => f && typeof f === 'object' && typeof f.size === 'number' && typeof f.arrayBuffer === 'function';
-const costoPaneles = n => (n <= 3 ? 1 : 2);
+const costoPaneles = n => Math.max(1, Math.min(Number(n) || 1, 6));   // 1 generación por viñeta
 
 // ¿Esta cuenta verificó que es mayor de 18? (el CEO siempre puede)
 async function esMayor18(env, ctx) {
@@ -78,16 +78,16 @@ export async function onRequestPost({ request, env }) {
     const conReglas = p => (dirColor ? (dirColor + ' ' + p + ' ' + dirColor) : p) + reglaAdultos + reglaSuave + reglaMenores;
     const intro = 'FACE LOCK (highest priority): copy each character\'s face from its own reference image exactly: same eye shape and color, eyebrows, nose, mouth, face shape, hair color, hairstyle and skin tone. Never blend faces between characters and never invent a new face. OUTFIT LOCK: every character wears only its own assigned outfit; characters with different outfits must look clearly different from each other. Create ONE new manga illustration (use the frame shape requested below; vertical if none is requested) using the reference images in this order: ' + (refNotas || 'each image is a reference') + '. Every character MUST have EXACTLY the same face (eye shape and color, nose, mouth), hair color and hairstyle, skin tone and body as in its own reference image. Each character wears ONLY the outfit shown in the outfit reference noted as \'outfit worn by NAME\'; a character without an outfit reference keeps the clothes of its own reference. The scene happens EXACTLY in the location shown in the location reference image. IMPORTANT: each character reference shows ONE single figure: use it ONLY to learn that character\'s look. An outfit reference may show the garments on a mannequin, flat on fabric or in several views: copy ONLY the garments (design, color, straps, lace), never the mannequin, the fabric background or the sheet layout, and put them on the character. NEVER draw a character sheet, several views, labels or panels of the character, and never copy the reference background. Draw only the scene requested below. Before finishing, double-check that every face, hairstyle, outfit and the location match their references. ';
 
-    // ---- COBRAR (el CEO no gasta). Páginas con viñetas: 1 generación hasta 3 viñetas, 2 generaciones de 4 a 6 ----
+    // ---- COBRAR (el CEO no gasta). Páginas con viñetas: 1 generación POR VIÑETA ----
     const costo = modo === 'paneles' ? costoPaneles(paneles.length) : 1;
     if (!ctx.esCeo) {
       const restante = await rpcUsuario(env, ctx.token, 'usar_generacion_ia', { modo });
       if (Number(restante) < 0) return out(402, { error: 'No te quedan generaciones. Podés comprar Sakuras IA o mejorar tu plan.', codigo: 'sin_generaciones' });
       cobrada = true;
-      if (costo === 2 && Number(restante) < 1) {   // no alcanza para la segunda: se devuelve la primera y se avisa
+      if (costo > 1 && Number(restante) < costo - 1) {   // no alcanzan para todas: se devuelve la primera y se avisa
         try { await getServiceClient(env).rpc('devolver_generacion_ia_srv', { p_uid: ctx.user.id }); } catch (e) {}
         cobrada = false;
-        return out(402, { error: 'Una página de ' + paneles.length + ' viñetas cuesta 2 generaciones y no te alcanzan.', codigo: 'sin_generaciones' });
+        return out(402, { error: 'Una página de ' + paneles.length + ' viñetas cuesta ' + costo + ' generaciones (1 por viñeta) y no te alcanzan.', codigo: 'sin_generaciones' });
       }
     }
 
@@ -111,7 +111,7 @@ export async function onRequestPost({ request, env }) {
         const res = await Promise.all(lote.map((p, k) => { const tam = TAM[formas[i + k]] || TAM.tall; return motorConReferencias(env, { escena, prompt: refs.length ? intro + conReglas(p) : conReglas(p), promptSinRef: conReglas(p), archivos: refs, w: tam[0], h: tam[1], n: 1, colorModo, seguro }); }));
         res.forEach(r => imagenes.push(r.imagenes[0]));
       }
-      if (costo === 2 && !ctx.esCeo) { try { await rpcUsuario(env, ctx.token, 'usar_generacion_ia', { modo }); } catch (e) { console.warn('Segunda generación no cobrada:', e.message); } }
+      if (costo > 1 && !ctx.esCeo) { for (let k = 1; k < costo; k++) { try { await rpcUsuario(env, ctx.token, 'usar_generacion_ia', { modo }); } catch (e) { console.warn('Generación extra no cobrada (viñeta ' + (k + 1) + '):', e.message); } } }
       return out(200, { ok: true, sync: true, paneles: true, imagenes, motor: 'fal-' + escena, cantidad: imagenes.length, costo });
     }
 
