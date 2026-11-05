@@ -895,6 +895,7 @@ div[style*="display:flex;gap:8px;margin-top:12px"]>*{width:100%!important;flex:n
 .pj-card .pj-sq{width:100%;aspect-ratio:1/1;border-radius:9px;overflow:hidden;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer}
 .pj-card .pj-sq img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block}
 .pj-card b{font-size:11px;color:var(--gold3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.pj-card .pj-sq.cont img{object-fit:contain;object-position:50% 50%}
 .pj-card .pj-bt{display:flex;gap:4px}
 .pj-card .pj-bt button{flex:1;padding:5px 0;font-size:12px;border-radius:8px;border:1px solid rgba(255,209,102,.35);background:rgba(255,209,102,.08);color:var(--text);cursor:pointer}
 .pj-card .pj-bt button.red{border-color:#ff6b81;color:#ff6b81}
@@ -1413,9 +1414,13 @@ Los creadores fieles tienen premios cuando la app crezca. Vos sos parte de esto 
 <div id="pj" class="ov">
 <div class="ov-head"><div class="chatfs-back" onclick="cerrarOv('pj')">←</div><h2>👥 Personajes</h2></div>
 <div class="ov-body">
+<div id="pjTabs" style="display:flex;gap:6px;margin-bottom:10px"><button type="button" class="btn on" data-t="pj" onclick="pjTab('pj')" style="flex:1;padding:8px 4px;font-size:12px">👥 Personajes</button><button type="button" class="btn" data-t="outfit" onclick="pjTab('outfit')" style="flex:1;padding:8px 4px;font-size:12px">👕 Mis outfits</button><button type="button" class="btn" data-t="lugar" onclick="pjTab('lugar')" style="flex:1;padding:8px 4px;font-size:12px">📍 Mis lugares</button></div>
+<div id="pjPanePj">
 <button class="btn-main" onclick="nuevoPersonaje()">＋ Nuevo personaje</button> <button class="btn" onclick="crearPersonajeIA()">✨ Crear con IA</button>
 <div class="warn-mini">💡 Cuanto más detalle pongas, mejor va a mantener la IA al personaje en cada página.</div>
 <div id="pjLista" style="margin-top:14px"></div>
+</div>
+<div id="pjPaneRec" style="display:none"></div>
 </div>
 </div>
 <div id="borradores-modal" class="modal-overlay"><div class="modal-box">
@@ -3355,7 +3360,7 @@ async function cargarPersonajes(){
   try{const {data}=await sb.from('personajes').select('*').eq('user_id',miPerfil.id).order('created_at',{ascending:false});PERSONAJES=data||[]}
   catch(e){PERSONAJES=[]}
 }
-async function abrirPersonajes(){if(!miPerfil){alert('Iniciá sesión primero');return}$('pj').classList.add('on');await cargarPersonajes();pintarPersonajes()}
+async function abrirPersonajes(){try{pjTab('pj')}catch(e){}if(!miPerfil){alert('Iniciá sesión primero');return}$('pj').classList.add('on');await cargarPersonajes();pintarPersonajes()}
 /* ==== PERSONAJES IA ==== */
 let _pjIA={img:null,estilo:'Shonen Battle',info:null,busy:false};
 const PJ_IA_ESTILOS=IA_ESTILOS.map(x=>x.n); /* mismos estilos que el resto de la app */
@@ -3513,6 +3518,18 @@ async function guardarPersonaje(){
   }catch(e){alert('No se pudo guardar el personaje: '+(e.message||e))}
   try{await _finPG()}catch(x){}
   if(btn){btn.disabled=false;btn.innerText=txt0}
+}
+async function pjTab(t){
+  document.querySelectorAll('#pjTabs .btn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  $('pjPanePj').style.display=t==='pj'?'block':'none';
+  const p=$('pjPaneRec');p.style.display=t==='pj'?'none':'block';
+  if(t==='pj')return;
+  p.innerHTML=vacio('Cargando...');
+  if(typeof TIENDA!=='undefined'&&(!TIENDA.items||!TIENDA.items.length)){try{await tiendaCargar()}catch(e){}}
+  const ceo=esCeoSync(),tit=t==='outfit'?'outfits':'lugares';
+  const lista=(TIENDA.items||[]).filter(r=>r.tipo===t&&(TIENDA.compras.has(String(r.id))||ceo));
+  const cards=lista.map(r=>'<div class="pj-card"><div class="pj-sq cont" onclick="window.open(\''+esc(r.imagen_url||'')+'\',\'_blank\')">'+(r.imagen_url?'<img src="'+esc(r.imagen_url)+'" alt="'+esc(r.nombre||r.codigo||'')+'" loading="lazy">':(t==='outfit'?'👕':'📍'))+'</div><b>'+esc(r.nombre||r.codigo||'')+'</b>'+(r.nombre&&r.codigo?'<small style="text-align:center;font-size:10px;color:var(--text2)">'+esc(r.codigo)+'</small>':'')+'</div>').join('');
+  p.innerHTML=(lista.length?'<p class="warn-mini">Estos '+tit+' son tuyos. Los elegís en <b>Crear</b>.</p><div class="pj-grid" style="margin-top:10px">'+cards+'</div>':vacio('Todavía no tenés '+tit+'. Comprá uno en la tienda 👇'))+'<button class="btn-main" style="margin-top:14px" onclick="cerrarOv(\'pj\');abrirTienda()">🛍️ Ir a la tienda</button>';
 }
 function pintarPersonajes(){
   const b=$('pjLista');if(!b)return;
@@ -5862,7 +5879,7 @@ async function renderCrearHome(){
   const cab='<p style="font-size:11px;color:var(--text2);margin:0 0 8px">Mangas creados: <b>'+MIS_MANGAS.length+((lm===null||ceo)?'':' / '+lm)+'</b></p>';
   lst.innerHTML=cab+(MIS_MANGAS.length?MIS_MANGAS.map(m=>{
     const nc=1+(Array.isArray(m.capitulos)?m.capitulos.length:0),pt=m.portada_url||((m.paginas_urls||[])[0])||'';
-    return '<div class="mm-card" onclick="abrirMangaCreador(\''+String(m.id).replace(/'/g,'')+'\')"><div class="mm-cover">'+(pt?'<img src="'+esc(pt)+'" alt="">':'')+'</div><div><b>'+esc(m.titulo)+'</b><small>'+nc+' capítulo(s) · '+(m.estado==='pendiente'?'⏳ en revisión':'✅ publicado')+'</small></div></div>';
+    return '<div class="mm-card" onclick="abrirMangaCreador(\''+String(m.id).replace(/'/g,'')+'\')"><div class="mm-cover">'+(pt?'<img src="'+esc(pt)+'" alt="">':'')+'</div><div><b>'+esc(m.titulo)+'</b><small>'+nc+' capítulo(s) · '+(m.estado==='pendiente'?'⏳ en revisión':'✅ publicado')+'</small></div>'+(ceo?'<button type="button" class="btn" style="margin-left:auto;border-color:#ff6b81;color:#ff6b81;padding:6px 10px;font-size:12px" onclick="event.stopPropagation();galBorrarManga(\''+String(m.id).replace(/'/g,'')+'\',this.closest(\'.mm-card\'))">🗑️ Borrar</button>':'')+'</div>';
   }).join(''):'<p style="font-size:12px;color:var(--text2)">Todavía no publicaste ningún manga. Elegí una forma de crear arriba 👆</p>');
 }
 function abrirMangaCreador(id){
